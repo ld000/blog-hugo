@@ -1,4 +1,4 @@
-baseURL = "http://ld000.space"
+baseURL = "https://ld000.space"
 languageCode = "zh-Hans"
 defaultContentLanguage = "zh-cn"                             # en / zh-cn / ... (This field determines which i18n file to use)
 title = "ld000"

@@ -1,2 +1,2 @@
 User-agent: *
-Sitemap: http://ld000.space/sitemap.xml
+Sitemap: https://ld000.space/sitemap.xml
