@@ -1,0 +1,8 @@
+language: go
+git:
+    depth: 1
+install: go get -v github.com/gohugoio/hugo
+script:
+    ‐ hugo
+deploy:
+    - git subtree push --prefix public origin gh-pages
