@@ -45,7 +45,7 @@ discuz 接入 cas 实现 SSO 的方法。
 ## 去除弹框登录
 管理中心 -> 界面 -> 去掉浮动窗口（登录）
 
-![image](/images/discuz-cas-1.png)
+![image](/img/discuz-cas-1.png)
 
 ## 在`CAS`文件夹中创建 `CasClientConfig.php`
 ```php
