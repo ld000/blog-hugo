@@ -4,5 +4,5 @@ git:
 install: go get -v github.com/gohugoio/hugo
 script:
     ‐ hugo
-deploy:
+after_success:
     - git subtree push --prefix public origin gh-pages
