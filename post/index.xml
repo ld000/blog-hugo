@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Posts on ld000</title>
@@ -7,10 +7,19 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-Hans</language>
     <copyright>ld000</copyright>
-    <lastBuildDate>Mon, 23 Jul 2018 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 23 Oct 2019 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="https://ld000.space/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>让 Redis zset 支持多条件排序</title>
+      <link>https://ld000.space/post/make_redis_zset_support_multiple_sort/</link>
+      <pubDate>Wed, 23 Oct 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://ld000.space/post/make_redis_zset_support_multiple_sort/</guid>
+      <description>一些需求中经常要我们实现一个排行榜，数据量少的话可以使用 RDB 数据库排序，数据量大可以自己实现算法或者使用 NoSQL 数据库排序，NoSQL 数据库中最方便</description>
+    </item>
     
     <item>
       <title>discuz 接入 cas</title>
@@ -18,9 +27,7 @@
       <pubDate>Mon, 23 Jul 2018 00:00:00 +0000</pubDate>
       
       <guid>https://ld000.space/post/discuz_cas/</guid>
-      <description>&lt;p&gt;discuz 接入 cas 实现 SSO 的方法。&lt;/p&gt;
-
-&lt;p&gt;&lt;/p&gt;</description>
+      <description>&lt;p&gt;discuz 接入 cas 实现 SSO 的方法。&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -29,9 +36,7 @@
       <pubDate>Wed, 28 Jun 2017 00:00:00 +0000</pubDate>
       
       <guid>https://ld000.space/post/java_call_cnet/</guid>
-      <description>&lt;p&gt;java 调用 c# 程序的几种方式。&lt;/p&gt;
-
-&lt;p&gt;&lt;/p&gt;</description>
+      <description>&lt;p&gt;java 调用 c# 程序的几种方式。&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -44,9 +49,7 @@
 &lt;p&gt;原文：&lt;a href=&#34;http://denis-zhdanov.blogspot.com/2009/07/spring-aop-top-problem-1-aspects-are.html&#34;&gt;http://denis-zhdanov.blogspot.com/2009/07/spring-aop-top-problem-1-aspects-are.html&lt;/a&gt;&lt;/p&gt;
 &lt;/blockquote&gt;
 
-&lt;p&gt;这篇文章继续讨论从 &lt;a href=&#34;http://denis-zhdanov.blogspot.com/2009/05/spring-aop-top-problem-2.html&#34;&gt;Spring AOP top problem #2 - java.lang.ClassCastException: $Proxy7&lt;/a&gt; 开始的话题。在这个话题里，我想要说明一些现在接触 spring AOP 的 spring 用户(特别是新用户)讨论最多(从我的观点看来)的问题。&lt;/p&gt;
-
-&lt;p&gt;&lt;/p&gt;</description>
+&lt;p&gt;这篇文章继续讨论从 &lt;a href=&#34;http://denis-zhdanov.blogspot.com/2009/05/spring-aop-top-problem-2.html&#34;&gt;Spring AOP top problem #2 - java.lang.ClassCastException: $Proxy7&lt;/a&gt; 开始的话题。在这个话题里，我想要说明一些现在接触 spring AOP 的 spring 用户(特别是新用户)讨论最多(从我的观点看来)的问题。&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -62,9 +65,7 @@
 &lt;li&gt;掉落列模型(column drop)&lt;/li&gt;
 &lt;li&gt;活动布局模型(layout shifter)&lt;/li&gt;
 &lt;li&gt;画布溢出模型(off canvas)&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;/p&gt;</description>
+&lt;/ul&gt;</description>
     </item>
     
     <item>
@@ -82,9 +83,7 @@
       <pubDate>Sat, 19 Mar 2016 00:00:00 +0000</pubDate>
       
       <guid>https://ld000.space/post/random-access/</guid>
-      <description>&lt;p&gt;List 实现所使用的标记接口，用来表明其支持快速（通常是固定时间）随机访问。此接口的主要目的是允许一般的算法更改其行为，从而在将其应用到随机或连续访问列表时能提供良好的性能。&lt;/p&gt;
-
-&lt;p&gt;&lt;/p&gt;</description>
+      <description>&lt;p&gt;List 实现所使用的标记接口，用来表明其支持快速（通常是固定时间）随机访问。此接口的主要目的是允许一般的算法更改其行为，从而在将其应用到随机或连续访问列表时能提供良好的性能。&lt;/p&gt;</description>
     </item>
     
   </channel>

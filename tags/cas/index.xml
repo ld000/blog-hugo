@@ -1,9 +1,9 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Cas on ld000</title>
+    <title>cas on ld000</title>
     <link>https://ld000.space/tags/cas/</link>
-    <description>Recent content in Cas on ld000</description>
+    <description>Recent content in cas on ld000</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-Hans</language>
     <copyright>ld000</copyright>
@@ -18,9 +18,7 @@
       <pubDate>Mon, 23 Jul 2018 00:00:00 +0000</pubDate>
       
       <guid>https://ld000.space/post/discuz_cas/</guid>
-      <description>&lt;p&gt;discuz 接入 cas 实现 SSO 的方法。&lt;/p&gt;
-
-&lt;p&gt;&lt;/p&gt;</description>
+      <description>&lt;p&gt;discuz 接入 cas 实现 SSO 的方法。&lt;/p&gt;</description>
     </item>
     
   </channel>
