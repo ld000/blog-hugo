@@ -16,38 +16,27 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
 
 
-<meta name="author" content="ld000" />
-  <meta name="description" content="discuz 接入 cas 实现 SSO 的方法。
-" />
-
-  <meta name="keywords" content="Hugo, theme, even, java, ld000" />
+<meta name="author" content="ld000" /><meta name="description" content="discuz 接入 cas 实现 SSO 的方法。
+" /><meta name="keywords" content="Hugo, theme, even, java, ld000" />
 
 
 
 
 
 
-<meta name="generator" content="Hugo 0.60.0-DEV" />
+<meta name="generator" content="Hugo 0.60.0-DEV with theme even" />
 
 
 <link rel="canonical" href="https://ld000.space/post/discuz_cas/" />
-
-<link rel="apple-touch-icon" sizes="180x180" href="https://ld000.space/apple-touch-icon.png">
-<link rel="icon" type="image/png" sizes="32x32" href="https://ld000.space/favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="https://ld000.space/favicon-16x16.png">
-<link rel="manifest" href="https://ld000.space/manifest.json">
-<link rel="mask-icon" href="https://ld000.space/safari-pinned-tab.svg" color="#5bbad5">
-
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
 
 
-
-
-
-
-<link href="https://ld000.space/dist/even.min.css?v=3.2.0" rel="stylesheet">
-<link href="https://ld000.space/lib/fancybox/jquery.fancybox-3.1.20.min.css" rel="stylesheet">
-
-
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
 
 
 <meta property="og:title" content="discuz 接入 cas" />
@@ -62,7 +51,7 @@
 
 <meta itemprop="datePublished" content="2018-07-23T00:00:00&#43;00:00" />
 <meta itemprop="dateModified" content="2018-07-23T00:00:00&#43;00:00" />
-<meta itemprop="wordCount" content="1050">
+<meta itemprop="wordCount" content="1202">
 
 
 
@@ -84,7 +73,7 @@
 <body>
   <div id="mobile-navbar" class="mobile-navbar">
   <div class="mobile-header-logo">
-    <a href="https://ld000.space/" class="logo">ld000</a>
+    <a href="/" class="logo">ld000</a>
   </div>
   <div class="mobile-navbar-icon">
     <span></span>
@@ -94,15 +83,15 @@
 </div>
 <nav id="mobile-menu" class="mobile-menu slideout-menu">
   <ul class="mobile-menu-list">
-    <a href="https://ld000.space/">
+    <a href="/">
         <li class="mobile-menu-item">首页</li>
-      </a><a href="https://ld000.space/post/">
+      </a><a href="/post/">
         <li class="mobile-menu-item">归档</li>
-      </a><a href="https://ld000.space/tags/">
+      </a><a href="/tags/">
         <li class="mobile-menu-item">标签</li>
-      </a><a href="https://ld000.space/links/">
+      </a><a href="/links/">
         <li class="mobile-menu-item">友链</li>
-      </a><a href="https://ld000.space/about/">
+      </a><a href="/about/">
         <li class="mobile-menu-item">关于</li>
       </a>
   </ul>
@@ -110,21 +99,21 @@
   <div class="container" id="mobile-panel">
     <header id="header" class="header">
         <div class="logo-wrapper">
-  <a href="https://ld000.space/" class="logo">ld000</a>
+  <a href="/" class="logo">ld000</a>
 </div>
 
 <nav class="site-navbar">
   <ul id="menu" class="menu">
     <li class="menu-item">
-        <a class="menu-item-link" href="https://ld000.space/">首页</a>
+        <a class="menu-item-link" href="/">首页</a>
       </li><li class="menu-item">
-        <a class="menu-item-link" href="https://ld000.space/post/">归档</a>
+        <a class="menu-item-link" href="/post/">归档</a>
       </li><li class="menu-item">
-        <a class="menu-item-link" href="https://ld000.space/tags/">标签</a>
+        <a class="menu-item-link" href="/tags/">标签</a>
       </li><li class="menu-item">
-        <a class="menu-item-link" href="https://ld000.space/links/">友链</a>
+        <a class="menu-item-link" href="/links/">友链</a>
       </li><li class="menu-item">
-        <a class="menu-item-link" href="https://ld000.space/about/">关于</a>
+        <a class="menu-item-link" href="/about/">关于</a>
       </li>
   </ul>
 </nav>
@@ -142,15 +131,11 @@
         <span class="post-time"> 2018-07-23 </span>
         
         
-        
       </div>
     </header>
 
-    
-    
-<div class="post-toc" id="post-toc">
+    <div class="post-toc" id="post-toc">
   <h2 class="post-toc-title">文章目录</h2>
-  
   <div class="post-toc-content always-active">
     <nav id="TableOfContents">
 <ul>
@@ -177,11 +162,6 @@
 </nav>
   </div>
 </div>
-
-    
-    
-
-    
     <div class="post-content">
       <p>discuz 接入 cas 实现 SSO 的方法。</p>
 
@@ -206,69 +186,183 @@
 <li><p>删除8-29行代码，删除31-32行代码</p></li>
 
 <li><p>添加以下代码，支持访问时 force 登录.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh"><span style="color:#75715e"># 需要 CAS 打开允许 iframe, 否则报错: Refused to display &#39;URL&#39; in a frame because it set &#39;X-Frame-Options&#39; to &#39;DENY&#39;</span>
-<span style="color:#75715e"># cas 配置：cas.httpWebRequest.header.xframe=false</span>
-&lt;script type<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;text/javascript&#34;</span>&gt;
-<span style="color:#f92672">(</span><span style="color:#66d9ef">function</span> <span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
-   var _body <span style="color:#f92672">=</span> document.body <span style="color:#f92672">||</span> document.getElementsByTagName<span style="color:#f92672">(</span><span style="color:#e6db74">&#39;body&#39;</span><span style="color:#f92672">)[</span><span style="color:#ae81ff">0</span><span style="color:#f92672">]</span>;
-   var iframe <span style="color:#f92672">=</span> document.createElement<span style="color:#f92672">(</span><span style="color:#e6db74">&#39;iframe&#39;</span><span style="color:#f92672">)</span>;
-   iframe.id <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;logcheck&#39;</span>;
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-sh" data-lang="sh"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-sh" data-lang="sh"><span class="c1"># 需要 CAS 打开允许 iframe, 否则报错: Refused to display &#39;URL&#39; in a frame because it set &#39;X-Frame-Options&#39; to &#39;DENY&#39;</span>
+<span class="c1"># cas 配置：cas.httpWebRequest.header.xframe=false</span>
+&lt;script <span class="nv">type</span><span class="o">=</span><span class="s2">&#34;text/javascript&#34;</span>&gt;
+<span class="o">(</span><span class="k">function</span> <span class="o">()</span> <span class="o">{</span>
+   var <span class="nv">_body</span> <span class="o">=</span> document.body <span class="o">||</span> document.getElementsByTagName<span class="o">(</span><span class="s1">&#39;body&#39;</span><span class="o">)[</span><span class="m">0</span><span class="o">]</span><span class="p">;</span>
+   var <span class="nv">iframe</span> <span class="o">=</span> document.createElement<span class="o">(</span><span class="s1">&#39;iframe&#39;</span><span class="o">)</span><span class="p">;</span>
+   iframe.id <span class="o">=</span> <span class="s1">&#39;logcheck&#39;</span><span class="p">;</span>
 
-   iframe.src <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;member.php?&#34;</span>+<span style="color:#f92672">((</span><span style="color:#e6db74">&#34;mod=logging&amp;action=loginCheck&#34;</span><span style="color:#f92672">))</span>;
-   iframe.style.display <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;none&#39;</span>;
-   _body.appendChild<span style="color:#f92672">(</span>iframe<span style="color:#f92672">)</span>;
-<span style="color:#f92672">})()</span>;
+   iframe.src <span class="o">=</span> <span class="s2">&#34;member.php?&#34;</span>+<span class="o">((</span><span class="s2">&#34;mod=logging&amp;action=loginCheck&#34;</span><span class="o">))</span><span class="p">;</span>
+   iframe.style.display <span class="o">=</span> <span class="s1">&#39;none&#39;</span><span class="p">;</span>
+   _body.appendChild<span class="o">(</span>iframe<span class="o">)</span><span class="p">;</span>
+<span class="o">})()</span><span class="p">;</span>
 &lt;/script&gt;
 
-<span style="color:#75715e"># TODO 现只能在 CAS 登录后才能登录，需做修改</span></code></pre></div></li>
+<span class="c1"># TODO 现只能在 CAS 登录后才能登录，需做修改</span></code></pre></td></tr></table>
+</div>
+</div></li>
 </ul>
 
 <h2 id="去除弹框登录">去除弹框登录</h2>
 
 <p>管理中心 -&gt; 界面 -&gt; 去掉浮动窗口（登录）</p>
 
-<p><img src="https://ld000.space/img/discuz-cas-1.png" alt="image" /></p>
+<p><img src="/img/discuz-cas-1.png" alt="image" /></p>
 
 <h2 id="在-cas-文件夹中创建-casclientconfig-php">在<code>CAS</code>文件夹中创建 <code>CasClientConfig.php</code></h2>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="color:#75715e">&lt;?php</span>
-<span style="color:#a6e22e">define</span> ( <span style="color:#e6db74">&#39;CAS_SERVER_HOSTNAME&#39;</span>, <span style="color:#e6db74">&#39;cas.com&#39;</span> );
-<span style="color:#a6e22e">define</span> ( <span style="color:#e6db74">&#39;CAS_SERVER_PORT&#39;</span>, <span style="color:#ae81ff">8080</span> ); 
-<span style="color:#a6e22e">define</span> ( <span style="color:#e6db74">&#39;CAS_SERVER_APP_NAME&#39;</span>, <span style="color:#e6db74">&#34;cas&#34;</span> ); 
-<span style="color:#75715e">?&gt;</span>
-</code></pre></div>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-php" data-lang="php"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span>
+<span class="nx">define</span> <span class="p">(</span> <span class="s1">&#39;CAS_SERVER_HOSTNAME&#39;</span><span class="p">,</span> <span class="s1">&#39;cas.com&#39;</span> <span class="p">);</span>
+<span class="nx">define</span> <span class="p">(</span> <span class="s1">&#39;CAS_SERVER_PORT&#39;</span><span class="p">,</span> <span class="mi">8080</span> <span class="p">);</span> 
+<span class="nx">define</span> <span class="p">(</span> <span class="s1">&#39;CAS_SERVER_APP_NAME&#39;</span><span class="p">,</span> <span class="s2">&#34;cas&#34;</span> <span class="p">);</span> 
+<span class="cp">?&gt;</span>
+</code></pre></td></tr></table>
+</div>
+</div>
 <h2 id="在-cas-文件夹中创建-casclient-php">在<code>CAS</code>文件夹中创建 <code>CasClient.php</code></h2>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="color:#75715e">&lt;?php</span>
-<span style="color:#66d9ef">require_once</span> <span style="color:#a6e22e">DISCUZ_ROOT</span><span style="color:#f92672">.</span><span style="color:#e6db74">&#39;./CAS/CasClientConfig.php&#39;</span>; <span style="color:#75715e">// 注意
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">require_once</span> <span style="color:#a6e22e">DISCUZ_ROOT</span><span style="color:#f92672">.</span><span style="color:#e6db74">&#39;./CAS/CAS.php&#39;</span>; <span style="color:#75715e">// 注意
-</span><span style="color:#75715e"></span>                                                  
-<span style="color:#75715e">// 初始化
-</span><span style="color:#75715e">//phpCAS::setDebug ();
-</span><span style="color:#75715e"></span> 
-<span style="color:#75715e">// initialize phpCAS
-</span><span style="color:#75715e"></span><span style="color:#a6e22e">phpCAS</span><span style="color:#f92672">::</span><span style="color:#a6e22e">client</span> ( <span style="color:#a6e22e">CAS_VERSION_2_0</span>, <span style="color:#a6e22e">CAS_SERVER_HOSTNAME</span>, <span style="color:#a6e22e">CAS_SERVER_PORT</span>, <span style="color:#a6e22e">CAS_SERVER_APP_NAME</span> );
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-php" data-lang="php"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span>
+<span class="k">require_once</span> <span class="nx">DISCUZ_ROOT</span><span class="o">.</span><span class="s1">&#39;./CAS/CasClientConfig.php&#39;</span><span class="p">;</span> <span class="c1">// 注意
+</span><span class="c1"></span><span class="k">require_once</span> <span class="nx">DISCUZ_ROOT</span><span class="o">.</span><span class="s1">&#39;./CAS/CAS.php&#39;</span><span class="p">;</span> <span class="c1">// 注意
+</span><span class="c1"></span>                                                  
+<span class="c1">// 初始化
+</span><span class="c1">//phpCAS::setDebug ();
+</span><span class="c1"></span> 
+<span class="c1">// initialize phpCAS
+</span><span class="c1"></span><span class="nx">phpCAS</span><span class="o">::</span><span class="na">client</span> <span class="p">(</span> <span class="nx">CAS_VERSION_2_0</span><span class="p">,</span> <span class="nx">CAS_SERVER_HOSTNAME</span><span class="p">,</span> <span class="nx">CAS_SERVER_PORT</span><span class="p">,</span> <span class="nx">CAS_SERVER_APP_NAME</span> <span class="p">);</span>
  
-<span style="color:#75715e">// no SSL validation for the CAS server
-</span><span style="color:#75715e"></span><span style="color:#a6e22e">phpCAS</span><span style="color:#f92672">::</span><span style="color:#a6e22e">setNoCasServerValidation</span> ();
+<span class="c1">// no SSL validation for the CAS server
+</span><span class="c1"></span><span class="nx">phpCAS</span><span class="o">::</span><span class="na">setNoCasServerValidation</span> <span class="p">();</span>
 
-<span style="color:#a6e22e">phpCAS</span><span style="color:#f92672">::</span><span style="color:#a6e22e">setNoClearTicketsFromUrl</span> ();
-<span style="color:#a6e22e">phpCAS</span><span style="color:#f92672">::</span><span style="color:#a6e22e">handleLogoutRequests</span>();
+<span class="nx">phpCAS</span><span class="o">::</span><span class="na">setNoClearTicketsFromUrl</span> <span class="p">();</span>
+<span class="nx">phpCAS</span><span class="o">::</span><span class="na">handleLogoutRequests</span><span class="p">();</span>
 
-<span style="color:#75715e">?&gt;</span>
-</code></pre></div>
+<span class="cp">?&gt;</span>
+</code></pre></td></tr></table>
+</div>
+</div>
 <h2 id="source-class-class-core-php第16行加入">source/class/class_core.php第16行加入</h2>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php">require_once DISCUZ_ROOT.&#34;CAS/CasClient.php&#34;;</code></pre></div>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-php" data-lang="php"><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-php" data-lang="php">require_once DISCUZ_ROOT.&#34;CAS/CasClient.php&#34;;</code></pre></td></tr></table>
+</div>
+</div>
 <h2 id="uc-client-control-user-php">uc_client/control/user.php</h2>
 
 <p>134行注释</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php">// elseif($user[&#39;password&#39;] != md5($passwordmd5.$user[&#39;salt&#39;])) {
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-php" data-lang="php"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-php" data-lang="php">// elseif($user[&#39;password&#39;] != md5($passwordmd5.$user[&#39;salt&#39;])) {
 // $status = -2;
-// } elseif($checkques <span style="color:#960050;background-color:#1e0010">&amp;&amp;</span> $user[&#39;secques&#39;] != $_ENV[&#39;user&#39;]-&gt;quescrypt($questionid, $answer)) {
+// } elseif($checkques <span class="err">&amp;&amp;</span> $user[&#39;secques&#39;] != $_ENV[&#39;user&#39;]-&gt;quescrypt($questionid, $answer)) {
 // $status = -3;
-// }</code></pre></div>
+// }</code></pre></td></tr></table>
+</div>
+</div>
 <p>注释 <code>onsynlogin</code>, <code>onsynlogout</code>, <code>onregister</code>方法</p>
 
 <h2 id="source-function-function-member-php-加入">source/function/function_member.php 加入</h2>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php">// 新加的方法，用以支持CAS 登录
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-php" data-lang="php"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-php" data-lang="php">// 新加的方法，用以支持CAS 登录
 function userloginCas($username, $ip = &#39;&#39;) {
     $return = array ();
     
@@ -282,7 +376,7 @@ function userloginCas($username, $ip = &#39;&#39;) {
     $duplicate = &#39;&#39;;
     list ( $tmp [&#39;uid&#39;], $tmp [&#39;username&#39;], $tmp [&#39;password&#39;], $tmp [&#39;email&#39;], $duplicate ) = $return [&#39;ucresult&#39;];
     $return [&#39;ucresult&#39;] = $tmp;
-    if ($duplicate <span style="color:#960050;background-color:#1e0010">&amp;&amp;</span> $return [&#39;ucresult&#39;] [&#39;uid&#39;] &gt; 0 || $return [&#39;ucresult&#39;] [&#39;uid&#39;] <span style="color:#960050;background-color:#1e0010">&lt;</span>= 0) {
+    if ($duplicate <span class="err">&amp;&amp;</span> $return [&#39;ucresult&#39;] [&#39;uid&#39;] &gt; 0 || $return [&#39;ucresult&#39;] [&#39;uid&#39;] <span class="err">&lt;</span>= 0) {
         $return [&#39;status&#39;] = 0;
         return $return;
     }
@@ -304,14 +398,45 @@ function userloginCas($username, $ip = &#39;&#39;) {
     }
     
     return $return;
-}</code></pre></div>
+}</code></pre></td></tr></table>
+</div>
+</div>
 <h2 id="source-class-class-member-php">source/class/class_member.php</h2>
 
 <p>51行注释并改为</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php">// if(!submitcheck(&#39;loginsubmit&#39;, 1, $seccodestatus)) {
-if (1 == 2) {</code></pre></div>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-php" data-lang="php"><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-php" data-lang="php">// if(!submitcheck(&#39;loginsubmit&#39;, 1, $seccodestatus)) {
+if (1 == 2) {</code></pre></td></tr></table>
+</div>
+</div>
 <p>92行 <code>$_G['username'] = $_G['member']['username'] = $_G['member']['password'] = ''</code> 后加入</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php">phpCAS::setNoClearTicketsFromUrl ();
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-php" data-lang="php"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-php" data-lang="php">phpCAS::setNoClearTicketsFromUrl ();
 // 这里会检测服务器端的退出的通知，就能实现php和其他语言平台间同步登出了  
 phpCAS::handleLogoutRequests();  
 $username=&#39;&#39;;
@@ -327,23 +452,94 @@ if(phpCAS::isAuthenticated()){
 // showmessage(&#39;profile_passwd_illegal&#39;);
 // }
 // $result = userlogin($_GET[&#39;username&#39;], $_GET[&#39;password&#39;], $_GET[&#39;questionid&#39;], $_GET[&#39;answer&#39;], $this-&gt;setting[&#39;autoidselect&#39;] ? &#39;auto&#39; : $_GET[&#39;loginfield&#39;], $_G[&#39;clientip&#39;]);
-$result = userloginCas($username, $_G[&#39;clientip&#39;]);</code></pre></div>
+$result = userloginCas($username, $_G[&#39;clientip&#39;]);</code></pre></td></tr></table>
+</div>
+</div>
 <p>347行 <code>on_logout</code> 方法</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php">if(defined(&#39;IN_MOBILE&#39;)) {
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-php" data-lang="php"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-php" data-lang="php">if(defined(&#39;IN_MOBILE&#39;)) {
     showmessage(&#39;location_logout_succeed_mobile&#39;, dreferer(), array(&#39;formhash&#39; =&gt; FORMHASH, &#39;referer&#39; =&gt; rawurlencode(dreferer())));
 } else {
     $service =  $_SERVER[&#39;HTTP_REFERER&#39;];
     phpCAS::logoutWithRedirectService ( $service );
 // showmessage(&#39;logout_succeed&#39;, dreferer(), array(&#39;formhash&#39; =&gt; FORMHASH, &#39;ucsynlogout&#39; =&gt; $ucsynlogout, &#39;referer&#39; =&gt; rawurlencode(dreferer())));
-}</code></pre></div>
+}</code></pre></td></tr></table>
+</div>
+</div>
 <p>386行 <code>on_register</code>方法中</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php">if(strpos($url_forward, $this-&gt;setting[&#39;regname&#39;]) !== false) {
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-php" data-lang="php"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-php" data-lang="php">if(strpos($url_forward, $this-&gt;setting[&#39;regname&#39;]) !== false) {
     $url_forward = &#39;forum.php&#39;;
 }
 // 修改掉防止当登录成功时无限跳转
-$url_forward = &#39;forum.php&#39;;</code></pre></div>
+$url_forward = &#39;forum.php&#39;;</code></pre></td></tr></table>
+</div>
+</div>
 <p><code>logging_ctl</code>类中 添加异步登录验证方法</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php">function on_loginCheck(){
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-php" data-lang="php"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-php" data-lang="php">function on_loginCheck(){
     global $_G;
     $username=&#39;&#39;;
     if(phpCAS::isAuthenticated()){
@@ -379,11 +575,13 @@ $url_forward = &#39;forum.php&#39;;</code></pre></div>
         dsetcookie(&#39;activationauth&#39;);
         dsetcookie(&#39;pmnum&#39;);
 
-        dexit(&#39;&lt;<span style="color:#f92672">script</span> <span style="color:#a6e22e">type</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;text/javascript&#34;</span>&gt;window.<span style="color:#a6e22e">top</span>.<span style="color:#a6e22e">location</span>.<span style="color:#a6e22e">reload</span>();&lt;/<span style="color:#f92672">script</span>&gt;&#39;);
+        dexit(&#39;<span class="p">&lt;</span><span class="nt">script</span> <span class="na">type</span><span class="o">=</span><span class="s">&#34;text/javascript&#34;</span><span class="p">&gt;</span><span class="nb">window</span><span class="p">.</span><span class="nx">top</span><span class="p">.</span><span class="nx">location</span><span class="p">.</span><span class="nx">reload</span><span class="p">();&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>&#39;);
     } else {
         dexit();
     }
-}</code></pre></div>
+}</code></pre></td></tr></table>
+</div>
+</div>
 <h2 id="source-module-member-member-logging-php-添加允许-logincheck-方法通过">source/module/member/member_logging.php 添加允许 <code>loginCheck</code> 方法通过</h2>
 
 <p>第15行改为 <code>if(!in_array($_GET['action'], array('login', 'logout','loginCheck')))</code></p>
@@ -409,7 +607,6 @@ $url_forward = &#39;forum.php&#39;;</code></pre></div>
 <code>$this-&gt;redirectToCas(false/* gateway */);</code></p>
     </div>
 
-    
     <div class="post-copyright">
   <p class="copyright-item">
     <span class="item-title">文章作者</span>
@@ -417,34 +614,40 @@ $url_forward = &#39;forum.php&#39;;</code></pre></div>
   </p>
   <p class="copyright-item">
     <span class="item-title">上次更新</span>
-    <span class="item-content">2018-07-23</span>
+    <span class="item-content">
+        2018-07-23
+        
+    </span>
   </p>
   
   
 </div>
-
+<div class="post-reward">
+  <input type="checkbox" name="reward" id="reward" hidden />
+  <label class="reward-button" for="reward">赞赏支持</label>
+  <div class="qr-code">
     
-    
-
-    <footer class="post-footer">
+    <label class="qr-code-image" for="reward">
+        <img class="image" src="/WechatIMG1.jpeg">
+        <span>微信打赏</span>
+      </label>
+    <label class="qr-code-image" for="reward">
+        <img class="image" src="/WechatIMG2.jpeg">
+        <span>支付宝打赏</span>
+      </label>
+  </div>
+</div><footer class="post-footer">
       <div class="post-tags">
-          
-          <a href="https://ld000.space/tags/discuz/">discuz</a>
-          
-          <a href="https://ld000.space/tags/cas/">cas</a>
-          
-        </div>
-
-      
+          <a href="/tags/discuz/">discuz</a>
+          <a href="/tags/cas/">cas</a>
+          </div>
       <nav class="post-nav">
-        
-          <a class="prev" href="https://ld000.space/post/make_redis_zset_support_multiple_sort/">
+        <a class="prev" href="/post/make_redis_zset_support_multiple_sort/">
             <i class="iconfont icon-left"></i>
             <span class="prev-text nav-default">让 Redis zset 支持多条件排序</span>
             <span class="prev-text nav-mobile">上一篇</span>
           </a>
-        
-          <a class="next" href="https://ld000.space/post/java_call_cnet/">
+        <a class="next" href="/post/java_call_cnet/">
             <span class="next-text nav-default">java 调用 c# 的方法</span>
             <span class="next-text nav-mobile">下一篇</span>
             <i class="iconfont icon-right"></i>
@@ -453,8 +656,7 @@ $url_forward = &#39;forum.php&#39;;</code></pre></div>
     </footer>
   </article>
         </div>
-        
-  <div id="disqus_thread"></div>
+        <div id="disqus_thread"></div>
     <script type="text/javascript">
     (function() {
       
@@ -468,6 +670,8 @@ $url_forward = &#39;forum.php&#39;;</code></pre></div>
     })();
     </script>
     <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+  
 
   
 
@@ -495,8 +699,7 @@ $url_forward = &#39;forum.php&#39;;</code></pre></div>
 
   <span class="copyright-year">
     &copy; 
-    
-      2017 - 
+    2017 - 
     2019
     <span class="heart">
       <i class="iconfont icon-heart"></i>
@@ -511,12 +714,10 @@ $url_forward = &#39;forum.php&#39;;</code></pre></div>
     </div>
   </div>
   
-<script src="https://ld000.space/lib/highlight/highlight.pack.js?v=20171001"></script><script type="text/javascript" src="https://ld000.space/lib/jquery/jquery-3.2.1.min.js"></script>
-  <script type="text/javascript" src="https://ld000.space/lib/slideout/slideout-1.0.1.min.js"></script>
-  <script type="text/javascript" src="https://ld000.space/lib/fancybox/jquery.fancybox-3.1.20.min.js"></script>
-
-
-<script type="text/javascript" src="https://ld000.space/dist/even.min.js?v=3.2.0"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
 
 
 <script type="application/javascript">
@@ -524,7 +725,7 @@ var doNotTrack = false;
 if (!doNotTrack) {
 	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
 	ga('create', 'UA-89678066-1', 'auto');
-	
+	ga('set', 'anonymizeIp', true);
 	ga('send', 'pageview');
 }
 </script>

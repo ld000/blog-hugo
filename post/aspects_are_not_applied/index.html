@@ -16,39 +16,28 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
 
 
-<meta name="author" content="ld000" />
-  <meta name="description" content=" 原文：http://denis-zhdanov.blogspot.com/2009/07/spring-aop-top-problem-1-aspects-are.html
+<meta name="author" content="ld000" /><meta name="description" content=" 原文：http://denis-zhdanov.blogspot.com/2009/07/spring-aop-top-problem-1-aspects-are.html
  这篇文章继续讨论从 Spring AOP top problem #2 - java.lang.ClassCastException: $Proxy7 开始的话题。在这个话题里，我想要说明一些现在接触 spring AOP 的 spring 用户(特别是新用户)讨论最多(从我的观点看来)的问题。
-" />
-
-  <meta name="keywords" content="Hugo, theme, even, java, ld000" />
+" /><meta name="keywords" content="Hugo, theme, even, java, ld000" />
 
 
 
 
 
 
-<meta name="generator" content="Hugo 0.60.0-DEV" />
+<meta name="generator" content="Hugo 0.60.0-DEV with theme even" />
 
 
 <link rel="canonical" href="https://ld000.space/post/aspects_are_not_applied/" />
-
-<link rel="apple-touch-icon" sizes="180x180" href="https://ld000.space/apple-touch-icon.png">
-<link rel="icon" type="image/png" sizes="32x32" href="https://ld000.space/favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="https://ld000.space/favicon-16x16.png">
-<link rel="manifest" href="https://ld000.space/manifest.json">
-<link rel="mask-icon" href="https://ld000.space/safari-pinned-tab.svg" color="#5bbad5">
-
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
 
 
-
-
-
-
-<link href="https://ld000.space/dist/even.min.css?v=3.2.0" rel="stylesheet">
-<link href="https://ld000.space/lib/fancybox/jquery.fancybox-3.1.20.min.css" rel="stylesheet">
-
-
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
 
 
 <meta property="og:title" content="翻译: Spring AOP 讨论最多的问题 #1 - aspects 没有生效" />
@@ -71,7 +60,7 @@
 
 <meta itemprop="datePublished" content="2017-06-12T00:00:00&#43;00:00" />
 <meta itemprop="dateModified" content="2017-06-12T00:00:00&#43;00:00" />
-<meta itemprop="wordCount" content="1188">
+<meta itemprop="wordCount" content="1288">
 
 
 
@@ -97,7 +86,7 @@
 <body>
   <div id="mobile-navbar" class="mobile-navbar">
   <div class="mobile-header-logo">
-    <a href="https://ld000.space/" class="logo">ld000</a>
+    <a href="/" class="logo">ld000</a>
   </div>
   <div class="mobile-navbar-icon">
     <span></span>
@@ -107,15 +96,15 @@
 </div>
 <nav id="mobile-menu" class="mobile-menu slideout-menu">
   <ul class="mobile-menu-list">
-    <a href="https://ld000.space/">
+    <a href="/">
         <li class="mobile-menu-item">首页</li>
-      </a><a href="https://ld000.space/post/">
+      </a><a href="/post/">
         <li class="mobile-menu-item">归档</li>
-      </a><a href="https://ld000.space/tags/">
+      </a><a href="/tags/">
         <li class="mobile-menu-item">标签</li>
-      </a><a href="https://ld000.space/links/">
+      </a><a href="/links/">
         <li class="mobile-menu-item">友链</li>
-      </a><a href="https://ld000.space/about/">
+      </a><a href="/about/">
         <li class="mobile-menu-item">关于</li>
       </a>
   </ul>
@@ -123,21 +112,21 @@
   <div class="container" id="mobile-panel">
     <header id="header" class="header">
         <div class="logo-wrapper">
-  <a href="https://ld000.space/" class="logo">ld000</a>
+  <a href="/" class="logo">ld000</a>
 </div>
 
 <nav class="site-navbar">
   <ul id="menu" class="menu">
     <li class="menu-item">
-        <a class="menu-item-link" href="https://ld000.space/">首页</a>
+        <a class="menu-item-link" href="/">首页</a>
       </li><li class="menu-item">
-        <a class="menu-item-link" href="https://ld000.space/post/">归档</a>
+        <a class="menu-item-link" href="/post/">归档</a>
       </li><li class="menu-item">
-        <a class="menu-item-link" href="https://ld000.space/tags/">标签</a>
+        <a class="menu-item-link" href="/tags/">标签</a>
       </li><li class="menu-item">
-        <a class="menu-item-link" href="https://ld000.space/links/">友链</a>
+        <a class="menu-item-link" href="/links/">友链</a>
       </li><li class="menu-item">
-        <a class="menu-item-link" href="https://ld000.space/about/">关于</a>
+        <a class="menu-item-link" href="/about/">关于</a>
       </li>
   </ul>
 </nav>
@@ -155,24 +144,15 @@
         <span class="post-time"> 2017-06-12 </span>
         
         
-        
       </div>
     </header>
 
-    
-    
-<div class="post-toc" id="post-toc">
+    <div class="post-toc" id="post-toc">
   <h2 class="post-toc-title">文章目录</h2>
-  
   <div class="post-toc-content always-active">
     
   </div>
 </div>
-
-    
-    
-
-    
     <div class="post-content">
       <blockquote>
 <p>原文：<a href="http://denis-zhdanov.blogspot.com/2009/07/spring-aop-top-problem-1-aspects-are.html">http://denis-zhdanov.blogspot.com/2009/07/spring-aop-top-problem-1-aspects-are.html</a></p>
@@ -187,123 +167,265 @@
 <p>让我们创建一个说明这个问题的例子。假设我们是 spring 的新用户而且用 spring aop 写了一个非常酷的代码，并且运行的很好。</p>
 
 <p><code>AopService.java</code></p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">package</span> com.spring.aop<span style="color:#f92672">;</span>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="kn">package</span> <span class="nn">com.spring.aop</span><span class="o">;</span>
 
-<span style="color:#f92672">import</span> org.springframework.stereotype.Component<span style="color:#f92672">;</span>
+<span class="kn">import</span> <span class="nn">org.springframework.stereotype.Component</span><span class="o">;</span>
 
-<span style="color:#a6e22e">@Component</span>
-<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">AopService</span> <span style="color:#f92672">{</span>
+<span class="nd">@Component</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">AopService</span> <span class="o">{</span>
 
-    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">service</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
-        System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;AopService.service()&#34;</span><span style="color:#f92672">);</span>
-    <span style="color:#f92672">}</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">service</span><span class="o">()</span> <span class="o">{</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;AopService.service()&#34;</span><span class="o">);</span>
+    <span class="o">}</span>
 
-    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">anotherService</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
-        System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;AopService.anotherService()&#34;</span><span style="color:#f92672">);</span>
-    <span style="color:#f92672">}</span>
-<span style="color:#f92672">}</span></code></pre></div>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">anotherService</span><span class="o">()</span> <span class="o">{</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;AopService.anotherService()&#34;</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span></code></pre></td></tr></table>
+</div>
+</div>
 <p><code>TestAspect.java</code></p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">package</span> com.spring.aop<span style="color:#f92672">;</span>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="kn">package</span> <span class="nn">com.spring.aop</span><span class="o">;</span>
 
-<span style="color:#f92672">import</span> org.aspectj.lang.ProceedingJoinPoint<span style="color:#f92672">;</span>
-<span style="color:#f92672">import</span> org.aspectj.lang.annotation.Aspect<span style="color:#f92672">;</span>
-<span style="color:#f92672">import</span> org.aspectj.lang.annotation.Around<span style="color:#f92672">;</span>
-<span style="color:#f92672">import</span> org.springframework.stereotype.Component<span style="color:#f92672">;</span>
+<span class="kn">import</span> <span class="nn">org.aspectj.lang.ProceedingJoinPoint</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.aspectj.lang.annotation.Aspect</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.aspectj.lang.annotation.Around</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.springframework.stereotype.Component</span><span class="o">;</span>
 
-<span style="color:#a6e22e">@Component</span>
-<span style="color:#a6e22e">@Aspect</span>
-<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">TestAspect</span> <span style="color:#f92672">{</span>
+<span class="nd">@Component</span>
+<span class="nd">@Aspect</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">TestAspect</span> <span class="o">{</span>
 
-    <span style="color:#a6e22e">@Around</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;execution(* com.spring.aop.AopService.*(..))&#34;</span><span style="color:#f92672">)</span>
-    <span style="color:#66d9ef">public</span> Object <span style="color:#a6e22e">advice</span><span style="color:#f92672">(</span>ProceedingJoinPoint joinPoint<span style="color:#f92672">)</span> <span style="color:#66d9ef">throws</span> Throwable <span style="color:#f92672">{</span>
-        System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;TestAspect.advice()&#34;</span><span style="color:#f92672">);</span>
-        <span style="color:#66d9ef">return</span> joinPoint<span style="color:#f92672">.</span><span style="color:#a6e22e">proceed</span><span style="color:#f92672">();</span>
-    <span style="color:#f92672">}</span>
-<span style="color:#f92672">}</span></code></pre></div>
+    <span class="nd">@Around</span><span class="o">(</span><span class="s">&#34;execution(* com.spring.aop.AopService.*(..))&#34;</span><span class="o">)</span>
+    <span class="kd">public</span> <span class="n">Object</span> <span class="nf">advice</span><span class="o">(</span><span class="n">ProceedingJoinPoint</span> <span class="n">joinPoint</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Throwable</span> <span class="o">{</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;TestAspect.advice()&#34;</span><span class="o">);</span>
+        <span class="k">return</span> <span class="n">joinPoint</span><span class="o">.</span><span class="na">proceed</span><span class="o">();</span>
+    <span class="o">}</span>
+<span class="o">}</span></code></pre></td></tr></table>
+</div>
+</div>
 <p><code>spring-config.xml</code></p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-xml" data-lang="xml"><span style="color:#75715e">&lt;?xml version=&#34;1.0&#34; encoding=&#34;UTF-8&#34;?&gt;</span>
-<span style="color:#f92672">&lt;beans</span> <span style="color:#a6e22e">xmlns=</span><span style="color:#e6db74">&#34;http://www.springframework.org/schema/beans&#34;</span>
-       <span style="color:#a6e22e">xmlns:xsi=</span><span style="color:#e6db74">&#34;http://www.w3.org/2001/XMLSchema-instance&#34;</span>
-       <span style="color:#a6e22e">xmlns:aop=</span><span style="color:#e6db74">&#34;http://www.springframework.org/schema/aop&#34;</span>
-       <span style="color:#a6e22e">xmlns:context=</span><span style="color:#e6db74">&#34;http://www.springframework.org/schema/context&#34;</span>
-       <span style="color:#a6e22e">xsi:schemaLocation=</span><span style="color:#e6db74">&#34;
-</span><span style="color:#e6db74">  http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
-</span><span style="color:#e6db74">  http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd
-</span><span style="color:#e6db74">  http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd&#34;</span><span style="color:#f92672">&gt;</span>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-xml" data-lang="xml"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-xml" data-lang="xml"><span class="cp">&lt;?xml version=&#34;1.0&#34; encoding=&#34;UTF-8&#34;?&gt;</span>
+<span class="nt">&lt;beans</span> <span class="na">xmlns=</span><span class="s">&#34;http://www.springframework.org/schema/beans&#34;</span>
+       <span class="na">xmlns:xsi=</span><span class="s">&#34;http://www.w3.org/2001/XMLSchema-instance&#34;</span>
+       <span class="na">xmlns:aop=</span><span class="s">&#34;http://www.springframework.org/schema/aop&#34;</span>
+       <span class="na">xmlns:context=</span><span class="s">&#34;http://www.springframework.org/schema/context&#34;</span>
+       <span class="na">xsi:schemaLocation=</span><span class="s">&#34;
+</span><span class="s">  http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+</span><span class="s">  http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd
+</span><span class="s">  http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd&#34;</span><span class="nt">&gt;</span>
 
-    <span style="color:#f92672">&lt;context:component-scan</span> <span style="color:#a6e22e">base-package=</span><span style="color:#e6db74">&#34;com.spring.aop&#34;</span><span style="color:#f92672">/&gt;</span>
-    <span style="color:#f92672">&lt;aop:aspectj-autoproxy/&gt;</span>
+    <span class="nt">&lt;context:component-scan</span> <span class="na">base-package=</span><span class="s">&#34;com.spring.aop&#34;</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;aop:aspectj-autoproxy/&gt;</span>
 
-<span style="color:#f92672">&lt;/beans&gt;</span></code></pre></div>
+<span class="nt">&lt;/beans&gt;</span></code></pre></td></tr></table>
+</div>
+</div>
 <p><code>SpringStart.java</code></p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">package</span> com.spring<span style="color:#f92672">;</span>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="kn">package</span> <span class="nn">com.spring</span><span class="o">;</span>
 
-<span style="color:#f92672">import</span> com.spring.aop.AopService<span style="color:#f92672">;</span>
-<span style="color:#f92672">import</span> org.springframework.context.support.ClassPathXmlApplicationContext<span style="color:#f92672">;</span>
+<span class="kn">import</span> <span class="nn">com.spring.aop.AopService</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.springframework.context.support.ClassPathXmlApplicationContext</span><span class="o">;</span>
 
-<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">SpringStart</span> <span style="color:#f92672">{</span>
-    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span><span style="color:#f92672">(</span>String<span style="color:#f92672">[]</span> args<span style="color:#f92672">)</span> <span style="color:#66d9ef">throws</span> Exception <span style="color:#f92672">{</span>
-        ClassPathXmlApplicationContext context <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ClassPathXmlApplicationContext<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;spring-config.xml&#34;</span><span style="color:#f92672">);</span>
-        AopService service <span style="color:#f92672">=</span> context<span style="color:#f92672">.</span><span style="color:#a6e22e">getBeansOfType</span><span style="color:#f92672">(</span>AopService<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">).</span><span style="color:#a6e22e">values</span><span style="color:#f92672">().</span><span style="color:#a6e22e">iterator</span><span style="color:#f92672">().</span><span style="color:#a6e22e">next</span><span style="color:#f92672">();</span>
-        service<span style="color:#f92672">.</span><span style="color:#a6e22e">service</span><span style="color:#f92672">();</span>
-        service<span style="color:#f92672">.</span><span style="color:#a6e22e">anotherService</span><span style="color:#f92672">();</span>
-    <span style="color:#f92672">}</span>
-<span style="color:#f92672">}</span></code></pre></div>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">SpringStart</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+        <span class="n">ClassPathXmlApplicationContext</span> <span class="n">context</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ClassPathXmlApplicationContext</span><span class="o">(</span><span class="s">&#34;spring-config.xml&#34;</span><span class="o">);</span>
+        <span class="n">AopService</span> <span class="n">service</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="na">getBeansOfType</span><span class="o">(</span><span class="n">AopService</span><span class="o">.</span><span class="na">class</span><span class="o">).</span><span class="na">values</span><span class="o">().</span><span class="na">iterator</span><span class="o">().</span><span class="na">next</span><span class="o">();</span>
+        <span class="n">service</span><span class="o">.</span><span class="na">service</span><span class="o">();</span>
+        <span class="n">service</span><span class="o">.</span><span class="na">anotherService</span><span class="o">();</span>
+    <span class="o">}</span>
+<span class="o">}</span></code></pre></td></tr></table>
+</div>
+</div>
 <p>我们创建了一个包含简单的只会打印一些输出来说明被调用过的方法和简单的 aspect 注入这个类中所有 public 方法并且打印信息来说明注入被执行了的 service 类。如果我们执行 <code>SpringStart</code> 类，我们会看到期望的输出 - 方法都被注入成功。</p>
-
-<pre><code>TestAspect.advice()
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">TestAspect.advice()
 AopService.service()
 TestAspect.advice()
-AopService.anotherService()
-</code></pre>
-
+AopService.anotherService()</pre></td></tr></table>
+</div>
+</div>
 <p>让我们稍微拓展下 service 类。</p>
 
 <p><code>AopService.java</code></p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">package</span> com.spring.aop<span style="color:#f92672">;</span>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="kn">package</span> <span class="nn">com.spring.aop</span><span class="o">;</span>
 
-<span style="color:#f92672">import</span> org.springframework.stereotype.Component<span style="color:#f92672">;</span>
+<span class="kn">import</span> <span class="nn">org.springframework.stereotype.Component</span><span class="o">;</span>
 
-<span style="color:#a6e22e">@Component</span>
-<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">AopService</span> <span style="color:#f92672">{</span>
+<span class="nd">@Component</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">AopService</span> <span class="o">{</span>
 
-    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">service</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
-        System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;AopService.service()&#34;</span><span style="color:#f92672">);</span>
-    <span style="color:#f92672">}</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">service</span><span class="o">()</span> <span class="o">{</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;AopService.service()&#34;</span><span class="o">);</span>
+    <span class="o">}</span>
 
-    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">anotherService</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
-        System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;AopService.anotherService(). Calling AopService.service()...&#34;</span><span style="color:#f92672">);</span>
-        service<span style="color:#f92672">();</span>
-    <span style="color:#f92672">}</span>
-<span style="color:#f92672">}</span></code></pre></div>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">anotherService</span><span class="o">()</span> <span class="o">{</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;AopService.anotherService(). Calling AopService.service()...&#34;</span><span class="o">);</span>
+        <span class="n">service</span><span class="o">();</span>
+    <span class="o">}</span>
+<span class="o">}</span></code></pre></td></tr></table>
+</div>
+</div>
 <p>我们期望 aspect 执行 3次 - <code>service()</code> 和 <code>anotherService()</code> 在 <code>SpringStart.main()</code> 中调用，<code>service()</code> 在 <code>AopService.anotherService()</code> 中调用。然而，如果我们运行这个例子我们发现 aspect 只执行了两次（从 <code>SpringStart.main()</code> 开始执行）i.e. <code>AopService.anotherService()</code> 中调用的 <code>service()</code> 没有被注入。</p>
-
-<pre><code>TestAspect.advice()
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">TestAspect.advice()
 AopService.service()
 TestAspect.advice()
 AopService.anotherService(). Calling AopService.service()...
-AopService.service()
-</code></pre>
-
+AopService.service()</pre></td></tr></table>
+</div>
+</div>
 <p>通常，problem root is tightly connected to <a href="https://www.joelonsoftware.com/2002/11/11/the-law-of-leaky-abstractions/">The Law of Leaky Abstractions</a>。I.e. 我们对 aspect 的表现有特别的期待但是没有发现 spring aop 的规则不允许这些期待实现。</p>
 
 <p>通常的解释是 spring AOP 是基于代理(proxy-based)的，i.e. 他假定当 bean 作为依赖被使用，他的方法应该用 aspect 代理包裹(be advised by particular aspect(s) the container injects aspect-aware bean proxy)而不是 bean 本身。例如，返回的代理使用和和下面代码近似的方法:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">AopServiceProxy</span> <span style="color:#f92672">{</span>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">AopServiceProxy</span> <span class="o">{</span>
 
-    <span style="color:#75715e">// Assuming that corresponding setters are introduced and the fields are defined.
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">private</span> TestAspect aspect<span style="color:#f92672">;</span>
-    <span style="color:#66d9ef">private</span> AopService rawService<span style="color:#f92672">;</span>
+    <span class="c1">// Assuming that corresponding setters are introduced and the fields are defined.
+</span><span class="c1"></span>    <span class="kd">private</span> <span class="n">TestAspect</span> <span class="n">aspect</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="n">AopService</span> <span class="n">rawService</span><span class="o">;</span>
 
-    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">service</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
-        aspect<span style="color:#f92672">.</span><span style="color:#a6e22e">advice</span><span style="color:#f92672">();</span>
-        rawService<span style="color:#f92672">.</span><span style="color:#a6e22e">service</span><span style="color:#f92672">();</span>
-    <span style="color:#f92672">}</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">service</span><span class="o">()</span> <span class="o">{</span>
+        <span class="n">aspect</span><span class="o">.</span><span class="na">advice</span><span class="o">();</span>
+        <span class="n">rawService</span><span class="o">.</span><span class="na">service</span><span class="o">();</span>
+    <span class="o">}</span>
 
-    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">anotherService</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
-        aspect<span style="color:#f92672">.</span><span style="color:#a6e22e">advice</span><span style="color:#f92672">();</span>
-        anotherService<span style="color:#f92672">();</span>
-    <span style="color:#f92672">}</span>
-<span style="color:#f92672">}</span></code></pre></div>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">anotherService</span><span class="o">()</span> <span class="o">{</span>
+        <span class="n">aspect</span><span class="o">.</span><span class="na">advice</span><span class="o">();</span>
+        <span class="n">anotherService</span><span class="o">();</span>
+    <span class="o">}</span>
+<span class="o">}</span></code></pre></td></tr></table>
+</div>
+</div>
 <p>I.e. 这个代理被 aspect 包裹而且在调用 <code>raw</code> bean 前他调用了必要的 aspect 方法。然而，上一个 <code>AopService</code> 实现在 <code>anotherService()</code> 内调用了 <code>service()</code> - 这样代理无法注入因为这样调用违反了 &lsquo;this&rsquo; 原则, i.e. 这个方法是 &lsquo;rawBean&rsquo; 自己调用的。这就是为什么 aspect 在这种情况下不起作用的答案。</p>
 
 <p>现在，当我们明白了问题原因我们来聊聊怎么解决它。至少有三种方法：</p>
@@ -319,7 +441,6 @@ AopService.service()
 <p>我会写一篇文章来说明在 spring 中怎么使用各种类型的 aspectj weaving，这样会更加清楚的说明这个问题。</p>
     </div>
 
-    
     <div class="post-copyright">
   <p class="copyright-item">
     <span class="item-title">文章作者</span>
@@ -327,36 +448,41 @@ AopService.service()
   </p>
   <p class="copyright-item">
     <span class="item-title">上次更新</span>
-    <span class="item-content">2017-06-12</span>
+    <span class="item-content">
+        2017-06-12
+        
+    </span>
   </p>
   
   
 </div>
-
+<div class="post-reward">
+  <input type="checkbox" name="reward" id="reward" hidden />
+  <label class="reward-button" for="reward">赞赏支持</label>
+  <div class="qr-code">
     
-    
-
-    <footer class="post-footer">
+    <label class="qr-code-image" for="reward">
+        <img class="image" src="/WechatIMG1.jpeg">
+        <span>微信打赏</span>
+      </label>
+    <label class="qr-code-image" for="reward">
+        <img class="image" src="/WechatIMG2.jpeg">
+        <span>支付宝打赏</span>
+      </label>
+  </div>
+</div><footer class="post-footer">
       <div class="post-tags">
-          
-          <a href="https://ld000.space/tags/aspect/">aspect</a>
-          
-          <a href="https://ld000.space/tags/spring/">spring</a>
-          
-          <a href="https://ld000.space/tags/java/">java</a>
-          
-        </div>
-
-      
+          <a href="/tags/aspect/">aspect</a>
+          <a href="/tags/spring/">spring</a>
+          <a href="/tags/java/">java</a>
+          </div>
       <nav class="post-nav">
-        
-          <a class="prev" href="https://ld000.space/post/java_call_cnet/">
+        <a class="prev" href="/post/java_call_cnet/">
             <i class="iconfont icon-left"></i>
             <span class="prev-text nav-default">java 调用 c# 的方法</span>
             <span class="prev-text nav-mobile">上一篇</span>
           </a>
-        
-          <a class="next" href="https://ld000.space/post/xyms/">
+        <a class="next" href="/post/xyms/">
             <span class="next-text nav-default">响应模式</span>
             <span class="next-text nav-mobile">下一篇</span>
             <i class="iconfont icon-right"></i>
@@ -365,8 +491,7 @@ AopService.service()
     </footer>
   </article>
         </div>
-        
-  <div id="disqus_thread"></div>
+        <div id="disqus_thread"></div>
     <script type="text/javascript">
     (function() {
       
@@ -380,6 +505,8 @@ AopService.service()
     })();
     </script>
     <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+  
 
   
 
@@ -407,8 +534,7 @@ AopService.service()
 
   <span class="copyright-year">
     &copy; 
-    
-      2017 - 
+    2017 - 
     2019
     <span class="heart">
       <i class="iconfont icon-heart"></i>
@@ -423,12 +549,10 @@ AopService.service()
     </div>
   </div>
   
-<script src="https://ld000.space/lib/highlight/highlight.pack.js?v=20171001"></script><script type="text/javascript" src="https://ld000.space/lib/jquery/jquery-3.2.1.min.js"></script>
-  <script type="text/javascript" src="https://ld000.space/lib/slideout/slideout-1.0.1.min.js"></script>
-  <script type="text/javascript" src="https://ld000.space/lib/fancybox/jquery.fancybox-3.1.20.min.js"></script>
-
-
-<script type="text/javascript" src="https://ld000.space/dist/even.min.js?v=3.2.0"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
 
 
 <script type="application/javascript">
@@ -436,7 +560,7 @@ var doNotTrack = false;
 if (!doNotTrack) {
 	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
 	ga('create', 'UA-89678066-1', 'auto');
-	
+	ga('set', 'anonymizeIp', true);
 	ga('send', 'pageview');
 }
 </script>

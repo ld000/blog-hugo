@@ -16,38 +16,27 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
 
 
-<meta name="author" content="ld000" />
-  <meta name="description" content="java 调用 c# 程序的几种方式。
-" />
-
-  <meta name="keywords" content="Hugo, theme, even, java, ld000" />
+<meta name="author" content="ld000" /><meta name="description" content="java 调用 c# 程序的几种方式。
+" /><meta name="keywords" content="Hugo, theme, even, java, ld000" />
 
 
 
 
 
 
-<meta name="generator" content="Hugo 0.60.0-DEV" />
+<meta name="generator" content="Hugo 0.60.0-DEV with theme even" />
 
 
 <link rel="canonical" href="https://ld000.space/post/java_call_cnet/" />
-
-<link rel="apple-touch-icon" sizes="180x180" href="https://ld000.space/apple-touch-icon.png">
-<link rel="icon" type="image/png" sizes="32x32" href="https://ld000.space/favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="https://ld000.space/favicon-16x16.png">
-<link rel="manifest" href="https://ld000.space/manifest.json">
-<link rel="mask-icon" href="https://ld000.space/safari-pinned-tab.svg" color="#5bbad5">
-
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
 
 
-
-
-
-
-<link href="https://ld000.space/dist/even.min.css?v=3.2.0" rel="stylesheet">
-<link href="https://ld000.space/lib/fancybox/jquery.fancybox-3.1.20.min.css" rel="stylesheet">
-
-
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
 
 
 <meta property="og:title" content="java 调用 c# 的方法" />
@@ -62,7 +51,7 @@
 
 <meta itemprop="datePublished" content="2017-06-28T00:00:00&#43;00:00" />
 <meta itemprop="dateModified" content="2017-06-28T00:00:00&#43;00:00" />
-<meta itemprop="wordCount" content="735">
+<meta itemprop="wordCount" content="761">
 
 
 
@@ -84,7 +73,7 @@
 <body>
   <div id="mobile-navbar" class="mobile-navbar">
   <div class="mobile-header-logo">
-    <a href="https://ld000.space/" class="logo">ld000</a>
+    <a href="/" class="logo">ld000</a>
   </div>
   <div class="mobile-navbar-icon">
     <span></span>
@@ -94,15 +83,15 @@
 </div>
 <nav id="mobile-menu" class="mobile-menu slideout-menu">
   <ul class="mobile-menu-list">
-    <a href="https://ld000.space/">
+    <a href="/">
         <li class="mobile-menu-item">首页</li>
-      </a><a href="https://ld000.space/post/">
+      </a><a href="/post/">
         <li class="mobile-menu-item">归档</li>
-      </a><a href="https://ld000.space/tags/">
+      </a><a href="/tags/">
         <li class="mobile-menu-item">标签</li>
-      </a><a href="https://ld000.space/links/">
+      </a><a href="/links/">
         <li class="mobile-menu-item">友链</li>
-      </a><a href="https://ld000.space/about/">
+      </a><a href="/about/">
         <li class="mobile-menu-item">关于</li>
       </a>
   </ul>
@@ -110,21 +99,21 @@
   <div class="container" id="mobile-panel">
     <header id="header" class="header">
         <div class="logo-wrapper">
-  <a href="https://ld000.space/" class="logo">ld000</a>
+  <a href="/" class="logo">ld000</a>
 </div>
 
 <nav class="site-navbar">
   <ul id="menu" class="menu">
     <li class="menu-item">
-        <a class="menu-item-link" href="https://ld000.space/">首页</a>
+        <a class="menu-item-link" href="/">首页</a>
       </li><li class="menu-item">
-        <a class="menu-item-link" href="https://ld000.space/post/">归档</a>
+        <a class="menu-item-link" href="/post/">归档</a>
       </li><li class="menu-item">
-        <a class="menu-item-link" href="https://ld000.space/tags/">标签</a>
+        <a class="menu-item-link" href="/tags/">标签</a>
       </li><li class="menu-item">
-        <a class="menu-item-link" href="https://ld000.space/links/">友链</a>
+        <a class="menu-item-link" href="/links/">友链</a>
       </li><li class="menu-item">
-        <a class="menu-item-link" href="https://ld000.space/about/">关于</a>
+        <a class="menu-item-link" href="/about/">关于</a>
       </li>
   </ul>
 </nav>
@@ -142,15 +131,11 @@
         <span class="post-time"> 2017-06-28 </span>
         
         
-        
       </div>
     </header>
 
-    
-    
-<div class="post-toc" id="post-toc">
+    <div class="post-toc" id="post-toc">
   <h2 class="post-toc-title">文章目录</h2>
-  
   <div class="post-toc-content always-active">
     <nav id="TableOfContents">
 <ul>
@@ -166,11 +151,6 @@
 </nav>
   </div>
 </div>
-
-    
-    
-
-    
     <div class="post-content">
       <p>java 调用 c# 程序的几种方式。</p>
 
@@ -191,26 +171,52 @@
 <h2 id="jni4net">jni4net</h2>
 
 <p>github: <a href="https://github.com/jni4net/jni4net">https://github.com/jni4net/jni4net</a></p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">import</span> java.io.File<span style="color:#f92672">;</span>
-<span style="color:#f92672">import</span> java.io.IOException<span style="color:#f92672">;</span>
-<span style="color:#f92672">import</span> testlib.Test<span style="color:#f92672">;</span>
-<span style="color:#f92672">import</span> net.sf.jni4net.Bridge<span style="color:#f92672">;</span>
-<span style="color:#f92672">...</span>
-        <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="kn">import</span> <span class="nn">java.io.File</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.io.IOException</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">testlib.Test</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">net.sf.jni4net.Bridge</span><span class="o">;</span>
+<span class="o">...</span>
+        <span class="k">try</span> <span class="o">{</span>
 
-            Bridge<span style="color:#f92672">.</span><span style="color:#a6e22e">setVerbose</span><span style="color:#f92672">(</span><span style="color:#66d9ef">true</span><span style="color:#f92672">);</span>
-            Bridge<span style="color:#f92672">.</span><span style="color:#a6e22e">init</span><span style="color:#f92672">();</span>
+            <span class="n">Bridge</span><span class="o">.</span><span class="na">setVerbose</span><span class="o">(</span><span class="kc">true</span><span class="o">);</span>
+            <span class="n">Bridge</span><span class="o">.</span><span class="na">init</span><span class="o">();</span>
 
-            Bridge<span style="color:#f92672">.</span><span style="color:#a6e22e">LoadAndRegisterAssemblyFrom</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> File<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;testlib.j4n.dll&#34;</span><span style="color:#f92672">));</span>
+            <span class="n">Bridge</span><span class="o">.</span><span class="na">LoadAndRegisterAssemblyFrom</span><span class="o">(</span><span class="k">new</span> <span class="n">File</span><span class="o">(</span><span class="s">&#34;testlib.j4n.dll&#34;</span><span class="o">));</span>
 
-        <span style="color:#f92672">}</span> <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>IOException e<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            <span style="color:#75715e">// TODO Auto-generated catch block
-</span><span style="color:#75715e"></span>            e<span style="color:#f92672">.</span><span style="color:#a6e22e">printStackTrace</span><span style="color:#f92672">();</span>
-        <span style="color:#f92672">}</span>
+        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">IOException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+            <span class="c1">// TODO Auto-generated catch block
+</span><span class="c1"></span>            <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+        <span class="o">}</span>
 
-        Test test <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Test<span style="color:#f92672">();</span>
-        test<span style="color:#f92672">.</span><span style="color:#a6e22e">Hello</span><span style="color:#f92672">();</span>
-        test<span style="color:#f92672">.</span><span style="color:#a6e22e">Repeat</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;It works!&#34;</span><span style="color:#f92672">);</span></code></pre></div>
+        <span class="n">Test</span> <span class="n">test</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Test</span><span class="o">();</span>
+        <span class="n">test</span><span class="o">.</span><span class="na">Hello</span><span class="o">();</span>
+        <span class="n">test</span><span class="o">.</span><span class="na">Repeat</span><span class="o">(</span><span class="s">&#34;It works!&#34;</span><span class="o">);</span></code></pre></td></tr></table>
+</div>
+</div>
 <p>缺点：</p>
 
 <ol>
@@ -222,12 +228,24 @@
 <h2 id="javonet">javonet</h2>
 
 <p>按年收费</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">GenerateRandomNumber</span><span style="color:#f92672">()</span> <span style="color:#66d9ef">throws</span> JavonetException <span style="color:#f92672">{</span>
-    NObject objRandom <span style="color:#f92672">=</span> Javonet<span style="color:#f92672">.</span><span style="color:#a6e22e">New</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;System.Random&#34;</span><span style="color:#f92672">);</span>
-    <span style="color:#66d9ef">int</span> value <span style="color:#f92672">=</span> objRandom<span style="color:#f92672">.</span><span style="color:#a6e22e">invoke</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Next&#34;</span><span style="color:#f92672">,</span>10<span style="color:#f92672">,</span>20<span style="color:#f92672">);</span>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kt">void</span> <span class="nf">GenerateRandomNumber</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">JavonetException</span> <span class="o">{</span>
+    <span class="n">NObject</span> <span class="n">objRandom</span> <span class="o">=</span> <span class="n">Javonet</span><span class="o">.</span><span class="na">New</span><span class="o">(</span><span class="s">&#34;System.Random&#34;</span><span class="o">);</span>
+    <span class="kt">int</span> <span class="n">value</span> <span class="o">=</span> <span class="n">objRandom</span><span class="o">.</span><span class="na">invoke</span><span class="o">(</span><span class="s">&#34;Next&#34;</span><span class="o">,</span><span class="n">10</span><span class="o">,</span><span class="n">20</span><span class="o">);</span>
 
-    System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span>value<span style="color:#f92672">);</span>
-<span style="color:#f92672">}</span></code></pre></div>
+    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">value</span><span class="o">);</span>
+<span class="o">}</span></code></pre></td></tr></table>
+</div>
+</div>
 <h2 id="自己实现一个c-native-dll作为你的c-dll的代理">自己实现一个C++ native dll作为你的C# dll的代理</h2>
 
 <p>基本的实现思路是：</p>
@@ -266,7 +284,6 @@
 </blockquote>
     </div>
 
-    
     <div class="post-copyright">
   <p class="copyright-item">
     <span class="item-title">文章作者</span>
@@ -274,32 +291,39 @@
   </p>
   <p class="copyright-item">
     <span class="item-title">上次更新</span>
-    <span class="item-content">2017-06-28</span>
+    <span class="item-content">
+        2017-06-28
+        
+    </span>
   </p>
   
   
 </div>
-
+<div class="post-reward">
+  <input type="checkbox" name="reward" id="reward" hidden />
+  <label class="reward-button" for="reward">赞赏支持</label>
+  <div class="qr-code">
     
-    
-
-    <footer class="post-footer">
+    <label class="qr-code-image" for="reward">
+        <img class="image" src="/WechatIMG1.jpeg">
+        <span>微信打赏</span>
+      </label>
+    <label class="qr-code-image" for="reward">
+        <img class="image" src="/WechatIMG2.jpeg">
+        <span>支付宝打赏</span>
+      </label>
+  </div>
+</div><footer class="post-footer">
       <div class="post-tags">
-          
-          <a href="https://ld000.space/tags/java/">java</a>
-          
-        </div>
-
-      
+          <a href="/tags/java/">java</a>
+          </div>
       <nav class="post-nav">
-        
-          <a class="prev" href="https://ld000.space/post/discuz_cas/">
+        <a class="prev" href="/post/discuz_cas/">
             <i class="iconfont icon-left"></i>
             <span class="prev-text nav-default">discuz 接入 cas</span>
             <span class="prev-text nav-mobile">上一篇</span>
           </a>
-        
-          <a class="next" href="https://ld000.space/post/aspects_are_not_applied/">
+        <a class="next" href="/post/aspects_are_not_applied/">
             <span class="next-text nav-default">翻译: Spring AOP 讨论最多的问题 #1 - aspects 没有生效</span>
             <span class="next-text nav-mobile">下一篇</span>
             <i class="iconfont icon-right"></i>
@@ -308,8 +332,7 @@
     </footer>
   </article>
         </div>
-        
-  <div id="disqus_thread"></div>
+        <div id="disqus_thread"></div>
     <script type="text/javascript">
     (function() {
       
@@ -323,6 +346,8 @@
     })();
     </script>
     <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+  
 
   
 
@@ -350,8 +375,7 @@
 
   <span class="copyright-year">
     &copy; 
-    
-      2017 - 
+    2017 - 
     2019
     <span class="heart">
       <i class="iconfont icon-heart"></i>
@@ -366,12 +390,10 @@
     </div>
   </div>
   
-<script src="https://ld000.space/lib/highlight/highlight.pack.js?v=20171001"></script><script type="text/javascript" src="https://ld000.space/lib/jquery/jquery-3.2.1.min.js"></script>
-  <script type="text/javascript" src="https://ld000.space/lib/slideout/slideout-1.0.1.min.js"></script>
-  <script type="text/javascript" src="https://ld000.space/lib/fancybox/jquery.fancybox-3.1.20.min.js"></script>
-
-
-<script type="text/javascript" src="https://ld000.space/dist/even.min.js?v=3.2.0"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
 
 
 <script type="application/javascript">
@@ -379,7 +401,7 @@ var doNotTrack = false;
 if (!doNotTrack) {
 	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
 	ga('create', 'UA-89678066-1', 'auto');
-	
+	ga('set', 'anonymizeIp', true);
 	ga('send', 'pageview');
 }
 </script>

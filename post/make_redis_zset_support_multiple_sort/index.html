@@ -16,37 +16,26 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
 
 
-<meta name="author" content="ld000" />
-  <meta name="description" content="一些需求中经常要我们实现一个排行榜，数据量少的话可以使用 RDB 数据库排序，数据量大可以自己实现算法或者使用 NoSQL 数据库排序，NoSQL 数据库中最方便" />
-
-  <meta name="keywords" content="Hugo, theme, even, java, ld000" />
+<meta name="author" content="ld000" /><meta name="description" content="一些需求中经常要我们实现一个排行榜，数据量少的话可以使用 RDB 数据库排序，数据量大可以自己实现算法或者使用 NoSQL 数据库排序，NoSQL 数据库中最方便" /><meta name="keywords" content="Hugo, theme, even, java, ld000" />
 
 
 
 
 
 
-<meta name="generator" content="Hugo 0.60.0-DEV" />
+<meta name="generator" content="Hugo 0.60.0-DEV with theme even" />
 
 
 <link rel="canonical" href="https://ld000.space/post/make_redis_zset_support_multiple_sort/" />
-
-<link rel="apple-touch-icon" sizes="180x180" href="https://ld000.space/apple-touch-icon.png">
-<link rel="icon" type="image/png" sizes="32x32" href="https://ld000.space/favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="https://ld000.space/favicon-16x16.png">
-<link rel="manifest" href="https://ld000.space/manifest.json">
-<link rel="mask-icon" href="https://ld000.space/safari-pinned-tab.svg" color="#5bbad5">
-
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
 
 
-
-
-
-
-<link href="https://ld000.space/dist/even.min.css?v=3.2.0" rel="stylesheet">
-<link href="https://ld000.space/lib/fancybox/jquery.fancybox-3.1.20.min.css" rel="stylesheet">
-
-
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
 
 
 <meta property="og:title" content="让 Redis zset 支持多条件排序" />
@@ -61,7 +50,7 @@
 
 <meta itemprop="datePublished" content="2019-10-23T00:00:00&#43;00:00" />
 <meta itemprop="dateModified" content="2019-10-23T00:00:00&#43;00:00" />
-<meta itemprop="wordCount" content="2610">
+<meta itemprop="wordCount" content="2836">
 
 
 
@@ -83,7 +72,7 @@
 <body>
   <div id="mobile-navbar" class="mobile-navbar">
   <div class="mobile-header-logo">
-    <a href="https://ld000.space/" class="logo">ld000</a>
+    <a href="/" class="logo">ld000</a>
   </div>
   <div class="mobile-navbar-icon">
     <span></span>
@@ -93,15 +82,15 @@
 </div>
 <nav id="mobile-menu" class="mobile-menu slideout-menu">
   <ul class="mobile-menu-list">
-    <a href="https://ld000.space/">
+    <a href="/">
         <li class="mobile-menu-item">首页</li>
-      </a><a href="https://ld000.space/post/">
+      </a><a href="/post/">
         <li class="mobile-menu-item">归档</li>
-      </a><a href="https://ld000.space/tags/">
+      </a><a href="/tags/">
         <li class="mobile-menu-item">标签</li>
-      </a><a href="https://ld000.space/links/">
+      </a><a href="/links/">
         <li class="mobile-menu-item">友链</li>
-      </a><a href="https://ld000.space/about/">
+      </a><a href="/about/">
         <li class="mobile-menu-item">关于</li>
       </a>
   </ul>
@@ -109,21 +98,21 @@
   <div class="container" id="mobile-panel">
     <header id="header" class="header">
         <div class="logo-wrapper">
-  <a href="https://ld000.space/" class="logo">ld000</a>
+  <a href="/" class="logo">ld000</a>
 </div>
 
 <nav class="site-navbar">
   <ul id="menu" class="menu">
     <li class="menu-item">
-        <a class="menu-item-link" href="https://ld000.space/">首页</a>
+        <a class="menu-item-link" href="/">首页</a>
       </li><li class="menu-item">
-        <a class="menu-item-link" href="https://ld000.space/post/">归档</a>
+        <a class="menu-item-link" href="/post/">归档</a>
       </li><li class="menu-item">
-        <a class="menu-item-link" href="https://ld000.space/tags/">标签</a>
+        <a class="menu-item-link" href="/tags/">标签</a>
       </li><li class="menu-item">
-        <a class="menu-item-link" href="https://ld000.space/links/">友链</a>
+        <a class="menu-item-link" href="/links/">友链</a>
       </li><li class="menu-item">
-        <a class="menu-item-link" href="https://ld000.space/about/">关于</a>
+        <a class="menu-item-link" href="/about/">关于</a>
       </li>
   </ul>
 </nav>
@@ -141,15 +130,11 @@
         <span class="post-time"> 2019-10-23 </span>
         
         
-        
       </div>
     </header>
 
-    
-    
-<div class="post-toc" id="post-toc">
+    <div class="post-toc" id="post-toc">
   <h2 class="post-toc-title">文章目录</h2>
-  
   <div class="post-toc-content always-active">
     <nav id="TableOfContents">
 <ul>
@@ -168,32 +153,50 @@
 </nav>
   </div>
 </div>
-
-    
-    
-
-    
     <div class="post-content">
       
 
 <p>一些需求中经常要我们实现一个排行榜，数据量少的话可以使用 RDB 数据库排序，数据量大可以自己实现算法或者使用 NoSQL 数据库排序，NoSQL 数据库中最方便的可能就是利用 Redis 的 zset 来实现了。 例如要实现一个玩家成就点数的排行榜：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">    &gt;zadd r <span style="color:#ae81ff">100</span> A
-    <span style="color:#e6db74">&#34;1&#34;</span>
-    &gt;zadd r <span style="color:#ae81ff">200</span> B
-    <span style="color:#e6db74">&#34;1&#34;</span>
-    &gt;zadd r <span style="color:#ae81ff">200</span> C
-    <span style="color:#e6db74">&#34;1&#34;</span>
-    &gt;zadd r <span style="color:#ae81ff">300</span> D
-    <span style="color:#e6db74">&#34;1&#34;</span>
-    &gt;zrange r <span style="color:#ae81ff">0</span> -1 withscores
-    <span style="color:#ae81ff">1</span><span style="color:#f92672">)</span>  <span style="color:#e6db74">&#34;A&#34;</span>
-    <span style="color:#ae81ff">2</span><span style="color:#f92672">)</span>  <span style="color:#e6db74">&#34;100&#34;</span>
-    <span style="color:#ae81ff">3</span><span style="color:#f92672">)</span>  <span style="color:#e6db74">&#34;B&#34;</span>
-    <span style="color:#ae81ff">4</span><span style="color:#f92672">)</span>  <span style="color:#e6db74">&#34;200&#34;</span>
-    <span style="color:#ae81ff">5</span><span style="color:#f92672">)</span>  <span style="color:#e6db74">&#34;C&#34;</span>
-    <span style="color:#ae81ff">6</span><span style="color:#f92672">)</span>  <span style="color:#e6db74">&#34;200&#34;</span>
-    <span style="color:#ae81ff">7</span><span style="color:#f92672">)</span>  <span style="color:#e6db74">&#34;D&#34;</span>
-    <span style="color:#ae81ff">8</span><span style="color:#f92672">)</span>  <span style="color:#e6db74">&#34;300&#34;</span>       </code></pre></div>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">    &gt;zadd r <span class="m">100</span> A
+    <span class="s2">&#34;1&#34;</span>
+    &gt;zadd r <span class="m">200</span> B
+    <span class="s2">&#34;1&#34;</span>
+    &gt;zadd r <span class="m">200</span> C
+    <span class="s2">&#34;1&#34;</span>
+    &gt;zadd r <span class="m">300</span> D
+    <span class="s2">&#34;1&#34;</span>
+    &gt;zrange r <span class="m">0</span> -1 withscores
+    <span class="m">1</span><span class="o">)</span>  <span class="s2">&#34;A&#34;</span>
+    <span class="m">2</span><span class="o">)</span>  <span class="s2">&#34;100&#34;</span>
+    <span class="m">3</span><span class="o">)</span>  <span class="s2">&#34;B&#34;</span>
+    <span class="m">4</span><span class="o">)</span>  <span class="s2">&#34;200&#34;</span>
+    <span class="m">5</span><span class="o">)</span>  <span class="s2">&#34;C&#34;</span>
+    <span class="m">6</span><span class="o">)</span>  <span class="s2">&#34;200&#34;</span>
+    <span class="m">7</span><span class="o">)</span>  <span class="s2">&#34;D&#34;</span>
+    <span class="m">8</span><span class="o">)</span>  <span class="s2">&#34;300&#34;</span>       </code></pre></td></tr></table>
+</div>
+</div>
 <p>其中 B 和 C 的分数是一样的，这时我们可能想让先达到对应分数的人排在前面，相当于增加了一个排序维度。这时直接用 score 就不能实现了，需要做一些转换，这里分享几个我会用到的方法。</p>
 
 <h2 id="实现方法">实现方法</h2>
@@ -201,37 +204,77 @@
 <p>假设我们需要一个三个维度的排序，第一维度是具体的数值，第二个维度是一个是否标志位，第三个维度是时间戳。其中氪金的（0否1是）和时间早的排序靠前。</p>
 
 <p>以下是原始数据：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">    玩家  成就  是否氪金  时间戳
-    A    <span style="color:#ae81ff">100</span>  <span style="color:#ae81ff">1</span>        <span style="color:#ae81ff">1571819021259</span>
-    B    <span style="color:#ae81ff">200</span>  <span style="color:#ae81ff">0</span>        <span style="color:#ae81ff">1571819021259</span>
-    C    <span style="color:#ae81ff">200</span>  <span style="color:#ae81ff">1</span>        <span style="color:#ae81ff">1571819021259</span>
-    D    <span style="color:#ae81ff">400</span>  <span style="color:#ae81ff">0</span>        <span style="color:#ae81ff">1571819021259</span>
-    E    <span style="color:#ae81ff">200</span>  <span style="color:#ae81ff">1</span>        <span style="color:#ae81ff">1571810001259</span></code></pre></div>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">    玩家  成就  是否氪金  时间戳
+    A    <span class="m">100</span>  <span class="m">1</span>        <span class="m">1571819021259</span>
+    B    <span class="m">200</span>  <span class="m">0</span>        <span class="m">1571819021259</span>
+    C    <span class="m">200</span>  <span class="m">1</span>        <span class="m">1571819021259</span>
+    D    <span class="m">400</span>  <span class="m">0</span>        <span class="m">1571819021259</span>
+    E    <span class="m">200</span>  <span class="m">1</span>        <span class="m">1571810001259</span></code></pre></td></tr></table>
+</div>
+</div>
 <h3 id="1-利用-key-排序">1. 利用 key 排序</h3>
 
 <p>如果后两个维度初始化后就不再变化的话，可以利用 Redis 的排序特性，将不变的维度写到 key 里，这样 score 相同时会用 key 来进行排序。</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">    <span style="color:#75715e"># 这里反转时间戳(9999999999999 - 1571810001259)，让时间早的排在前面</span>
-    &gt;zadd r <span style="color:#ae81ff">100</span> A-1-8428180978740
-    <span style="color:#e6db74">&#34;1&#34;</span>
-    &gt;zadd r <span style="color:#ae81ff">200</span> B-0-8428180978740
-    <span style="color:#e6db74">&#34;1&#34;</span>
-    &gt;zadd r <span style="color:#ae81ff">200</span> C-1-8428180978740
-    <span style="color:#e6db74">&#34;1&#34;</span>
-    &gt;zadd r <span style="color:#ae81ff">400</span> D-0-8428180978740
-    <span style="color:#e6db74">&#34;1&#34;</span>
-    &gt;zadd r <span style="color:#ae81ff">200</span> E-1-8428189998740
-    <span style="color:#e6db74">&#34;1&#34;</span>
-    &gt;zrange r <span style="color:#ae81ff">0</span> -1 withscores
-     <span style="color:#ae81ff">1</span><span style="color:#f92672">)</span>  <span style="color:#e6db74">&#34;A-1-8428180978740&#34;</span>
-     <span style="color:#ae81ff">2</span><span style="color:#f92672">)</span>  <span style="color:#e6db74">&#34;100&#34;</span>
-     <span style="color:#ae81ff">3</span><span style="color:#f92672">)</span>  <span style="color:#e6db74">&#34;B-0-8428180978740&#34;</span>
-     <span style="color:#ae81ff">4</span><span style="color:#f92672">)</span>  <span style="color:#e6db74">&#34;200&#34;</span>
-     <span style="color:#ae81ff">5</span><span style="color:#f92672">)</span>  <span style="color:#e6db74">&#34;C-1-8428180978740&#34;</span>
-     <span style="color:#ae81ff">6</span><span style="color:#f92672">)</span>  <span style="color:#e6db74">&#34;200&#34;</span>
-     <span style="color:#ae81ff">7</span><span style="color:#f92672">)</span>  <span style="color:#e6db74">&#34;E-1-8428189998740&#34;</span>
-     <span style="color:#ae81ff">8</span><span style="color:#f92672">)</span>  <span style="color:#e6db74">&#34;200&#34;</span>
-     <span style="color:#ae81ff">9</span><span style="color:#f92672">)</span>  <span style="color:#e6db74">&#34;D-0-8428180978740&#34;</span>
-     <span style="color:#ae81ff">10</span><span style="color:#f92672">)</span>  <span style="color:#e6db74">&#34;400&#34;</span></code></pre></div>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">    <span class="c1"># 这里反转时间戳(9999999999999 - 1571810001259)，让时间早的排在前面</span>
+    &gt;zadd r <span class="m">100</span> A-1-8428180978740
+    <span class="s2">&#34;1&#34;</span>
+    &gt;zadd r <span class="m">200</span> B-0-8428180978740
+    <span class="s2">&#34;1&#34;</span>
+    &gt;zadd r <span class="m">200</span> C-1-8428180978740
+    <span class="s2">&#34;1&#34;</span>
+    &gt;zadd r <span class="m">400</span> D-0-8428180978740
+    <span class="s2">&#34;1&#34;</span>
+    &gt;zadd r <span class="m">200</span> E-1-8428189998740
+    <span class="s2">&#34;1&#34;</span>
+    &gt;zrange r <span class="m">0</span> -1 withscores
+     <span class="m">1</span><span class="o">)</span>  <span class="s2">&#34;A-1-8428180978740&#34;</span>
+     <span class="m">2</span><span class="o">)</span>  <span class="s2">&#34;100&#34;</span>
+     <span class="m">3</span><span class="o">)</span>  <span class="s2">&#34;B-0-8428180978740&#34;</span>
+     <span class="m">4</span><span class="o">)</span>  <span class="s2">&#34;200&#34;</span>
+     <span class="m">5</span><span class="o">)</span>  <span class="s2">&#34;C-1-8428180978740&#34;</span>
+     <span class="m">6</span><span class="o">)</span>  <span class="s2">&#34;200&#34;</span>
+     <span class="m">7</span><span class="o">)</span>  <span class="s2">&#34;E-1-8428189998740&#34;</span>
+     <span class="m">8</span><span class="o">)</span>  <span class="s2">&#34;200&#34;</span>
+     <span class="m">9</span><span class="o">)</span>  <span class="s2">&#34;D-0-8428180978740&#34;</span>
+     <span class="m">10</span><span class="o">)</span>  <span class="s2">&#34;400&#34;</span></code></pre></td></tr></table>
+</div>
+</div>
 <p>以上就是第一种方法了，实现起来非常简单。</p>
 
 <hr />
@@ -239,33 +282,63 @@
 <h3 id="score-存储格式">score 存储格式</h3>
 
 <p>在介绍下两种方法前先来看看 zset 的 score 是怎么存储的，能保留多少精度，直接看跳表 node 的结构。</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">    <span style="color:#75715e">/*
-</span><span style="color:#75715e">     * 跳跃表节点
-</span><span style="color:#75715e">     */</span>
-    <span style="color:#66d9ef">typedef</span> <span style="color:#66d9ef">struct</span> zskiplistNode {
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-c" data-lang="c"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-c" data-lang="c">    <span class="cm">/*
+</span><span class="cm">     * 跳跃表节点
+</span><span class="cm">     */</span>
+    <span class="k">typedef</span> <span class="k">struct</span> <span class="n">zskiplistNode</span> <span class="p">{</span>
     
-        <span style="color:#75715e">// 成员对象
-</span><span style="color:#75715e"></span>        robj <span style="color:#f92672">*</span>obj;
+        <span class="c1">// 成员对象
+</span><span class="c1"></span>        <span class="n">robj</span> <span class="o">*</span><span class="n">obj</span><span class="p">;</span>
     
-        <span style="color:#75715e">// 分值
-</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">double</span> score;
+        <span class="c1">// 分值
+</span><span class="c1"></span>        <span class="kt">double</span> <span class="n">score</span><span class="p">;</span>
     
-        <span style="color:#75715e">// 后退指针
-</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">struct</span> zskiplistNode <span style="color:#f92672">*</span>backward;
+        <span class="c1">// 后退指针
+</span><span class="c1"></span>        <span class="k">struct</span> <span class="n">zskiplistNode</span> <span class="o">*</span><span class="n">backward</span><span class="p">;</span>
     
-        <span style="color:#75715e">// 层
-</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">struct</span> zskiplistLevel {
-            <span style="color:#75715e">// 前进指针
-</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">struct</span> zskiplistNode <span style="color:#f92672">*</span>forward;
+        <span class="c1">// 层
+</span><span class="c1"></span>        <span class="k">struct</span> <span class="n">zskiplistLevel</span> <span class="p">{</span>
+            <span class="c1">// 前进指针
+</span><span class="c1"></span>            <span class="k">struct</span> <span class="n">zskiplistNode</span> <span class="o">*</span><span class="n">forward</span><span class="p">;</span>
     
-            <span style="color:#75715e">// 跨度
-</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">int</span> span;
-        } level[];
+            <span class="c1">// 跨度
+</span><span class="c1"></span>            <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">span</span><span class="p">;</span>
+        <span class="p">}</span> <span class="n">level</span><span class="p">[];</span>
     
-    } zskiplistNode;</code></pre></div>
+    <span class="p">}</span> <span class="n">zskiplistNode</span><span class="p">;</span></code></pre></td></tr></table>
+</div>
+</div>
 <p>我们可以看到 score 是用 double 存储的，它是一个 IEEE 754 标准的 double 浮点数。（IEEE 754 标准的详细存储规则可以搜索其他文章，这里重点分析保留的精度）</p>
 
-<p><img src="https://ld000.space/img/make_redis_zset_support_multiple_sort/redis_zset_1.png" alt="" /></p>
+<p><img src="/img/make_redis_zset_support_multiple_sort/redis_zset_1.png" alt="" /></p>
 
 <p>一个 64 位浮点数存储时分为3段</p>
 
@@ -274,9 +347,14 @@
 <li>Exp:指数字，第二段，占11位，移码方式表示正负数，排除全0和全1表示零和无穷大的特殊情况，指数部分是−1022～+1023加上1023，指数值的大小从1～2046</li>
 
 <li><p>Fraction:有效数字，占52位，定点数，小数点放在尾数最前面</p>
-
-<pre><code>实际数字 = (-1)^S * Fraction * 2^Exp  (二进制计算)
-</code></pre></li>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">实际数字 = (-1)^S * Fraction * 2^Exp  (二进制计算)</pre></td></tr></table>
+</div>
+</div></li>
 </ul>
 
 <p>double 存储的有效数据是第三段的52位，超出会损失精度，由于标准规定小数点是在有效数字最前面，所以实际可以存储 53 位数字。比如有个数字是 <code>111___(53个1)</code>，有效数字位存储的是 <code>.11___(52个1)</code>，计算时会在个位补1，得到<code>1.11___(53个1)</code>，最大值为 <code>2^53 = 9007199254740991</code>，大概 <code>log2^53 = 15.95</code> 位。</p>
@@ -292,13 +370,21 @@
 <p>第二种方法，可以利用二进制 64 位 long 分段存储各个维度。</p>
 
 <p>首先时间戳如果全存储就太长了，可以通过一些计算缩小一些，先忽略毫秒，然后和一个大数计算差值。</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">    <span style="color:#66d9ef">int</span> MAX_SECOND <span style="color:#f92672">=</span> 1861891200<span style="color:#f92672">;</span> <span style="color:#75715e">// 2029.1.1 0:0:0
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> sts <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>MAX_SECOND <span style="color:#f92672">-</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">)(</span>ts <span style="color:#f92672">/</span> 1000<span style="color:#f92672">))</span></code></pre></div>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java">    <span class="kt">int</span> <span class="n">MAX_SECOND</span> <span class="o">=</span> <span class="n">1861891200</span><span class="o">;</span> <span class="c1">// 2029.1.1 0:0:0
+</span><span class="c1"></span>    <span class="kt">int</span> <span class="n">sts</span> <span class="o">=</span> <span class="o">(</span><span class="n">MAX_SECOND</span> <span class="o">-</span> <span class="o">(</span><span class="kt">int</span><span class="o">)(</span><span class="n">ts</span> <span class="o">/</span> <span class="n">1000</span><span class="o">))</span></code></pre></td></tr></table>
+</div>
+</div>
 <p>这样时间就缩小到了300000000以内。</p>
 
 <p>接下来进行划分，首位标志位不用，剩下63位，然后我划分高33位存分数，1位存标志位，最后29位存时间戳，存储结构是这样的：</p>
 
-<p><img src="https://ld000.space/img/make_redis_zset_support_multiple_sort/redis_zset_2.png" alt="" /></p>
+<p><img src="/img/make_redis_zset_support_multiple_sort/redis_zset_2.png" alt="" /></p>
 
 <p>如果要不损失精度，第一段可存储位数 = 53 - 1 - 29 = 23。</p>
 
@@ -311,174 +397,370 @@
 </ul>
 
 <p>然后就可以用下面的方法计算 score 了，因为是二进制，可以全用位运算。</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">    <span style="color:#66d9ef">int</span> size1 <span style="color:#f92672">=</span> 33<span style="color:#f92672">;</span>
-    <span style="color:#66d9ef">int</span> size2 <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span>
-    <span style="color:#66d9ef">int</span> size3 <span style="color:#f92672">=</span> 29<span style="color:#f92672">;</span>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java">    <span class="kt">int</span> <span class="n">size1</span> <span class="o">=</span> <span class="n">33</span><span class="o">;</span>
+    <span class="kt">int</span> <span class="n">size2</span> <span class="o">=</span> <span class="n">1</span><span class="o">;</span>
+    <span class="kt">int</span> <span class="n">size3</span> <span class="o">=</span> <span class="n">29</span><span class="o">;</span>
     
-    <span style="color:#66d9ef">long</span> d1Max <span style="color:#f92672">=</span> maxBySize<span style="color:#f92672">(</span>size1<span style="color:#f92672">);</span>
-    <span style="color:#66d9ef">long</span> d2Max <span style="color:#f92672">=</span> maxBySize<span style="color:#f92672">(</span>size2<span style="color:#f92672">);</span>
-    <span style="color:#66d9ef">long</span> d3Max <span style="color:#f92672">=</span> maxBySize<span style="color:#f92672">(</span>size3<span style="color:#f92672">);</span>
+    <span class="kt">long</span> <span class="n">d1Max</span> <span class="o">=</span> <span class="n">maxBySize</span><span class="o">(</span><span class="n">size1</span><span class="o">);</span>
+    <span class="kt">long</span> <span class="n">d2Max</span> <span class="o">=</span> <span class="n">maxBySize</span><span class="o">(</span><span class="n">size2</span><span class="o">);</span>
+    <span class="kt">long</span> <span class="n">d3Max</span> <span class="o">=</span> <span class="n">maxBySize</span><span class="o">(</span><span class="n">size3</span><span class="o">);</span>
     
-    <span style="color:#75715e">// 计算 score
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">long</span> <span style="color:#a6e22e">genScore</span><span style="color:#f92672">(</span><span style="color:#66d9ef">long</span> d1<span style="color:#f92672">,</span> <span style="color:#66d9ef">long</span> d2<span style="color:#f92672">,</span> <span style="color:#66d9ef">long</span> d3<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">return</span> <span style="color:#f92672">((</span>d1 <span style="color:#f92672">&amp;</span> d1Max<span style="color:#f92672">)</span> <span style="color:#f92672">&lt;&lt;</span> <span style="color:#f92672">(</span>size2 <span style="color:#f92672">+</span> size3<span style="color:#f92672">))</span> <span style="color:#f92672">|</span> <span style="color:#f92672">((</span>d2 <span style="color:#f92672">&amp;</span> d2Max<span style="color:#f92672">)</span> <span style="color:#f92672">&lt;&lt;</span> size3<span style="color:#f92672">)</span> <span style="color:#f92672">|</span> <span style="color:#f92672">(</span>d3 <span style="color:#f92672">&amp;</span> d3Max<span style="color:#f92672">);</span>
-    <span style="color:#f92672">}</span>
+    <span class="c1">// 计算 score
+</span><span class="c1"></span>    <span class="kd">public</span> <span class="kt">long</span> <span class="nf">genScore</span><span class="o">(</span><span class="kt">long</span> <span class="n">d1</span><span class="o">,</span> <span class="kt">long</span> <span class="n">d2</span><span class="o">,</span> <span class="kt">long</span> <span class="n">d3</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="o">((</span><span class="n">d1</span> <span class="o">&amp;</span> <span class="n">d1Max</span><span class="o">)</span> <span class="o">&lt;&lt;</span> <span class="o">(</span><span class="n">size2</span> <span class="o">+</span> <span class="n">size3</span><span class="o">))</span> <span class="o">|</span> <span class="o">((</span><span class="n">d2</span> <span class="o">&amp;</span> <span class="n">d2Max</span><span class="o">)</span> <span class="o">&lt;&lt;</span> <span class="n">size3</span><span class="o">)</span> <span class="o">|</span> <span class="o">(</span><span class="n">d3</span> <span class="o">&amp;</span> <span class="n">d3Max</span><span class="o">);</span>
+    <span class="o">}</span>
     
-    <span style="color:#75715e">// 计算增加 value 值
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">incValue</span><span style="color:#f92672">(</span><span style="color:#66d9ef">long</span> d1<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>    
-        <span style="color:#66d9ef">return</span> <span style="color:#f92672">((</span>d1 <span style="color:#f92672">&amp;</span> d1Max<span style="color:#f92672">)</span> <span style="color:#f92672">&lt;&lt;</span> <span style="color:#f92672">(</span>size2 <span style="color:#f92672">+</span> size3<span style="color:#f92672">))</span> <span style="color:#f92672">|</span> <span style="color:#f92672">((</span>0 <span style="color:#f92672">&amp;</span> d2Max<span style="color:#f92672">)</span> <span style="color:#f92672">&lt;&lt;</span> size3<span style="color:#f92672">)</span> <span style="color:#f92672">|</span> <span style="color:#f92672">(</span>0 <span style="color:#f92672">&amp;</span> d3Max<span style="color:#f92672">);</span>
-    <span style="color:#f92672">}</span>
+    <span class="c1">// 计算增加 value 值
+</span><span class="c1"></span>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">incValue</span><span class="o">(</span><span class="kt">long</span> <span class="n">d1</span><span class="o">)</span> <span class="o">{</span>    
+        <span class="k">return</span> <span class="o">((</span><span class="n">d1</span> <span class="o">&amp;</span> <span class="n">d1Max</span><span class="o">)</span> <span class="o">&lt;&lt;</span> <span class="o">(</span><span class="n">size2</span> <span class="o">+</span> <span class="n">size3</span><span class="o">))</span> <span class="o">|</span> <span class="o">((</span><span class="n">0</span> <span class="o">&amp;</span> <span class="n">d2Max</span><span class="o">)</span> <span class="o">&lt;&lt;</span> <span class="n">size3</span><span class="o">)</span> <span class="o">|</span> <span class="o">(</span><span class="n">0</span> <span class="o">&amp;</span> <span class="n">d3Max</span><span class="o">);</span>
+    <span class="o">}</span>
     
-    <span style="color:#75715e">// 根据二进制长度计算最大值
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">long</span> <span style="color:#a6e22e">maxBySize</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> len<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">long</span> r <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
-        <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>len<span style="color:#f92672">--</span> <span style="color:#f92672">&gt;</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            r <span style="color:#f92672">=</span> <span style="color:#f92672">((</span>r <span style="color:#f92672">&lt;&lt;</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">|</span> 1<span style="color:#f92672">);</span>
-        <span style="color:#f92672">}</span>
+    <span class="c1">// 根据二进制长度计算最大值
+</span><span class="c1"></span>    <span class="kd">private</span> <span class="kt">long</span> <span class="nf">maxBySize</span><span class="o">(</span><span class="kt">int</span> <span class="n">len</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kt">long</span> <span class="n">r</span> <span class="o">=</span> <span class="n">0</span><span class="o">;</span>
+        <span class="k">while</span> <span class="o">(</span><span class="n">len</span><span class="o">--</span> <span class="o">&gt;</span> <span class="n">0</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">r</span> <span class="o">=</span> <span class="o">((</span><span class="n">r</span> <span class="o">&lt;&lt;</span> <span class="n">1</span><span class="o">)</span> <span class="o">|</span> <span class="n">1</span><span class="o">);</span>
+        <span class="o">}</span>
     
-        <span style="color:#66d9ef">return</span> r<span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span></code></pre></div>
+        <span class="k">return</span> <span class="n">r</span><span class="o">;</span>
+    <span class="o">}</span></code></pre></td></tr></table>
+</div>
+</div>
 <p>增加高位分数的话直接把低维度设为0，计算出分数后调用 ZINCRBY 就行了。</p>
 
 <p>改变低位维度值的话就不能调用 <code>ZINCRBY</code> 了，需要调用<code>ZADD</code>，我们用自旋加 CAS 更新，防止覆盖掉新更新的值。</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">    <span style="color:#75715e">/**
-</span><span style="color:#75715e">     * 设置维度值
-</span><span style="color:#75715e">     * 
-</span><span style="color:#75715e">     * @param key zset key
-</span><span style="color:#75715e">     * @param value zset value
-</span><span style="color:#75715e">     * @param d2 第二位
-</span><span style="color:#75715e">     * @param d3 第三位
-</span><span style="color:#75715e">     * @return
-</span><span style="color:#75715e">     */</span>
-    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">setD</span><span style="color:#f92672">(</span>String key<span style="color:#f92672">,</span> String value<span style="color:#f92672">,</span> Long d2<span style="color:#f92672">,</span> Long d3<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">long</span> start <span style="color:#f92672">=</span> System<span style="color:#f92672">.</span><span style="color:#a6e22e">currentTimeMillis</span><span style="color:#f92672">();</span>
-        Long oldScore<span style="color:#f92672">;</span>
-        <span style="color:#66d9ef">long</span> score<span style="color:#f92672">;</span>
-        <span style="color:#66d9ef">byte</span><span style="color:#f92672">[]</span> originBytes<span style="color:#f92672">;</span>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span><span class="lnt">59
+</span><span class="lnt">60
+</span><span class="lnt">61
+</span><span class="lnt">62
+</span><span class="lnt">63
+</span><span class="lnt">64
+</span><span class="lnt">65
+</span><span class="lnt">66
+</span><span class="lnt">67
+</span><span class="lnt">68
+</span><span class="lnt">69
+</span><span class="lnt">70
+</span><span class="lnt">71
+</span><span class="lnt">72
+</span><span class="lnt">73
+</span><span class="lnt">74
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java">    <span class="cm">/**
+</span><span class="cm">     * 设置维度值
+</span><span class="cm">     * 
+</span><span class="cm">     * @param key zset key
+</span><span class="cm">     * @param value zset value
+</span><span class="cm">     * @param d2 第二位
+</span><span class="cm">     * @param d3 第三位
+</span><span class="cm">     * @return
+</span><span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">setD</span><span class="o">(</span><span class="n">String</span> <span class="n">key</span><span class="o">,</span> <span class="n">String</span> <span class="n">value</span><span class="o">,</span> <span class="n">Long</span> <span class="n">d2</span><span class="o">,</span> <span class="n">Long</span> <span class="n">d3</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kt">long</span> <span class="n">start</span> <span class="o">=</span> <span class="n">System</span><span class="o">.</span><span class="na">currentTimeMillis</span><span class="o">();</span>
+        <span class="n">Long</span> <span class="n">oldScore</span><span class="o">;</span>
+        <span class="kt">long</span> <span class="n">score</span><span class="o">;</span>
+        <span class="kt">byte</span><span class="o">[]</span> <span class="n">originBytes</span><span class="o">;</span>
     
-        <span style="color:#66d9ef">do</span> <span style="color:#f92672">{</span>
-            <span style="color:#66d9ef">if</span> <span style="color:#f92672">((</span>System<span style="color:#f92672">.</span><span style="color:#a6e22e">currentTimeMillis</span><span style="color:#f92672">()</span> <span style="color:#f92672">-</span> start<span style="color:#f92672">)</span> <span style="color:#f92672">&gt;</span> 2000<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-                <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
-            <span style="color:#f92672">}</span>
+        <span class="k">do</span> <span class="o">{</span>
+            <span class="k">if</span> <span class="o">((</span><span class="n">System</span><span class="o">.</span><span class="na">currentTimeMillis</span><span class="o">()</span> <span class="o">-</span> <span class="n">start</span><span class="o">)</span> <span class="o">&gt;</span> <span class="n">2000</span><span class="o">)</span> <span class="o">{</span>
+                <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+            <span class="o">}</span>
     
-            <span style="color:#66d9ef">long</span> d1 <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
+            <span class="kt">long</span> <span class="n">d1</span> <span class="o">=</span> <span class="n">0</span><span class="o">;</span>
     
-            originBytes <span style="color:#f92672">=</span> zscoreBytes<span style="color:#f92672">(</span>key<span style="color:#f92672">,</span> value<span style="color:#f92672">);</span>
-            oldScore <span style="color:#f92672">=</span> convertZscore<span style="color:#f92672">(</span>originBytes<span style="color:#f92672">);</span>
+            <span class="n">originBytes</span> <span class="o">=</span> <span class="n">zscoreBytes</span><span class="o">(</span><span class="n">key</span><span class="o">,</span> <span class="n">value</span><span class="o">);</span>
+            <span class="n">oldScore</span> <span class="o">=</span> <span class="n">convertZscore</span><span class="o">(</span><span class="n">originBytes</span><span class="o">);</span>
     
-            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>originBytes <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-                <span style="color:#75715e">// 根据 score 获取原始值
-</span><span style="color:#75715e"></span>                d1 <span style="color:#f92672">=</span> getD1ByScore<span style="color:#f92672">(</span>oldScore<span style="color:#f92672">);</span>
-            <span style="color:#f92672">}</span>
-            <span style="color:#75715e">// 如果不设置新值就获取原始值
-</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>d2 <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-                <span style="color:#75715e">// 根据 score 获取原始值
-</span><span style="color:#75715e"></span>                d2 <span style="color:#f92672">=</span> getD2ByScore<span style="color:#f92672">(</span>oldScore<span style="color:#f92672">);</span>
-            <span style="color:#f92672">}</span>
-    				<span style="color:#75715e">// 如果不设置新值就获取原始值
-</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>d3 <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-                <span style="color:#75715e">// 根据 score 获取原始值
-</span><span style="color:#75715e"></span>                d3 <span style="color:#f92672">=</span> getD3ByScore<span style="color:#f92672">(</span>oldScore<span style="color:#f92672">);</span>
-            <span style="color:#f92672">}</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">originBytes</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+                <span class="c1">// 根据 score 获取原始值
+</span><span class="c1"></span>                <span class="n">d1</span> <span class="o">=</span> <span class="n">getD1ByScore</span><span class="o">(</span><span class="n">oldScore</span><span class="o">);</span>
+            <span class="o">}</span>
+            <span class="c1">// 如果不设置新值就获取原始值
+</span><span class="c1"></span>            <span class="k">if</span> <span class="o">(</span><span class="n">d2</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+                <span class="c1">// 根据 score 获取原始值
+</span><span class="c1"></span>                <span class="n">d2</span> <span class="o">=</span> <span class="n">getD2ByScore</span><span class="o">(</span><span class="n">oldScore</span><span class="o">);</span>
+            <span class="o">}</span>
+    				<span class="c1">// 如果不设置新值就获取原始值
+</span><span class="c1"></span>            <span class="k">if</span> <span class="o">(</span><span class="n">d3</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+                <span class="c1">// 根据 score 获取原始值
+</span><span class="c1"></span>                <span class="n">d3</span> <span class="o">=</span> <span class="n">getD3ByScore</span><span class="o">(</span><span class="n">oldScore</span><span class="o">);</span>
+            <span class="o">}</span>
     
-    				<span style="color:#75715e">// 生成新值
-</span><span style="color:#75715e"></span>            score <span style="color:#f92672">=</span> genScore<span style="color:#f92672">(</span>d1<span style="color:#f92672">,</span> d2<span style="color:#f92672">,</span> d3<span style="color:#f92672">);</span>
-        <span style="color:#f92672">}</span> <span style="color:#66d9ef">while</span> <span style="color:#f92672">(!</span>compareAndSetDimension<span style="color:#f92672">(</span>key<span style="color:#f92672">,</span> value<span style="color:#f92672">,</span> originBytes<span style="color:#f92672">,</span> score<span style="color:#f92672">));</span>
+    				<span class="c1">// 生成新值
+</span><span class="c1"></span>            <span class="n">score</span> <span class="o">=</span> <span class="n">genScore</span><span class="o">(</span><span class="n">d1</span><span class="o">,</span> <span class="n">d2</span><span class="o">,</span> <span class="n">d3</span><span class="o">);</span>
+        <span class="o">}</span> <span class="k">while</span> <span class="o">(!</span><span class="n">compareAndSetDimension</span><span class="o">(</span><span class="n">key</span><span class="o">,</span> <span class="n">value</span><span class="o">,</span> <span class="n">originBytes</span><span class="o">,</span> <span class="n">score</span><span class="o">));</span>
     
-        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span>
+        <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+    <span class="o">}</span>
     
     
-    Long SUCCESS <span style="color:#f92672">=</span> 1L<span style="color:#f92672">;</span>
-    String script <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;if (((not (redis.call(&#39;zscore&#39;, KEYS[1], ARGV[1]))) and (ARGV[2] == &#39;&#39;)) &#34;</span> <span style="color:#f92672">+</span>
-                        <span style="color:#e6db74">&#34;or redis.call(&#39;zscore&#39;, KEYS[1], ARGV[1]) == ARGV[2]) &#34;</span> <span style="color:#f92672">+</span>
-                    <span style="color:#e6db74">&#34; then redis.call(&#39;zadd&#39;,KEYS[1],ARGV[3],ARGV[1]) return 1 else return 0 end&#34;</span><span style="color:#f92672">;</span>
+    <span class="n">Long</span> <span class="n">SUCCESS</span> <span class="o">=</span> <span class="n">1L</span><span class="o">;</span>
+    <span class="n">String</span> <span class="n">script</span> <span class="o">=</span> <span class="s">&#34;if (((not (redis.call(&#39;zscore&#39;, KEYS[1], ARGV[1]))) and (ARGV[2] == &#39;&#39;)) &#34;</span> <span class="o">+</span>
+                        <span class="s">&#34;or redis.call(&#39;zscore&#39;, KEYS[1], ARGV[1]) == ARGV[2]) &#34;</span> <span class="o">+</span>
+                    <span class="s">&#34; then redis.call(&#39;zadd&#39;,KEYS[1],ARGV[3],ARGV[1]) return 1 else return 0 end&#34;</span><span class="o">;</span>
     
-    <span style="color:#75715e">// CAS 设置值
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">compareAndSetDimension</span><span style="color:#f92672">(</span>String setKey<span style="color:#f92672">,</span> String key<span style="color:#f92672">,</span> <span style="color:#66d9ef">byte</span><span style="color:#f92672">[]</span> oldScore<span style="color:#f92672">,</span> <span style="color:#66d9ef">long</span> newScore<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        Long result <span style="color:#f92672">=</span> redisTemplate<span style="color:#f92672">.</span><span style="color:#a6e22e">execute</span><span style="color:#f92672">((</span>RedisCallback<span style="color:#f92672">&lt;</span>Long<span style="color:#f92672">&gt;)</span> connection <span style="color:#f92672">-&gt;</span> <span style="color:#f92672">{</span>
-            <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
-                <span style="color:#66d9ef">return</span> connection<span style="color:#f92672">.</span><span style="color:#a6e22e">eval</span><span style="color:#f92672">(</span>script<span style="color:#f92672">.</span><span style="color:#a6e22e">getBytes</span><span style="color:#f92672">(),</span> ReturnType<span style="color:#f92672">.</span><span style="color:#a6e22e">fromJavaType</span><span style="color:#f92672">(</span>Long<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">),</span> 1<span style="color:#f92672">,</span> setKey<span style="color:#f92672">.</span><span style="color:#a6e22e">getBytes</span><span style="color:#f92672">(),</span>
-                        key<span style="color:#f92672">.</span><span style="color:#a6e22e">getBytes</span><span style="color:#f92672">(),</span> oldScore<span style="color:#f92672">,</span> om<span style="color:#f92672">.</span><span style="color:#a6e22e">writeValueAsBytes</span><span style="color:#f92672">(</span>newScore<span style="color:#f92672">));</span>
-            <span style="color:#f92672">}</span> <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>JsonProcessingException e<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-                <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> RuntimeException<span style="color:#f92672">(</span>e<span style="color:#f92672">);</span>
-            <span style="color:#f92672">}</span>
-        <span style="color:#f92672">});</span>
+    <span class="c1">// CAS 设置值
+</span><span class="c1"></span>    <span class="kd">private</span> <span class="kt">boolean</span> <span class="nf">compareAndSetDimension</span><span class="o">(</span><span class="n">String</span> <span class="n">setKey</span><span class="o">,</span> <span class="n">String</span> <span class="n">key</span><span class="o">,</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">oldScore</span><span class="o">,</span> <span class="kt">long</span> <span class="n">newScore</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">Long</span> <span class="n">result</span> <span class="o">=</span> <span class="n">redisTemplate</span><span class="o">.</span><span class="na">execute</span><span class="o">((</span><span class="n">RedisCallback</span><span class="o">&lt;</span><span class="n">Long</span><span class="o">&gt;)</span> <span class="n">connection</span> <span class="o">-&gt;</span> <span class="o">{</span>
+            <span class="k">try</span> <span class="o">{</span>
+                <span class="k">return</span> <span class="n">connection</span><span class="o">.</span><span class="na">eval</span><span class="o">(</span><span class="n">script</span><span class="o">.</span><span class="na">getBytes</span><span class="o">(),</span> <span class="n">ReturnType</span><span class="o">.</span><span class="na">fromJavaType</span><span class="o">(</span><span class="n">Long</span><span class="o">.</span><span class="na">class</span><span class="o">),</span> <span class="n">1</span><span class="o">,</span> <span class="n">setKey</span><span class="o">.</span><span class="na">getBytes</span><span class="o">(),</span>
+                        <span class="n">key</span><span class="o">.</span><span class="na">getBytes</span><span class="o">(),</span> <span class="n">oldScore</span><span class="o">,</span> <span class="n">om</span><span class="o">.</span><span class="na">writeValueAsBytes</span><span class="o">(</span><span class="n">newScore</span><span class="o">));</span>
+            <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">JsonProcessingException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+                <span class="k">throw</span> <span class="k">new</span> <span class="n">RuntimeException</span><span class="o">(</span><span class="n">e</span><span class="o">);</span>
+            <span class="o">}</span>
+        <span class="o">});</span>
     
-        <span style="color:#66d9ef">return</span> SUCCESS<span style="color:#f92672">.</span><span style="color:#a6e22e">equals</span><span style="color:#f92672">(</span>result<span style="color:#f92672">);</span>
-    <span style="color:#f92672">}</span>
+        <span class="k">return</span> <span class="n">SUCCESS</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="n">result</span><span class="o">);</span>
+    <span class="o">}</span>
     
-    <span style="color:#75715e">// 获取原始值
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">byte</span><span style="color:#f92672">[]</span> <span style="color:#a6e22e">zscoreBytes</span><span style="color:#f92672">(</span>String key<span style="color:#f92672">,</span> String value<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        String script <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;return redis.call(&#39;zscore&#39;, KEYS[1], ARGV[1])&#34;</span><span style="color:#f92672">;</span>
-        <span style="color:#66d9ef">return</span> redisTemplate<span style="color:#f92672">.</span><span style="color:#a6e22e">execute</span><span style="color:#f92672">((</span>RedisCallback<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">byte</span><span style="color:#f92672">[]&gt;)</span> connection <span style="color:#f92672">-&gt;</span> connection<span style="color:#f92672">.</span><span style="color:#a6e22e">eval</span><span style="color:#f92672">(</span>script<span style="color:#f92672">.</span><span style="color:#a6e22e">getBytes</span><span style="color:#f92672">(),</span>
-                ReturnType<span style="color:#f92672">.</span><span style="color:#a6e22e">fromJavaType</span><span style="color:#f92672">(</span>String<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">),</span>
-                1<span style="color:#f92672">,</span> key<span style="color:#f92672">.</span><span style="color:#a6e22e">getBytes</span><span style="color:#f92672">(),</span> value<span style="color:#f92672">.</span><span style="color:#a6e22e">getBytes</span><span style="color:#f92672">()));</span>
-    <span style="color:#f92672">}</span></code></pre></div>
+    <span class="c1">// 获取原始值
+</span><span class="c1"></span>    <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">zscoreBytes</span><span class="o">(</span><span class="n">String</span> <span class="n">key</span><span class="o">,</span> <span class="n">String</span> <span class="n">value</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">String</span> <span class="n">script</span> <span class="o">=</span> <span class="s">&#34;return redis.call(&#39;zscore&#39;, KEYS[1], ARGV[1])&#34;</span><span class="o">;</span>
+        <span class="k">return</span> <span class="n">redisTemplate</span><span class="o">.</span><span class="na">execute</span><span class="o">((</span><span class="n">RedisCallback</span><span class="o">&lt;</span><span class="kt">byte</span><span class="o">[]&gt;)</span> <span class="n">connection</span> <span class="o">-&gt;</span> <span class="n">connection</span><span class="o">.</span><span class="na">eval</span><span class="o">(</span><span class="n">script</span><span class="o">.</span><span class="na">getBytes</span><span class="o">(),</span>
+                <span class="n">ReturnType</span><span class="o">.</span><span class="na">fromJavaType</span><span class="o">(</span><span class="n">String</span><span class="o">.</span><span class="na">class</span><span class="o">),</span>
+                <span class="n">1</span><span class="o">,</span> <span class="n">key</span><span class="o">.</span><span class="na">getBytes</span><span class="o">(),</span> <span class="n">value</span><span class="o">.</span><span class="na">getBytes</span><span class="o">()));</span>
+    <span class="o">}</span></code></pre></td></tr></table>
+</div>
+</div>
 <p>这里初始 score 值获取使用的是 <code>zscoreBytes()</code> 而不是<code>redisTemplate.opsForZSet().score()</code>是为了防止损失精度，这个方法返回的 score 值其实是可能损失精度的，我们看源码分析下：</p>
 
 <p>直接进到最底层的执行方法 <code>zscore</code></p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">    <span style="color:#75715e">// class RedisCommandBuilder
-</span><span style="color:#75715e"></span>    
-    Command<span style="color:#f92672">&lt;</span>K<span style="color:#f92672">,</span> V<span style="color:#f92672">,</span> Double<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">zscore</span><span style="color:#f92672">(</span>K key<span style="color:#f92672">,</span> V member<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        notNullKey<span style="color:#f92672">(</span>key<span style="color:#f92672">);</span>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java">    <span class="c1">// class RedisCommandBuilder
+</span><span class="c1"></span>    
+    <span class="n">Command</span><span class="o">&lt;</span><span class="n">K</span><span class="o">,</span> <span class="n">V</span><span class="o">,</span> <span class="n">Double</span><span class="o">&gt;</span> <span class="nf">zscore</span><span class="o">(</span><span class="n">K</span> <span class="n">key</span><span class="o">,</span> <span class="n">V</span> <span class="n">member</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">notNullKey</span><span class="o">(</span><span class="n">key</span><span class="o">);</span>
     
-        <span style="color:#66d9ef">return</span> createCommand<span style="color:#f92672">(</span>ZSCORE<span style="color:#f92672">,</span> <span style="color:#66d9ef">new</span> DoubleOutput<span style="color:#f92672">&lt;&gt;(</span>codec<span style="color:#f92672">),</span> key<span style="color:#f92672">,</span> member<span style="color:#f92672">);</span>
-    <span style="color:#f92672">}</span></code></pre></div>
+        <span class="k">return</span> <span class="n">createCommand</span><span class="o">(</span><span class="n">ZSCORE</span><span class="o">,</span> <span class="k">new</span> <span class="n">DoubleOutput</span><span class="o">&lt;&gt;(</span><span class="n">codec</span><span class="o">),</span> <span class="n">key</span><span class="o">,</span> <span class="n">member</span><span class="o">);</span>
+    <span class="o">}</span></code></pre></td></tr></table>
+</div>
+</div>
 <p><code>DoubleOutput</code> 将 Redis 的返回值转成 Double</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">    <span style="color:#75715e">// 将 Redis 返回值转成 Double
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">DoubleOutput</span><span style="color:#f92672">&lt;</span>K<span style="color:#f92672">,</span> V<span style="color:#f92672">&gt;</span> <span style="color:#66d9ef">extends</span> CommandOutput<span style="color:#f92672">&lt;</span>K<span style="color:#f92672">,</span> V<span style="color:#f92672">,</span> Double<span style="color:#f92672">&gt;</span> <span style="color:#f92672">{</span>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java">    <span class="c1">// 将 Redis 返回值转成 Double
+</span><span class="c1"></span>    <span class="kd">public</span> <span class="kd">class</span> <span class="nc">DoubleOutput</span><span class="o">&lt;</span><span class="n">K</span><span class="o">,</span> <span class="n">V</span><span class="o">&gt;</span> <span class="kd">extends</span> <span class="n">CommandOutput</span><span class="o">&lt;</span><span class="n">K</span><span class="o">,</span> <span class="n">V</span><span class="o">,</span> <span class="n">Double</span><span class="o">&gt;</span> <span class="o">{</span>
     
-        <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">DoubleOutput</span><span style="color:#f92672">(</span>RedisCodec<span style="color:#f92672">&lt;</span>K<span style="color:#f92672">,</span> V<span style="color:#f92672">&gt;</span> codec<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            <span style="color:#66d9ef">super</span><span style="color:#f92672">(</span>codec<span style="color:#f92672">,</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">);</span>
-        <span style="color:#f92672">}</span>
+        <span class="kd">public</span> <span class="nf">DoubleOutput</span><span class="o">(</span><span class="n">RedisCodec</span><span class="o">&lt;</span><span class="n">K</span><span class="o">,</span> <span class="n">V</span><span class="o">&gt;</span> <span class="n">codec</span><span class="o">)</span> <span class="o">{</span>
+            <span class="kd">super</span><span class="o">(</span><span class="n">codec</span><span class="o">,</span> <span class="kc">null</span><span class="o">);</span>
+        <span class="o">}</span>
     
-        <span style="color:#75715e">// 方法参数 bytes 就是 Redis 返回的原始值了，是个字符串
-</span><span style="color:#75715e"></span>        <span style="color:#a6e22e">@Override</span>
-        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">set</span><span style="color:#f92672">(</span>ByteBuffer bytes<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            output <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>bytes <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">?</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">:</span> parseDouble<span style="color:#f92672">(</span>decodeAscii<span style="color:#f92672">(</span>bytes<span style="color:#f92672">));</span>
-        <span style="color:#f92672">}</span>
-    <span style="color:#f92672">}</span></code></pre></div>
+        <span class="c1">// 方法参数 bytes 就是 Redis 返回的原始值了，是个字符串
+</span><span class="c1"></span>        <span class="nd">@Override</span>
+        <span class="kd">public</span> <span class="kt">void</span> <span class="nf">set</span><span class="o">(</span><span class="n">ByteBuffer</span> <span class="n">bytes</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">output</span> <span class="o">=</span> <span class="o">(</span><span class="n">bytes</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">?</span> <span class="kc">null</span> <span class="o">:</span> <span class="n">parseDouble</span><span class="o">(</span><span class="n">decodeAscii</span><span class="o">(</span><span class="n">bytes</span><span class="o">));</span>
+        <span class="o">}</span>
+    <span class="o">}</span></code></pre></td></tr></table>
+</div>
+</div>
 <p>Redis 原始的返回值其实是个类似 <code>1.3094266712875436e+18</code> 的字符串，<code>DoubleOutput</code> 在转换成 Double 的时候有可能会损失精度，用 <code>BigDecimal</code> 转的话是不会丢精度的。</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">    String a <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;1.3094266712875436e+18&#34;</span><span style="color:#f92672">;</span>
-    <span style="color:#66d9ef">long</span> value <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> BigDecimal<span style="color:#f92672">(</span>a<span style="color:#f92672">).</span><span style="color:#a6e22e">longValue</span><span style="color:#f92672">();</span></code></pre></div>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java">    <span class="n">String</span> <span class="n">a</span> <span class="o">=</span> <span class="s">&#34;1.3094266712875436e+18&#34;</span><span class="o">;</span>
+    <span class="kt">long</span> <span class="n">value</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BigDecimal</span><span class="o">(</span><span class="n">a</span><span class="o">).</span><span class="na">longValue</span><span class="o">();</span></code></pre></td></tr></table>
+</div>
+</div>
 <p>所以要不损失精度的话，可以修改下原始方法重新打个包或者用 lua 取出来原始的字符串再转成自己需要的值。</p>
 
 <p>最后利用 <code>genScore</code> 方法就可以生成score值并排序了</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">    <span style="color:#75715e"># genScore(100, 1, 290072179)</span>
-    &gt;zadd r <span style="color:#ae81ff">108201125491</span> A
-    <span style="color:#e6db74">&#34;1&#34;</span>
-    <span style="color:#75715e"># genScore(200, 0, 290072179)</span>
-    &gt;zadd r <span style="color:#ae81ff">215038436979</span> B
-    <span style="color:#e6db74">&#34;1&#34;</span>
-    <span style="color:#75715e"># genScore(200, 1, 290072179)</span>
-    &gt;zadd r <span style="color:#ae81ff">215575307891</span> C
-    <span style="color:#e6db74">&#34;1&#34;</span>
-    <span style="color:#75715e"># genScore(400, 0, 290072179)</span>
-    &gt;zadd r <span style="color:#ae81ff">429786801779</span> D
-    <span style="color:#e6db74">&#34;1&#34;</span>
-    <span style="color:#75715e"># genScore(200, 1, 290081199)</span>
-    &gt;zadd r <span style="color:#ae81ff">215575316911</span> E
-    <span style="color:#e6db74">&#34;1&#34;</span>
-    &gt;zrange r <span style="color:#ae81ff">0</span> -1 withscores
-     <span style="color:#ae81ff">1</span><span style="color:#f92672">)</span>  <span style="color:#e6db74">&#34;A&#34;</span>
-     <span style="color:#ae81ff">2</span><span style="color:#f92672">)</span>  <span style="color:#e6db74">&#34;108201125491&#34;</span>
-     <span style="color:#ae81ff">3</span><span style="color:#f92672">)</span>  <span style="color:#e6db74">&#34;B&#34;</span>
-     <span style="color:#ae81ff">4</span><span style="color:#f92672">)</span>  <span style="color:#e6db74">&#34;215038436979&#34;</span>
-     <span style="color:#ae81ff">5</span><span style="color:#f92672">)</span>  <span style="color:#e6db74">&#34;C&#34;</span>
-     <span style="color:#ae81ff">6</span><span style="color:#f92672">)</span>  <span style="color:#e6db74">&#34;215575307891&#34;</span>
-     <span style="color:#ae81ff">7</span><span style="color:#f92672">)</span>  <span style="color:#e6db74">&#34;E&#34;</span>
-     <span style="color:#ae81ff">8</span><span style="color:#f92672">)</span>  <span style="color:#e6db74">&#34;215575316911&#34;</span>
-     <span style="color:#ae81ff">9</span><span style="color:#f92672">)</span>  <span style="color:#e6db74">&#34;D&#34;</span>
-     <span style="color:#ae81ff">10</span><span style="color:#f92672">)</span>  <span style="color:#e6db74">&#34;429786801779&#34;</span></code></pre></div>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">    <span class="c1"># genScore(100, 1, 290072179)</span>
+    &gt;zadd r <span class="m">108201125491</span> A
+    <span class="s2">&#34;1&#34;</span>
+    <span class="c1"># genScore(200, 0, 290072179)</span>
+    &gt;zadd r <span class="m">215038436979</span> B
+    <span class="s2">&#34;1&#34;</span>
+    <span class="c1"># genScore(200, 1, 290072179)</span>
+    &gt;zadd r <span class="m">215575307891</span> C
+    <span class="s2">&#34;1&#34;</span>
+    <span class="c1"># genScore(400, 0, 290072179)</span>
+    &gt;zadd r <span class="m">429786801779</span> D
+    <span class="s2">&#34;1&#34;</span>
+    <span class="c1"># genScore(200, 1, 290081199)</span>
+    &gt;zadd r <span class="m">215575316911</span> E
+    <span class="s2">&#34;1&#34;</span>
+    &gt;zrange r <span class="m">0</span> -1 withscores
+     <span class="m">1</span><span class="o">)</span>  <span class="s2">&#34;A&#34;</span>
+     <span class="m">2</span><span class="o">)</span>  <span class="s2">&#34;108201125491&#34;</span>
+     <span class="m">3</span><span class="o">)</span>  <span class="s2">&#34;B&#34;</span>
+     <span class="m">4</span><span class="o">)</span>  <span class="s2">&#34;215038436979&#34;</span>
+     <span class="m">5</span><span class="o">)</span>  <span class="s2">&#34;C&#34;</span>
+     <span class="m">6</span><span class="o">)</span>  <span class="s2">&#34;215575307891&#34;</span>
+     <span class="m">7</span><span class="o">)</span>  <span class="s2">&#34;E&#34;</span>
+     <span class="m">8</span><span class="o">)</span>  <span class="s2">&#34;215575316911&#34;</span>
+     <span class="m">9</span><span class="o">)</span>  <span class="s2">&#34;D&#34;</span>
+     <span class="m">10</span><span class="o">)</span>  <span class="s2">&#34;429786801779&#34;</span></code></pre></td></tr></table>
+</div>
+</div>
 <h3 id="3-直接拆分-double">3. 直接拆分 double</h3>
 
 <p>可以用二进制拆分当然也可以直接拆分十进制数，为了方便，还可以用小数划分维度，比如将分数放在整数位，标志位和时间戳放在小数位。</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">    A <span style="color:#ae81ff">100</span>.1290072179
-    B <span style="color:#ae81ff">200</span>.0290072179
-    C <span style="color:#ae81ff">200</span>.1290072179
-    D <span style="color:#ae81ff">400</span>.0290072179
-    E <span style="color:#ae81ff">200</span>.1290081199</code></pre></div>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">    A <span class="m">100</span>.1290072179
+    B <span class="m">200</span>.0290072179
+    C <span class="m">200</span>.1290072179
+    D <span class="m">400</span>.0290072179
+    E <span class="m">200</span>.1290081199</code></pre></td></tr></table>
+</div>
+</div>
 <p>不过这样不丢精度存储的分数比二进制拆分小。</p>
 
 <p>原理和二进制拆分一样，就不赘述了。</p>
@@ -489,7 +771,6 @@
 
     </div>
 
-    
     <div class="post-copyright">
   <p class="copyright-item">
     <span class="item-title">文章作者</span>
@@ -497,27 +778,35 @@
   </p>
   <p class="copyright-item">
     <span class="item-title">上次更新</span>
-    <span class="item-content">2019-10-23</span>
+    <span class="item-content">
+        2019-10-23
+        
+    </span>
   </p>
   
   
 </div>
-
+<div class="post-reward">
+  <input type="checkbox" name="reward" id="reward" hidden />
+  <label class="reward-button" for="reward">赞赏支持</label>
+  <div class="qr-code">
     
-    
-
-    <footer class="post-footer">
+    <label class="qr-code-image" for="reward">
+        <img class="image" src="/WechatIMG1.jpeg">
+        <span>微信打赏</span>
+      </label>
+    <label class="qr-code-image" for="reward">
+        <img class="image" src="/WechatIMG2.jpeg">
+        <span>支付宝打赏</span>
+      </label>
+  </div>
+</div><footer class="post-footer">
       <div class="post-tags">
-          
-          <a href="https://ld000.space/tags/java/">java</a>
-          
-        </div>
-
-      
+          <a href="/tags/java/">java</a>
+          </div>
       <nav class="post-nav">
         
-        
-          <a class="next" href="https://ld000.space/post/discuz_cas/">
+        <a class="next" href="/post/discuz_cas/">
             <span class="next-text nav-default">discuz 接入 cas</span>
             <span class="next-text nav-mobile">下一篇</span>
             <i class="iconfont icon-right"></i>
@@ -526,8 +815,7 @@
     </footer>
   </article>
         </div>
-        
-  <div id="disqus_thread"></div>
+        <div id="disqus_thread"></div>
     <script type="text/javascript">
     (function() {
       
@@ -541,6 +829,8 @@
     })();
     </script>
     <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+  
 
   
 
@@ -568,8 +858,7 @@
 
   <span class="copyright-year">
     &copy; 
-    
-      2017 - 
+    2017 - 
     2019
     <span class="heart">
       <i class="iconfont icon-heart"></i>
@@ -584,12 +873,10 @@
     </div>
   </div>
   
-<script src="https://ld000.space/lib/highlight/highlight.pack.js?v=20171001"></script><script type="text/javascript" src="https://ld000.space/lib/jquery/jquery-3.2.1.min.js"></script>
-  <script type="text/javascript" src="https://ld000.space/lib/slideout/slideout-1.0.1.min.js"></script>
-  <script type="text/javascript" src="https://ld000.space/lib/fancybox/jquery.fancybox-3.1.20.min.js"></script>
-
-
-<script type="text/javascript" src="https://ld000.space/dist/even.min.js?v=3.2.0"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
 
 
 <script type="application/javascript">
@@ -597,7 +884,7 @@ var doNotTrack = false;
 if (!doNotTrack) {
 	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
 	ga('create', 'UA-89678066-1', 'auto');
-	
+	ga('set', 'anonymizeIp', true);
 	ga('send', 'pageview');
 }
 </script>
