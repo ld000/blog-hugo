@@ -6,5 +6,7 @@ script:
     - rm -rf public
     - hugo
 after_success:
+    - git config user.name "ld000"
+    - git config user.email "lidong9144@163.com"
     - cd public && git add --all && git commit -m "update public" && git push origin master && cd ..
     - git subtree push --prefix public origin gh-pages
