@@ -8,5 +8,8 @@ script:
 after_success:
     - git config user.name "ld000"
     - git config user.email "lidong9144@163.com"
-    - cd public && git add --all && git commit -m "update public" && git push origin master && cd ..
-    - git subtree push --prefix public origin gh-pages
+    - cd public && git add --all && git commit -m "update public" && git push "https://${GITHUB_TOKEN}@${GITHUB_REF}" master && cd ..
+    - git subtree push --prefix public "https://${GITHUB_TOKEN}@${GITHUB_REF}" gh-pages
+env:
+    global:
+        - GITHUB_REF: git@github.com:ld000/blog-hugo.git
