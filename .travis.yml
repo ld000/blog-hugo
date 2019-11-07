@@ -3,6 +3,8 @@ git:
     depth: 1
 install: go get -v github.com/gohugoio/hugo
 script:
+    - rm -rf public
     - hugo
 after_success:
+    - cd public && git add --all && git commit -m "update public" && git push origin master && cd ..
     - git subtree push --prefix public origin gh-pages
