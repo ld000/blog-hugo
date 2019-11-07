@@ -5,9 +5,6 @@ install: go get -v github.com/gohugoio/hugo
 script:
     - rm -rf public
     - hugo
-env:
-    global:
-        - GITHUB_REF: github.com/ld000/blog-hugo.git
 deploy:
   provider: pages
   skip_cleanup: true
