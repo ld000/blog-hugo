@@ -7,10 +7,19 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-Hans</language>
     <copyright>ld000</copyright>
-    <lastBuildDate>Wed, 23 Oct 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 25 Oct 2019 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="https://ld000.space/tags/java/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>用外置 Tomcat 部署 Spring Boot 应用</title>
+      <link>https://ld000.space/post/spring_boot_tomcat/</link>
+      <pubDate>Fri, 25 Oct 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://ld000.space/post/spring_boot_tomcat/</guid>
+      <description>现在越来越多的人使用 Spring Boot 来开发自己的应用了，Spring Boot 用起来是各种方便，还内置 web 容器，只需要java -jar就能启动应用。但有时候有些公</description>
+    </item>
     
     <item>
       <title>让 Redis zset 支持多条件排序</title>
