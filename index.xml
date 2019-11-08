@@ -27,7 +27,7 @@
       <pubDate>Wed, 09 Apr 2014 00:00:00 +0000</pubDate>
       
       <guid>https://ld000.space/about/</guid>
-      <description>Hugo is a static site engine written in Go. It makes use of a variety of open source projects including: Cobra Viper J Walter Weatherman Cast Learn more and contribute on GitHub.</description>
+      <description>90后码农，现在帝都搬砖，天天CRUD的过程中还坚持总结与学习新技术 有空就会分享一些自己的开发总结和实用资源，欢迎关注~ GitHub 公众号</description>
     </item>
     
     <item>
@@ -46,6 +46,15 @@
       
       <guid>https://ld000.space/post/make_redis_zset_support_multiple_sort/</guid>
       <description>一些需求中经常要我们实现一个排行榜，数据量少的话可以使用 RDB 数据库排序，数据量大可以自己实现算法或者使用 NoSQL 数据库排序，NoSQL 数据库中最方便</description>
+    </item>
+    
+    <item>
+      <title>MacOS 用 automater 自动备份安装的软件列表</title>
+      <link>https://ld000.space/post/automator_brewfile/</link>
+      <pubDate>Sun, 15 Sep 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://ld000.space/post/automator_brewfile/</guid>
+      <description>不知道有没有人经历过重装系统后需要把所有软件都重装一遍的痛苦，而且很有可能落下几个软件没装，等到用的时候才发现，重新下载再重新配置，时间不知</description>
     </item>
     
     <item>

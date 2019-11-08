@@ -58,6 +58,20 @@
   </url>
   
   <url>
+    <loc>https://ld000.space/tags/automater/</loc>
+    <lastmod>2019-09-15T00:00:00+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://ld000.space/post/automator_brewfile/</loc>
+    <lastmod>2019-09-15T00:00:00+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
     <loc>https://ld000.space/tags/cas/</loc>
     <lastmod>2018-07-23T00:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
