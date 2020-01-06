@@ -23,7 +23,7 @@
 
 
 
-<meta name="generator" content="Hugo 0.60.0-DEV with theme even" />
+<meta name="generator" content="Hugo 0.63.0-DEV with theme even" />
 
 
 <link rel="canonical" href="https://ld000.space/post/automator_brewfile/" />
@@ -46,16 +46,13 @@
 <meta property="article:modified_time" content="2019-09-15T00:00:00+00:00" />
 <meta itemprop="name" content="MacOS 用 automater 自动备份安装的软件列表">
 <meta itemprop="description" content="不知道有没有人经历过重装系统后需要把所有软件都重装一遍的痛苦，而且很有可能落下几个软件没装，等到用的时候才发现，重新下载再重新配置，时间不知">
-
-
 <meta itemprop="datePublished" content="2019-09-15T00:00:00&#43;00:00" />
 <meta itemprop="dateModified" content="2019-09-15T00:00:00&#43;00:00" />
 <meta itemprop="wordCount" content="892">
 
 
 
-<meta itemprop="keywords" content="automater," />
-<meta name="twitter:card" content="summary"/>
+<meta itemprop="keywords" content="automater," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="MacOS 用 automater 自动备份安装的软件列表"/>
 <meta name="twitter:description" content="不知道有没有人经历过重装系统后需要把所有软件都重装一遍的痛苦，而且很有可能落下几个软件没装，等到用的时候才发现，重新下载再重新配置，时间不知"/>
 
@@ -137,44 +134,34 @@
   <h2 class="post-toc-title">文章目录</h2>
   <div class="post-toc-content always-active">
     <nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li><a href="#准备">准备</a></li>
-<li><a href="#automator-配置">Automator 配置</a></li>
-</ul></li>
-</ul>
+  <ul>
+    <li><a href="#准备">准备</a></li>
+    <li><a href="#automator-配置">Automator 配置</a></li>
+  </ul>
 </nav>
   </div>
 </div>
     <div class="post-content">
-      
-
-<p>不知道有没有人经历过重装系统后需要把所有软件都重装一遍的痛苦，而且很有可能落下几个软件没装，等到用的时候才发现，重新下载再重新配置，时间不知不觉就没了。</p>
-
+      <p>不知道有没有人经历过重装系统后需要把所有软件都重装一遍的痛苦，而且很有可能落下几个软件没装，等到用的时候才发现，重新下载再重新配置，时间不知不觉就没了。</p>
 <p>所以要是能把安装过的软件列表都备份下来就好了。mac 上正好就有这样一个软件 <code>brew</code>。</p>
-
 <h2 id="准备">准备</h2>
-
 <p><code>brew</code> 是 Mac 下的一个包管理工具，类似 Ubuntu 的 apt，可以方便的安装各种软件。</p>
-
 <blockquote>
 <p><a href="https://brew.sh/">https://brew.sh/</a></p>
 </blockquote>
-
 <p>靠一行命令就可以安装：</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code class="language-sh" data-lang="sh"><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-sh" data-lang="sh">    /usr/bin/ruby -e <span class="s2">&#34;</span><span class="k">$(</span>curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install<span class="k">)</span><span class="s2">&#34;</span></code></pre></td></tr></table>
+<pre class="chroma"><code class="language-sh" data-lang="sh">    /usr/bin/ruby -e <span class="s2">&#34;</span><span class="k">$(</span>curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install<span class="k">)</span><span class="s2">&#34;</span>
+</code></pre></td></tr></table>
 </div>
-</div>
-<p>安装好后就可以靠命令来快速安装软件了</p>
+</div><p>安装好后就可以靠命令来快速安装软件了</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code class="language-sh" data-lang="sh"><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -183,35 +170,34 @@
 <pre class="chroma"><code class="language-sh" data-lang="sh">    <span class="c1"># 安装不带界面的命令行下的工具或三方库</span>
     brew install wget
     <span class="c1"># 安装带界面的应用程序</span>
-    brew cask install firefox</code></pre></td></tr></table>
+    brew cask install firefox
+</code></pre></td></tr></table>
 </div>
-</div>
-<p>还可以安装 <code>mas</code>来管理 App Store 下载的软件</p>
-
+</div><p>还可以安装 <code>mas</code>来管理 App Store 下载的软件</p>
 <blockquote>
 <p><a href="https://github.com/mas-cli/mas">https://github.com/mas-cli/mas</a></p>
 </blockquote>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code class="language-sh" data-lang="sh"><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-sh" data-lang="sh">    brew install mas</code></pre></td></tr></table>
+<pre class="chroma"><code class="language-sh" data-lang="sh">    brew install mas
+</code></pre></td></tr></table>
 </div>
-</div>
-<p>之后我们就可以执行命令将安装过的软件列表导出了</p>
+</div><p>之后我们就可以执行命令将安装过的软件列表导出了</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code class="language-sh" data-lang="sh"><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-sh" data-lang="sh">    brew bundle dump --force --describe</code></pre></td></tr></table>
+<pre class="chroma"><code class="language-sh" data-lang="sh">    brew bundle dump --force --describe
+</code></pre></td></tr></table>
 </div>
-</div>
-<p>执行上面命令后会导出个 Brewfile 文件，里面大概长这样</p>
+</div><p>执行上面命令后会导出个 Brewfile 文件，里面大概长这样</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code class="language-sh" data-lang="sh"><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -230,37 +216,28 @@
     
     cask <span class="s2">&#34;docker&#34;</span>
     
-    mas <span class="s2">&#34;iMovie 剪辑&#34;</span>, id: <span class="m">408981434</span></code></pre></td></tr></table>
+    mas <span class="s2">&#34;iMovie 剪辑&#34;</span>, id: <span class="m">408981434</span>
+</code></pre></td></tr></table>
 </div>
-</div>
-<p>记录了通过 brew 和 App Store 安装的软件，之后可以通过 <code>brew bundle --file=&quot;./Brewfile&quot;</code>导入。</p>
-
+</div><p>记录了通过 brew 和 App Store 安装的软件，之后可以通过 <code>brew bundle --file=&quot;./Brewfile&quot;</code>导入。</p>
 <h2 id="automator-配置">Automator 配置</h2>
-
 <p>Automator 是 masOS 下的一个自动操作工具</p>
-
 <blockquote>
 <p>“自动操作”能让电脑上的大部分操作自动进行。有了“自动操作”，要创建自动化操作，您不必了解复杂的编程或脚本语言，只需使用“自动操作”资源库中数百个可用操作中的任意一些，便可以创建工作流程。这些操作能与各种 App 和 macOS 的部分程序进行互动。工作流程可以简单到只有一个操作，也可以包含许多操作以执行一系列复杂的任务。</p>
-
+</blockquote>
+<blockquote>
 <p><a href="https://support.apple.com/zh-cn/guide/automator/welcome/mac">https://support.apple.com/zh-cn/guide/automator/welcome/mac</a></p>
 </blockquote>
-
 <p>我们可以通过 Automator 创建个自动备份 Brewfile 的程序，还可以同步到 GitHub 上防止丢失。</p>
-
 <p>首先创建一个日历提醒</p>
-
-<p><img src="/img/automator_brewfile/automator1.png" alt="" /></p>
-
+<p><img src="/img/automator_brewfile/automator1.png" alt=""></p>
 <p>在左侧资源库中选择运行 Shell 脚本</p>
-
-<p><img src="/img/automator_brewfile/automator2.png" alt="" /></p>
-
+<p><img src="/img/automator_brewfile/automator2.png" alt=""></p>
 <p>然后填写上导出 Brewfile 的命令</p>
-
-<p><img src="/img/automator_brewfile/automator3.png" alt="" /></p>
+<p><img src="/img/automator_brewfile/automator3.png" alt=""></p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code class="language-sh" data-lang="sh"><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -279,19 +256,14 @@
     git add --all
     git commit -m <span class="s2">&#34;update brewfile&#34;</span>
     git pull
-    git push</code></pre></td></tr></table>
+    git push
+</code></pre></td></tr></table>
 </div>
-</div>
-<p>写好后可以点击右上角的运行按钮来测试下，打开结果可以看到运行输出</p>
-
-<p><img src="/img/automator_brewfile/automator4.png" alt="" /></p>
-
+</div><p>写好后可以点击右上角的运行按钮来测试下，打开结果可以看到运行输出</p>
+<p><img src="/img/automator_brewfile/automator4.png" alt=""></p>
 <p>之后 ctrl+s 保存，输入文件名后会自动创建一个日历提醒，重复里选上每周，之后就可以让电脑自动备份安装过的软件列表了。</p>
-
-<p><img src="/img/automator_brewfile/automator5.png" alt="" /></p>
-
+<p><img src="/img/automator_brewfile/automator5.png" alt=""></p>
 <p>下次在新电脑上就可以执行<code>brew bundle --file=&quot;./Brewfile&quot;</code>来恢复安装过的软件了，是不是很方便呢。</p>
-
 <p>如果怕忘了命令还可以写个脚本来自动执行，比如我的 <a href="https://github.com/ld000/mac-init"><code>https://github.com/ld000/mac-init</code></a>。</p>
 
     </div>
@@ -392,7 +364,7 @@
   <span class="copyright-year">
     &copy; 
     2017 - 
-    2019
+    2020
     <span class="heart">
       <i class="iconfont icon-heart"></i>
     </span>

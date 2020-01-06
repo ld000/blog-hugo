@@ -24,7 +24,7 @@
 
 
 
-<meta name="generator" content="Hugo 0.60.0-DEV with theme even" />
+<meta name="generator" content="Hugo 0.63.0-DEV with theme even" />
 
 
 <link rel="canonical" href="https://ld000.space/post/java_call_cnet/" />
@@ -47,16 +47,13 @@
 <meta property="article:modified_time" content="2017-06-28T00:00:00+00:00" />
 <meta itemprop="name" content="java 调用 c# 的方法">
 <meta itemprop="description" content="java 调用 c# 程序的几种方式。">
-
-
 <meta itemprop="datePublished" content="2017-06-28T00:00:00&#43;00:00" />
 <meta itemprop="dateModified" content="2017-06-28T00:00:00&#43;00:00" />
-<meta itemprop="wordCount" content="761">
+<meta itemprop="wordCount" content="755">
 
 
 
-<meta itemprop="keywords" content="java," />
-<meta name="twitter:card" content="summary"/>
+<meta itemprop="keywords" content="java," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="java 调用 c# 的方法"/>
 <meta name="twitter:description" content="java 调用 c# 程序的几种方式。"/>
 
@@ -138,42 +135,28 @@
   <h2 class="post-toc-title">文章目录</h2>
   <div class="post-toc-content always-active">
     <nav id="TableOfContents">
-<ul>
-<li><a href="#native-java">Native Java</a>
-<ul>
-<li><a href="#jni4net">jni4net</a></li>
-<li><a href="#javonet">javonet</a></li>
-<li><a href="#自己实现一个c-native-dll作为你的c-dll的代理">自己实现一个C++ native dll作为你的C# dll的代理</a></li>
-</ul></li>
-<li><a href="#使用中间文件做交互">使用中间文件做交互</a></li>
-<li><a href="#接口调用">接口调用</a></li>
-</ul>
+  <ul>
+    <li><a href="#jni4net">jni4net</a></li>
+    <li><a href="#javonet">javonet</a></li>
+    <li><a href="#自己实现一个c-native-dll作为你的c-dll的代理">自己实现一个C++ native dll作为你的C# dll的代理</a></li>
+  </ul>
 </nav>
   </div>
 </div>
     <div class="post-content">
       <p>java 调用 c# 程序的几种方式。</p>
-
 <h1 id="native-java">Native Java</h1>
-
 <p>Java不能直接调用C#的dll，这是因为C#和Java一样，也是运行在虚拟机上的语言，所生成的dll并不是和C++一样的native dll，因此没有办法使用JNI进行直接调用。</p>
-
 <p>Java调用C#的基本思路是：</p>
-
 <p>Java &lt;=== JNI ===&gt; C++ Native dll &lt;=== CLR ===&gt; C# dll</p>
-
 <p>给C# dll做一个C++的wrapper，Java与C++之间通过JNI实现调用，而C++和C#之间通过CLR实现调用。</p>
-
 <p><strong>这样做有个缺陷就是不能在 linux 上运行。</strong></p>
-
 <p>有以下几种方法实现：</p>
-
 <h2 id="jni4net">jni4net</h2>
-
 <p>github: <a href="https://github.com/jni4net/jni4net">https://github.com/jni4net/jni4net</a></p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code class="language-java" data-lang="java"><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -199,38 +182,35 @@
 <span class="kn">import</span> <span class="nn">java.io.IOException</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">testlib.Test</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">net.sf.jni4net.Bridge</span><span class="o">;</span>
-<span class="o">...</span>
+<span class="o">.</span><span class="o">.</span><span class="o">.</span>
         <span class="k">try</span> <span class="o">{</span>
 
-            <span class="n">Bridge</span><span class="o">.</span><span class="na">setVerbose</span><span class="o">(</span><span class="kc">true</span><span class="o">);</span>
-            <span class="n">Bridge</span><span class="o">.</span><span class="na">init</span><span class="o">();</span>
+            <span class="n">Bridge</span><span class="o">.</span><span class="na">setVerbose</span><span class="o">(</span><span class="kc">true</span><span class="o">)</span><span class="o">;</span>
+            <span class="n">Bridge</span><span class="o">.</span><span class="na">init</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
 
-            <span class="n">Bridge</span><span class="o">.</span><span class="na">LoadAndRegisterAssemblyFrom</span><span class="o">(</span><span class="k">new</span> <span class="n">File</span><span class="o">(</span><span class="s">&#34;testlib.j4n.dll&#34;</span><span class="o">));</span>
+            <span class="n">Bridge</span><span class="o">.</span><span class="na">LoadAndRegisterAssemblyFrom</span><span class="o">(</span><span class="k">new</span> <span class="n">File</span><span class="o">(</span><span class="s">&#34;testlib.j4n.dll&#34;</span><span class="o">)</span><span class="o">)</span><span class="o">;</span>
 
         <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">IOException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
             <span class="c1">// TODO Auto-generated catch block
-</span><span class="c1"></span>            <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+</span><span class="c1"></span>            <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
         <span class="o">}</span>
 
-        <span class="n">Test</span> <span class="n">test</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Test</span><span class="o">();</span>
-        <span class="n">test</span><span class="o">.</span><span class="na">Hello</span><span class="o">();</span>
-        <span class="n">test</span><span class="o">.</span><span class="na">Repeat</span><span class="o">(</span><span class="s">&#34;It works!&#34;</span><span class="o">);</span></code></pre></td></tr></table>
+        <span class="n">Test</span> <span class="n">test</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Test</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+        <span class="n">test</span><span class="o">.</span><span class="na">Hello</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+        <span class="n">test</span><span class="o">.</span><span class="na">Repeat</span><span class="o">(</span><span class="s">&#34;It works!&#34;</span><span class="o">)</span><span class="o">;</span>
+</code></pre></td></tr></table>
 </div>
-</div>
-<p>缺点：</p>
-
+</div><p>缺点：</p>
 <ol>
 <li>很长时间没更新了</li>
-<li>不支持在 Mono 和 Linux 上运行。原文：<a href="http://zamboch.blogspot.cz/2010/04/jni4net-not-yet-on-mono-linux.html">It&rsquo;s not supported at the moment, sorry</a></li>
+<li>不支持在 Mono 和 Linux 上运行。原文：<a href="http://zamboch.blogspot.cz/2010/04/jni4net-not-yet-on-mono-linux.html">It's not supported at the moment, sorry</a></li>
 <li>性能一般</li>
 </ol>
-
 <h2 id="javonet">javonet</h2>
-
 <p>按年收费</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code class="language-java" data-lang="java"><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -238,47 +218,35 @@
 </span><span class="lnt">6
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kt">void</span> <span class="nf">GenerateRandomNumber</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">JavonetException</span> <span class="o">{</span>
-    <span class="n">NObject</span> <span class="n">objRandom</span> <span class="o">=</span> <span class="n">Javonet</span><span class="o">.</span><span class="na">New</span><span class="o">(</span><span class="s">&#34;System.Random&#34;</span><span class="o">);</span>
-    <span class="kt">int</span> <span class="n">value</span> <span class="o">=</span> <span class="n">objRandom</span><span class="o">.</span><span class="na">invoke</span><span class="o">(</span><span class="s">&#34;Next&#34;</span><span class="o">,</span><span class="n">10</span><span class="o">,</span><span class="n">20</span><span class="o">);</span>
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kt">void</span> <span class="nf">GenerateRandomNumber</span><span class="o">(</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">JavonetException</span> <span class="o">{</span>
+    <span class="n">NObject</span> <span class="n">objRandom</span> <span class="o">=</span> <span class="n">Javonet</span><span class="o">.</span><span class="na">New</span><span class="o">(</span><span class="s">&#34;System.Random&#34;</span><span class="o">)</span><span class="o">;</span>
+    <span class="kt">int</span> <span class="n">value</span> <span class="o">=</span> <span class="n">objRandom</span><span class="o">.</span><span class="na">invoke</span><span class="o">(</span><span class="s">&#34;Next&#34;</span><span class="o">,</span><span class="n">10</span><span class="o">,</span><span class="n">20</span><span class="o">)</span><span class="o">;</span>
 
-    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">value</span><span class="o">);</span>
-<span class="o">}</span></code></pre></td></tr></table>
+    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">value</span><span class="o">)</span><span class="o">;</span>
+<span class="o">}</span>
+</code></pre></td></tr></table>
 </div>
-</div>
-<h2 id="自己实现一个c-native-dll作为你的c-dll的代理">自己实现一个C++ native dll作为你的C# dll的代理</h2>
-
+</div><h2 id="自己实现一个c-native-dll作为你的c-dll的代理">自己实现一个C++ native dll作为你的C# dll的代理</h2>
 <p>基本的实现思路是：</p>
-
 <ol>
 <li>对应你的C# dll，写一套Java版本的API。</li>
 <li>使用javah命令，将Java API翻译成对应的C++ API，并输出到对应的xxxxJNI.h文件中。</li>
 <li>创建C++ dll工程，添加xxxxJNI.h以及jdk提供的jni.h和jni_md.h，并启用clr支持。</li>
 <li>在C++ dll工程中通过managed C++调用你的C#dll，进而实现所有的C++ API。</li>
 </ol>
-
 <p>操作过程可参考  <a href="https://www.codeproject.com/Articles/378826/How-to-wrap-a-Csharp-library-for-use-in-Java">How-to-wrap-a-Csharp-library-for-use-in-Java</a> 和 <a href="http://www.iteye.com/topic/1133867">Java 调用 C# DLL</a>.</p>
-
 <h1 id="使用中间文件做交互">使用中间文件做交互</h1>
-
 <p>可以把输入和输出存到一个中间文本文件中(json, csv, txt)，让 c# 程序调用，然后输出一个文本文件。</p>
-
 <p>缺点：</p>
-
 <ol>
 <li>过程繁琐。</li>
 <li>java 和 c# 方都无法感知对方处理进度，无法方便的确定输入输出完成时间。(可以在文本结尾放置一段特殊字符作为处理结束标志)</li>
 <li>程序异常不好发现。</li>
 </ol>
-
 <h1 id="接口调用">接口调用</h1>
-
 <p>c# 将输入封装成 http 或 socket 接口，供 java 调用。c# 程序编译成 exe，在安装了 Mono 的 Linux 机器上运行，或运行在 Mono Docker 镜像中。</p>
-
-<hr />
-
+<hr>
 <p>参考</p>
-
 <blockquote>
 <p><a href="http://ju.outofmemory.cn/entry/153844">http://ju.outofmemory.cn/entry/153844</a></p>
 </blockquote>
@@ -380,7 +348,7 @@
   <span class="copyright-year">
     &copy; 
     2017 - 
-    2019
+    2020
     <span class="heart">
       <i class="iconfont icon-heart"></i>
     </span>

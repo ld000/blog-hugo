@@ -25,7 +25,7 @@
 
 
 
-<meta name="generator" content="Hugo 0.60.0-DEV with theme even" />
+<meta name="generator" content="Hugo 0.63.0-DEV with theme even" />
 
 
 <link rel="canonical" href="https://ld000.space/post/aspects_are_not_applied/" />
@@ -44,7 +44,6 @@
 <meta property="og:description" content="
 原文：http://denis-zhdanov.blogspot.com/2009/07/spring-aop-top-problem-1-aspects-are.html
 
-
 这篇文章继续讨论从 Spring AOP top problem #2 - java.lang.ClassCastException: $Proxy7 开始的话题。在这个话题里，我想要说明一些现在接触 spring AOP 的 spring 用户(特别是新用户)讨论最多(从我的观点看来)的问题。" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://ld000.space/post/aspects_are_not_applied/" />
@@ -54,22 +53,17 @@
 <meta itemprop="description" content="
 原文：http://denis-zhdanov.blogspot.com/2009/07/spring-aop-top-problem-1-aspects-are.html
 
-
 这篇文章继续讨论从 Spring AOP top problem #2 - java.lang.ClassCastException: $Proxy7 开始的话题。在这个话题里，我想要说明一些现在接触 spring AOP 的 spring 用户(特别是新用户)讨论最多(从我的观点看来)的问题。">
-
-
 <meta itemprop="datePublished" content="2017-06-12T00:00:00&#43;00:00" />
 <meta itemprop="dateModified" content="2017-06-12T00:00:00&#43;00:00" />
-<meta itemprop="wordCount" content="1288">
+<meta itemprop="wordCount" content="1290">
 
 
 
-<meta itemprop="keywords" content="aspect,spring,java," />
-<meta name="twitter:card" content="summary"/>
+<meta itemprop="keywords" content="aspect,spring,java," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="翻译: Spring AOP 讨论最多的问题 #1 - aspects 没有生效"/>
 <meta name="twitter:description" content="
 原文：http://denis-zhdanov.blogspot.com/2009/07/spring-aop-top-problem-1-aspects-are.html
-
 
 这篇文章继续讨论从 Spring AOP top problem #2 - java.lang.ClassCastException: $Proxy7 开始的话题。在这个话题里，我想要说明一些现在接触 spring AOP 的 spring 用户(特别是新用户)讨论最多(从我的观点看来)的问题。"/>
 
@@ -150,26 +144,21 @@
     <div class="post-toc" id="post-toc">
   <h2 class="post-toc-title">文章目录</h2>
   <div class="post-toc-content always-active">
-    
+    <nav id="TableOfContents"></nav>
   </div>
 </div>
     <div class="post-content">
       <blockquote>
-<p>原文：<a href="http://denis-zhdanov.blogspot.com/2009/07/spring-aop-top-problem-1-aspects-are.html">http://denis-zhdanov.blogspot.com/2009/07/spring-aop-top-problem-1-aspects-are.html</a></p>
+<p>原文：http://denis-zhdanov.blogspot.com/2009/07/spring-aop-top-problem-1-aspects-are.html</p>
 </blockquote>
-
 <p>这篇文章继续讨论从 <a href="http://denis-zhdanov.blogspot.com/2009/05/spring-aop-top-problem-2.html">Spring AOP top problem #2 - java.lang.ClassCastException: $Proxy7</a> 开始的话题。在这个话题里，我想要说明一些现在接触 spring AOP 的 spring 用户(特别是新用户)讨论最多(从我的观点看来)的问题。</p>
-
 <p>现在我想要聊一聊自身调用(&lsquo;self-calls&rsquo;)，如果你有这方面的经验可以跳过接下来的内容.</p>
-
 <p>请注意 spring 文档也描述了一个同样的问题 - <a href="http://docs.spring.io/spring/docs/3.0.x/spring-framework-reference/html/ch08s06.html#aop-understanding-aop-proxies">8.6.1 Understanding AOP proxies</a>。然而，我发现通过 spring 论坛里的很多文章显示人们并没有发现这个问题。所以，我想要把这个问题解释的更明白些 / 用我的语言。</p>
-
 <p>让我们创建一个说明这个问题的例子。假设我们是 spring 的新用户而且用 spring aop 写了一个非常酷的代码，并且运行的很好。</p>
-
 <p><code>AopService.java</code></p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code class="language-java" data-lang="java"><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -193,20 +182,20 @@
 <span class="nd">@Component</span>
 <span class="kd">public</span> <span class="kd">class</span> <span class="nc">AopService</span> <span class="o">{</span>
 
-    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">service</span><span class="o">()</span> <span class="o">{</span>
-        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;AopService.service()&#34;</span><span class="o">);</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">service</span><span class="o">(</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;AopService.service()&#34;</span><span class="o">)</span><span class="o">;</span>
     <span class="o">}</span>
 
-    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">anotherService</span><span class="o">()</span> <span class="o">{</span>
-        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;AopService.anotherService()&#34;</span><span class="o">);</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">anotherService</span><span class="o">(</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;AopService.anotherService()&#34;</span><span class="o">)</span><span class="o">;</span>
     <span class="o">}</span>
-<span class="o">}</span></code></pre></td></tr></table>
+<span class="o">}</span>
+</code></pre></td></tr></table>
 </div>
-</div>
-<p><code>TestAspect.java</code></p>
+</div><p><code>TestAspect.java</code></p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code class="language-java" data-lang="java"><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -223,6 +212,7 @@
 </span><span class="lnt">15
 </span><span class="lnt">16
 </span><span class="lnt">17
+</span><span class="lnt">18
 </span></code></pre></td>
 <td class="lntd">
 <pre class="chroma"><code class="language-java" data-lang="java"><span class="kn">package</span> <span class="nn">com.spring.aop</span><span class="o">;</span>
@@ -238,16 +228,17 @@
 
     <span class="nd">@Around</span><span class="o">(</span><span class="s">&#34;execution(* com.spring.aop.AopService.*(..))&#34;</span><span class="o">)</span>
     <span class="kd">public</span> <span class="n">Object</span> <span class="nf">advice</span><span class="o">(</span><span class="n">ProceedingJoinPoint</span> <span class="n">joinPoint</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Throwable</span> <span class="o">{</span>
-        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;TestAspect.advice()&#34;</span><span class="o">);</span>
-        <span class="k">return</span> <span class="n">joinPoint</span><span class="o">.</span><span class="na">proceed</span><span class="o">();</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;TestAspect.advice()&#34;</span><span class="o">)</span><span class="o">;</span>
+        <span class="k">return</span> <span class="n">joinPoint</span><span class="o">.</span><span class="na">proceed</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
     <span class="o">}</span>
-<span class="o">}</span></code></pre></td></tr></table>
+<span class="o">}</span>
+
+</code></pre></td></tr></table>
 </div>
-</div>
-<p><code>spring-config.xml</code></p>
+</div><p><code>spring-config.xml</code></p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code class="language-xml" data-lang="xml"><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -261,9 +252,11 @@
 </span><span class="lnt">12
 </span><span class="lnt">13
 </span><span class="lnt">14
+</span><span class="lnt">15
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-xml" data-lang="xml"><span class="cp">&lt;?xml version=&#34;1.0&#34; encoding=&#34;UTF-8&#34;?&gt;</span>
+<pre class="chroma"><code class="language-xml" data-lang="xml">
+<span class="cp">&lt;?xml version=&#34;1.0&#34; encoding=&#34;UTF-8&#34;?&gt;</span>
 <span class="nt">&lt;beans</span> <span class="na">xmlns=</span><span class="s">&#34;http://www.springframework.org/schema/beans&#34;</span>
        <span class="na">xmlns:xsi=</span><span class="s">&#34;http://www.w3.org/2001/XMLSchema-instance&#34;</span>
        <span class="na">xmlns:aop=</span><span class="s">&#34;http://www.springframework.org/schema/aop&#34;</span>
@@ -274,15 +267,15 @@
 </span><span class="s">  http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd&#34;</span><span class="nt">&gt;</span>
 
     <span class="nt">&lt;context:component-scan</span> <span class="na">base-package=</span><span class="s">&#34;com.spring.aop&#34;</span><span class="nt">/&gt;</span>
-    <span class="nt">&lt;aop:aspectj-autoproxy/&gt;</span>
+    <span class="nt">&lt;aop:aspectj-autoproxy</span><span class="nt">/&gt;</span>
 
-<span class="nt">&lt;/beans&gt;</span></code></pre></td></tr></table>
+<span class="nt">&lt;/beans&gt;</span>
+</code></pre></td></tr></table>
 </div>
-</div>
-<p><code>SpringStart.java</code></p>
+</div><p><code>SpringStart.java</code></p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code class="language-java" data-lang="java"><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -303,36 +296,35 @@
 <span class="kn">import</span> <span class="nn">org.springframework.context.support.ClassPathXmlApplicationContext</span><span class="o">;</span>
 
 <span class="kd">public</span> <span class="kd">class</span> <span class="nc">SpringStart</span> <span class="o">{</span>
-    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
-        <span class="n">ClassPathXmlApplicationContext</span> <span class="n">context</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ClassPathXmlApplicationContext</span><span class="o">(</span><span class="s">&#34;spring-config.xml&#34;</span><span class="o">);</span>
-        <span class="n">AopService</span> <span class="n">service</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="na">getBeansOfType</span><span class="o">(</span><span class="n">AopService</span><span class="o">.</span><span class="na">class</span><span class="o">).</span><span class="na">values</span><span class="o">().</span><span class="na">iterator</span><span class="o">().</span><span class="na">next</span><span class="o">();</span>
-        <span class="n">service</span><span class="o">.</span><span class="na">service</span><span class="o">();</span>
-        <span class="n">service</span><span class="o">.</span><span class="na">anotherService</span><span class="o">();</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[</span><span class="o">]</span> <span class="n">args</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+        <span class="n">ClassPathXmlApplicationContext</span> <span class="n">context</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ClassPathXmlApplicationContext</span><span class="o">(</span><span class="s">&#34;spring-config.xml&#34;</span><span class="o">)</span><span class="o">;</span>
+        <span class="n">AopService</span> <span class="n">service</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="na">getBeansOfType</span><span class="o">(</span><span class="n">AopService</span><span class="o">.</span><span class="na">class</span><span class="o">)</span><span class="o">.</span><span class="na">values</span><span class="o">(</span><span class="o">)</span><span class="o">.</span><span class="na">iterator</span><span class="o">(</span><span class="o">)</span><span class="o">.</span><span class="na">next</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+        <span class="n">service</span><span class="o">.</span><span class="na">service</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+        <span class="n">service</span><span class="o">.</span><span class="na">anotherService</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
     <span class="o">}</span>
-<span class="o">}</span></code></pre></td></tr></table>
+<span class="o">}</span>
+</code></pre></td></tr></table>
 </div>
-</div>
-<p>我们创建了一个包含简单的只会打印一些输出来说明被调用过的方法和简单的 aspect 注入这个类中所有 public 方法并且打印信息来说明注入被执行了的 service 类。如果我们执行 <code>SpringStart</code> 类，我们会看到期望的输出 - 方法都被注入成功。</p>
+</div><p>我们创建了一个包含简单的只会打印一些输出来说明被调用过的方法和简单的 aspect 注入这个类中所有 public 方法并且打印信息来说明注入被执行了的 service 类。如果我们执行 <code>SpringStart</code> 类，我们会看到期望的输出 - 方法都被注入成功。</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
-</span></pre></td>
+</span></code></pre></td>
 <td class="lntd">
-<pre class="chroma">TestAspect.advice()
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">TestAspect.advice()
 AopService.service()
 TestAspect.advice()
-AopService.anotherService()</pre></td></tr></table>
+AopService.anotherService()
+</code></pre></td></tr></table>
 </div>
-</div>
-<p>让我们稍微拓展下 service 类。</p>
-
+</div><p>让我们稍微拓展下 service 类。</p>
 <p><code>AopService.java</code></p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code class="language-java" data-lang="java"><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -357,40 +349,39 @@ AopService.anotherService()</pre></td></tr></table>
 <span class="nd">@Component</span>
 <span class="kd">public</span> <span class="kd">class</span> <span class="nc">AopService</span> <span class="o">{</span>
 
-    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">service</span><span class="o">()</span> <span class="o">{</span>
-        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;AopService.service()&#34;</span><span class="o">);</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">service</span><span class="o">(</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;AopService.service()&#34;</span><span class="o">)</span><span class="o">;</span>
     <span class="o">}</span>
 
-    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">anotherService</span><span class="o">()</span> <span class="o">{</span>
-        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;AopService.anotherService(). Calling AopService.service()...&#34;</span><span class="o">);</span>
-        <span class="n">service</span><span class="o">();</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">anotherService</span><span class="o">(</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;AopService.anotherService(). Calling AopService.service()...&#34;</span><span class="o">)</span><span class="o">;</span>
+        <span class="n">service</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
     <span class="o">}</span>
-<span class="o">}</span></code></pre></td></tr></table>
+<span class="o">}</span>
+</code></pre></td></tr></table>
 </div>
-</div>
-<p>我们期望 aspect 执行 3次 - <code>service()</code> 和 <code>anotherService()</code> 在 <code>SpringStart.main()</code> 中调用，<code>service()</code> 在 <code>AopService.anotherService()</code> 中调用。然而，如果我们运行这个例子我们发现 aspect 只执行了两次（从 <code>SpringStart.main()</code> 开始执行）i.e. <code>AopService.anotherService()</code> 中调用的 <code>service()</code> 没有被注入。</p>
+</div><p>我们期望 aspect 执行 3次 - <code>service()</code> 和 <code>anotherService()</code> 在 <code>SpringStart.main()</code> 中调用，<code>service()</code> 在 <code>AopService.anotherService()</code> 中调用。然而，如果我们运行这个例子我们发现 aspect 只执行了两次（从 <code>SpringStart.main()</code> 开始执行）i.e. <code>AopService.anotherService()</code> 中调用的 <code>service()</code> 没有被注入。</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
 </span><span class="lnt">5
-</span></pre></td>
+</span></code></pre></td>
 <td class="lntd">
-<pre class="chroma">TestAspect.advice()
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">TestAspect.advice()
 AopService.service()
 TestAspect.advice()
 AopService.anotherService(). Calling AopService.service()...
-AopService.service()</pre></td></tr></table>
+AopService.service()
+</code></pre></td></tr></table>
 </div>
-</div>
-<p>通常，problem root is tightly connected to <a href="https://www.joelonsoftware.com/2002/11/11/the-law-of-leaky-abstractions/">The Law of Leaky Abstractions</a>。I.e. 我们对 aspect 的表现有特别的期待但是没有发现 spring aop 的规则不允许这些期待实现。</p>
-
+</div><p>通常，problem root is tightly connected to <a href="https://www.joelonsoftware.com/2002/11/11/the-law-of-leaky-abstractions/">The Law of Leaky Abstractions</a>。I.e. 我们对 aspect 的表现有特别的期待但是没有发现 spring aop 的规则不允许这些期待实现。</p>
 <p>通常的解释是 spring AOP 是基于代理(proxy-based)的，i.e. 他假定当 bean 作为依赖被使用，他的方法应该用 aspect 代理包裹(be advised by particular aspect(s) the container injects aspect-aware bean proxy)而不是 bean 本身。例如，返回的代理使用和和下面代码近似的方法:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code class="language-java" data-lang="java"><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -414,30 +405,31 @@ AopService.service()</pre></td></tr></table>
 </span><span class="c1"></span>    <span class="kd">private</span> <span class="n">TestAspect</span> <span class="n">aspect</span><span class="o">;</span>
     <span class="kd">private</span> <span class="n">AopService</span> <span class="n">rawService</span><span class="o">;</span>
 
-    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">service</span><span class="o">()</span> <span class="o">{</span>
-        <span class="n">aspect</span><span class="o">.</span><span class="na">advice</span><span class="o">();</span>
-        <span class="n">rawService</span><span class="o">.</span><span class="na">service</span><span class="o">();</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">service</span><span class="o">(</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">aspect</span><span class="o">.</span><span class="na">advice</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+        <span class="n">rawService</span><span class="o">.</span><span class="na">service</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
     <span class="o">}</span>
 
-    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">anotherService</span><span class="o">()</span> <span class="o">{</span>
-        <span class="n">aspect</span><span class="o">.</span><span class="na">advice</span><span class="o">();</span>
-        <span class="n">anotherService</span><span class="o">();</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">anotherService</span><span class="o">(</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">aspect</span><span class="o">.</span><span class="na">advice</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+        <span class="n">anotherService</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
     <span class="o">}</span>
-<span class="o">}</span></code></pre></td></tr></table>
+<span class="o">}</span>
+</code></pre></td></tr></table>
 </div>
-</div>
-<p>I.e. 这个代理被 aspect 包裹而且在调用 <code>raw</code> bean 前他调用了必要的 aspect 方法。然而，上一个 <code>AopService</code> 实现在 <code>anotherService()</code> 内调用了 <code>service()</code> - 这样代理无法注入因为这样调用违反了 &lsquo;this&rsquo; 原则, i.e. 这个方法是 &lsquo;rawBean&rsquo; 自己调用的。这就是为什么 aspect 在这种情况下不起作用的答案。</p>
-
+</div><p>I.e. 这个代理被 aspect 包裹而且在调用 <code>raw</code> bean 前他调用了必要的 aspect 方法。然而，上一个 <code>AopService</code> 实现在 <code>anotherService()</code> 内调用了 <code>service()</code> - 这样代理无法注入因为这样调用违反了 &lsquo;this&rsquo; 原则, i.e. 这个方法是 &lsquo;rawBean&rsquo; 自己调用的。这就是为什么 aspect 在这种情况下不起作用的答案。</p>
 <p>现在，当我们明白了问题原因我们来聊聊怎么解决它。至少有三种方法：</p>
-
 <ul>
-<li><p><strong>aspect 建议重写代码来避免 self-calls</strong> - 非常不方便，特别是如果你在维护遗留代码;</p></li>
-
-<li><p><strong>用 aspect-aware proxy 替换 self-calls, i.e. 在 anotherService() 里用 ((AopService) AopContext.currentProxy()).service() 代替 service()</strong> - 也不方便，需要额外设置代理而且和 spring 的代码重复;</p></li>
-
-<li><p><strong>用 aspectj weaving</strong> - 这是我喜欢的方案。他会直接注入 aspect 到对应的 class 里， i.e. 不需要所有的方法都必须被代理;</p></li>
+<li>
+<p><strong>aspect 建议重写代码来避免 self-calls</strong> - 非常不方便，特别是如果你在维护遗留代码;</p>
+</li>
+<li>
+<p><strong>用 aspect-aware proxy 替换 self-calls, i.e. 在 anotherService() 里用 ((AopService) AopContext.currentProxy()).service() 代替 service()</strong> - 也不方便，需要额外设置代理而且和 spring 的代码重复;</p>
+</li>
+<li>
+<p><strong>用 aspectj weaving</strong> - 这是我喜欢的方案。他会直接注入 aspect 到对应的 class 里， i.e. 不需要所有的方法都必须被代理;</p>
+</li>
 </ul>
-
 <p>我会写一篇文章来说明在 spring 中怎么使用各种类型的 aspectj weaving，这样会更加清楚的说明这个问题。</p>
     </div>
 
@@ -539,7 +531,7 @@ AopService.service()</pre></td></tr></table>
   <span class="copyright-year">
     &copy; 
     2017 - 
-    2019
+    2020
     <span class="heart">
       <i class="iconfont icon-heart"></i>
     </span>

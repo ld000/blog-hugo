@@ -23,7 +23,7 @@
 
 
 
-<meta name="generator" content="Hugo 0.60.0-DEV with theme even" />
+<meta name="generator" content="Hugo 0.63.0-DEV with theme even" />
 
 
 <link rel="canonical" href="https://ld000.space/post/github-pages-jekyll/" />
@@ -46,16 +46,13 @@
 <meta property="article:modified_time" content="2016-12-16T00:00:00+00:00" />
 <meta itemprop="name" content="搭建一个基于 github-pages 和 jekyll 的免费博客">
 <meta itemprop="description" content="搭建一个基于 github-pages 和 jekyll 的免费博客 环境 macOS 10.12.2 申请 github-pages 源地址 https://pages.github.com 创建一个仓库 在 github 建立一个新仓库，命名为 username.github.io，用自己的用户名">
-
-
 <meta itemprop="datePublished" content="2016-12-16T00:00:00&#43;00:00" />
 <meta itemprop="dateModified" content="2016-12-16T00:00:00&#43;00:00" />
 <meta itemprop="wordCount" content="1139">
 
 
 
-<meta itemprop="keywords" content="github-pages," />
-<meta name="twitter:card" content="summary"/>
+<meta itemprop="keywords" content="github-pages," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="搭建一个基于 github-pages 和 jekyll 的免费博客"/>
 <meta name="twitter:description" content="搭建一个基于 github-pages 和 jekyll 的免费博客 环境 macOS 10.12.2 申请 github-pages 源地址 https://pages.github.com 创建一个仓库 在 github 建立一个新仓库，命名为 username.github.io，用自己的用户名"/>
 
@@ -137,93 +134,67 @@
   <h2 class="post-toc-title">文章目录</h2>
   <div class="post-toc-content always-active">
     <nav id="TableOfContents">
-<ul>
-<li><a href="#申请-github-pages">申请 github-pages</a></li>
-<li><a href="#搭建-jekyll-环境">搭建 jekyll 环境</a></li>
-<li><a href="#安装模板">安装模板</a>
-<ul>
-<li><a href="#安装过程">安装过程</a></li>
-<li><a href="#碰到的坑-安装的时候会碰到以下错误">碰到的坑，安装的时候会碰到以下错误</a></li>
-</ul></li>
-</ul>
+  <ul>
+    <li><a href="#安装过程">安装过程</a></li>
+    <li><a href="#碰到的坑安装的时候会碰到以下错误">碰到的坑，安装的时候会碰到以下错误</a></li>
+  </ul>
 </nav>
   </div>
 </div>
     <div class="post-content">
-      
-
-<p>搭建一个基于 github-pages 和 jekyll 的免费博客</p>
-
-<!-- more -->
-
+      <p>搭建一个基于 github-pages 和 jekyll 的免费博客</p>
+<!-- raw HTML omitted -->
 <blockquote>
 <p>环境 macOS 10.12.2</p>
 </blockquote>
-
 <h1 id="申请-github-pages">申请 github-pages</h1>
-
-<hr />
-
+<hr>
 <blockquote>
 <p>源地址 <a href="https://pages.github.com">https://pages.github.com</a></p>
 </blockquote>
-
 <ol>
-<li><p>创建一个仓库
-在 github 建立一个新仓库，命名为 <code>username.github.io</code>，用自己的用户名替换 <code>username</code>。<strong>note: 如果用户名不匹配，将会不起作用。</strong></p></li>
-
-<li><p>clone 项目 <code>git clone https://github.com/username/username.github.io</code></p></li>
-
-<li><p>创建 hello world。<code>cd username.github.io &amp;&amp; echo &quot;Hello World&quot; &gt; index.html</code></p></li>
-
-<li><p>push 项目。<code>git add --all &amp;&amp; git commit -m &quot;Initial commit&quot; &amp;&amp; git push -u origin master</code></p></li>
-
-<li><p>访问 <code>http://username.github.io</code>，就能看到刚刚创建的网站了。</p></li>
+<li>
+<p>创建一个仓库
+在 github 建立一个新仓库，命名为 <code>username.github.io</code>，用自己的用户名替换 <code>username</code>。<strong>note: 如果用户名不匹配，将会不起作用。</strong></p>
+</li>
+<li>
+<p>clone 项目 <code>git clone https://github.com/username/username.github.io</code></p>
+</li>
+<li>
+<p>创建 hello world。<code>cd username.github.io &amp;&amp; echo &quot;Hello World&quot; &gt; index.html</code></p>
+</li>
+<li>
+<p>push 项目。<code>git add --all &amp;&amp; git commit -m &quot;Initial commit&quot; &amp;&amp; git push -u origin master</code></p>
+</li>
+<li>
+<p>访问 <code>http://username.github.io</code>，就能看到刚刚创建的网站了。</p>
+</li>
 </ol>
-
 <h1 id="搭建-jekyll-环境">搭建 jekyll 环境</h1>
-
-<hr />
-
+<hr>
 <p>输入 <code>ruby --version</code> 验证是否安装了 <code>ruby</code>（Mac 已经预装了）</p>
-
-<p><img src="http://upload-images.jianshu.io/upload_images/1768578-d51c03c25e21438d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="ruby_version.png" /></p>
-
+<p><img src="http://upload-images.jianshu.io/upload_images/1768578-d51c03c25e21438d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="ruby_version.png"></p>
 <p>安装 jekyll，输入 <code>gem install jekyll</code></p>
-
 <p>删除之前的 <code>index.html</code>，运行 <code>jekyll new .</code>，jekyll 就会自动生成一些博客的基础文件和目录。输入 <code>jekyll serve</code>，就可以访问了。默认地址 <code>http://127.0.0.1:4000/</code>。</p>
-
 <p>还可以在 <code>_config.yml</code> 中进行一些个性化配置。</p>
-
 <p>文档地址 <code>http://jekyllcn.com/</code></p>
-
 <h1 id="安装模板">安装模板</h1>
-
-<hr />
-
+<hr>
 <p>如果用 jekyll 从头开始搭建一个网站就太费时间了，可以先找一个模板，然后再在上面做修改。</p>
-
 <p>一些模板网站：</p>
-
 <ul>
 <li><a href="http://jekyllthemes.org/">http://jekyllthemes.org/</a></li>
 <li><a href="https://mademistakes.com/work/jekyll-themes/">https://mademistakes.com/work/jekyll-themes/</a></li>
 </ul>
-
 <p>我现在用的是第二个网站里的 <code>Minimal Mistakes Theme</code> 模板。</p>
-
 <p>效果图：</p>
-
-<p><img src="http://upload-images.jianshu.io/upload_images/1768578-adf87c2843b91b17.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="minimal_mistakes.png" /></p>
-
+<p><img src="http://upload-images.jianshu.io/upload_images/1768578-adf87c2843b91b17.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="minimal_mistakes.png"></p>
 <h2 id="安装过程">安装过程</h2>
-
 <p>将项目 clone 下来，解压放入 github-pages 项目路径。</p>
-
 <p>用以下代码替换 Gemfile 里的内容：</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -234,9 +205,9 @@
 </span><span class="lnt"> 9
 </span><span class="lnt">10
 </span><span class="lnt">11
-</span></pre></td>
+</span></code></pre></td>
 <td class="lntd">
-<pre class="chroma">source &#34;https://rubygems.org&#34;
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">source &#34;https://rubygems.org&#34;
 
 gem &#34;github-pages&#34;, group: :jekyll_plugins
 
@@ -246,13 +217,11 @@ group :jekyll_plugins do
   gem &#34;jekyll-gist&#34;
   gem &#34;jekyll-feed&#34;
   gem &#34;jemoji&#34;
-end</pre></td></tr></table>
+end
+</code></pre></td></tr></table>
 </div>
-</div>
-<p>然后运行 <code>bundle update</code> 安装依赖。</p>
-
+</div><p>然后运行 <code>bundle update</code> 安装依赖。</p>
 <p>移除以下不需要的文件或文件夹：</p>
-
 <ul>
 <li><code>.editorconfig</code></li>
 <li><code>.gitattributes</code></li>
@@ -265,13 +234,11 @@ end</pre></td></tr></table>
 <li><code>screenshot-layouts.png</code></li>
 <li><code>screenshot.png</code></li>
 </ul>
-
 <p>最后运行 <code>bundle exec jekyll serve</code> 就能在本地启动服务了。访问 <code>localhost:4000</code> 就能看到效果。</p>
-
-<h2 id="碰到的坑-安装的时候会碰到以下错误">碰到的坑，安装的时候会碰到以下错误</h2>
+<h2 id="碰到的坑安装的时候会碰到以下错误">碰到的坑，安装的时候会碰到以下错误</h2>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="lnt">  1
+<pre class="chroma"><code><span class="lnt">  1
 </span><span class="lnt">  2
 </span><span class="lnt">  3
 </span><span class="lnt">  4
@@ -395,9 +362,9 @@ current directory: /Library/Ruby/Gems/2.0.0/gems/nokogiri-1.6.8.1/ext/nokogiri
 checking <span class="k">if</span> the C compiler accepts ... yes
 checking <span class="k">if</span> the C compiler accepts -Wno-error<span class="o">=</span>unused-command-line-argument-hard-error-in-future... no
 Building nokogiri using packaged libraries.
-Using mini_portile version <span class="m">2</span>.1.0
+Using mini_portile version 2.1.0
 checking <span class="k">for</span> iconv.h... yes
-checking <span class="k">for</span> gzdopen<span class="o">()</span> in -lz... yes
+checking <span class="k">for</span> gzdopen<span class="o">(</span><span class="o">)</span> in -lz... yes
 checking <span class="k">for</span> iconv... yes
 ************************************************************************
 IMPORTANT NOTICE:
@@ -422,10 +389,10 @@ Note, however, that nokogiri is not fully compatible with arbitrary
 versions of libxml2 provided by OS/package vendors.
 ************************************************************************
 Extracting libxml2-2.9.4.tar.gz into tmp/x86_64-apple-darwin16/ports/libxml2/2.9.4... OK
-Running <span class="s1">&#39;configure&#39;</span> <span class="k">for</span> libxml2 <span class="m">2</span>.9.4... OK
-Running <span class="s1">&#39;compile&#39;</span> <span class="k">for</span> libxml2 <span class="m">2</span>.9.4... ERROR, review
+Running <span class="s1">&#39;configure&#39;</span> <span class="k">for</span> libxml2 2.9.4... OK
+Running <span class="s1">&#39;compile&#39;</span> <span class="k">for</span> libxml2 2.9.4... ERROR, review
 <span class="s1">&#39;/Library/Ruby/Gems/2.0.0/gems/nokogiri-1.6.8.1/ext/nokogiri/tmp/x86_64-apple-darwin16/ports/libxml2/2.9.4/compile.log&#39;</span> to see what happened. Last lines are:
-<span class="o">========================================================================</span>
+<span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span>
   CCLD     libxml2.la
   CC       testdso.lo
   CCLD     testdso.la
@@ -444,10 +411,10 @@ Undefined symbols <span class="k">for</span> architecture i386:
       _is_format_lzma in libxml2.a<span class="o">(</span>xzlib.o<span class="o">)</span>
 ld: symbol<span class="o">(</span>s<span class="o">)</span> not found <span class="k">for</span> architecture i386
 clang: error: linker <span class="nb">command</span> failed with <span class="nb">exit</span> code <span class="m">1</span> <span class="o">(</span>use -v to see invocation<span class="o">)</span>
-make<span class="o">[</span><span class="m">2</span><span class="o">]</span>: *** <span class="o">[</span>xmllint<span class="o">]</span> Error <span class="m">1</span>
-make<span class="o">[</span><span class="m">1</span><span class="o">]</span>: *** <span class="o">[</span>all-recursive<span class="o">]</span> Error <span class="m">1</span>
+make<span class="o">[</span>2<span class="o">]</span>: *** <span class="o">[</span>xmllint<span class="o">]</span> Error <span class="m">1</span>
+make<span class="o">[</span>1<span class="o">]</span>: *** <span class="o">[</span>all-recursive<span class="o">]</span> Error <span class="m">1</span>
 make: *** <span class="o">[</span>all<span class="o">]</span> Error <span class="nv">2</span>
-<span class="o">========================================================================</span>
+<span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span><span class="o">=</span>
 *** extconf.rb failed ***
 Could not create Makefile due to some reason, probably lack of necessary
 libraries and/or headers.  Check the mkmf.log file <span class="k">for</span> more details.  You may
@@ -502,20 +469,21 @@ Provided configuration options:
 </span><span class="s1">Results logged to /Library/Ruby/Gems/2.0.0/extensions/universal-darwin-16/2.0.0/nokogiri-1.6.8.1/gem_make.out
 </span><span class="s1">
 </span><span class="s1">An error occurred while installing nokogiri (1.6.8.1), and Bundler cannot continue.
-</span><span class="s1">Make sure that `gem install nokogiri -v &#39;</span><span class="m">1</span>.6.8.1<span class="err">&#39;</span><span class="sb">`</span> succeeds before bundling.</code></pre></td></tr></table>
+</span><span class="s1">Make sure that `gem install nokogiri -v &#39;</span>1.6.8.1<span class="err">&#39;</span><span class="sb">`</span> succeeds before bundling.
+</code></pre></td></tr></table>
 </div>
-</div>
-<p>运行以下命令解决：</p>
+</div><p>运行以下命令解决：</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span></code></pre></td>
 <td class="lntd">
 <pre class="chroma"><code class="language-bash" data-lang="bash">brew uninstall --ignore-dependencies xz
 
-bundle update</code></pre></td></tr></table>
+bundle update
+</code></pre></td></tr></table>
 </div>
 </div>
     </div>
@@ -616,7 +584,7 @@ bundle update</code></pre></td></tr></table>
   <span class="copyright-year">
     &copy; 
     2017 - 
-    2019
+    2020
     <span class="heart">
       <i class="iconfont icon-heart"></i>
     </span>

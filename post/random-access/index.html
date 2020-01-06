@@ -24,7 +24,7 @@
 
 
 
-<meta name="generator" content="Hugo 0.60.0-DEV with theme even" />
+<meta name="generator" content="Hugo 0.63.0-DEV with theme even" />
 
 
 <link rel="canonical" href="https://ld000.space/post/random-access/" />
@@ -47,16 +47,13 @@
 <meta property="article:modified_time" content="2016-03-19T00:00:00+00:00" />
 <meta itemprop="name" content="RandomAccess 接口使用">
 <meta itemprop="description" content="List 实现所使用的标记接口，用来表明其支持快速（通常是固定时间）随机访问。此接口的主要目的是允许一般的算法更改其行为，从而在将其应用到随机或连续访问列表时能提供良好的性能。">
-
-
 <meta itemprop="datePublished" content="2016-03-19T00:00:00&#43;00:00" />
 <meta itemprop="dateModified" content="2016-03-19T00:00:00&#43;00:00" />
 <meta itemprop="wordCount" content="1265">
 
 
 
-<meta itemprop="keywords" content="java," />
-<meta name="twitter:card" content="summary"/>
+<meta itemprop="keywords" content="java," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="RandomAccess 接口使用"/>
 <meta name="twitter:description" content="List 实现所使用的标记接口，用来表明其支持快速（通常是固定时间）随机访问。此接口的主要目的是允许一般的算法更改其行为，从而在将其应用到随机或连续访问列表时能提供良好的性能。"/>
 
@@ -137,21 +134,18 @@
     <div class="post-toc" id="post-toc">
   <h2 class="post-toc-title">文章目录</h2>
   <div class="post-toc-content always-active">
-    
+    <nav id="TableOfContents"></nav>
   </div>
 </div>
     <div class="post-content">
       <p>List 实现所使用的标记接口，用来表明其支持快速（通常是固定时间）随机访问。此接口的主要目的是允许一般的算法更改其行为，从而在将其应用到随机或连续访问列表时能提供良好的性能。</p>
-
 <p>##用法</p>
-
 <p>Random Access List(随机访问列表)如 <code>ArrayList</code> 要实现此接口，Sequence Access List(顺序访问列表)如 <code>LinkedList</code> 不要实现。
 因为两者的高效遍历算法不同</p>
-
 <p>通常做法，遍历前先判断：</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code class="language-java" data-lang="java"><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -160,49 +154,44 @@
 </span></code></pre></td>
 <td class="lntd">
 <pre class="chroma"><code class="language-java" data-lang="java"><span class="k">if</span> <span class="o">(</span><span class="n">list</span> <span class="n">instance</span> <span class="n">of</span> <span class="n">RandomAccess</span><span class="o">)</span> <span class="o">{</span>       
-  <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">m</span> <span class="o">=</span> <span class="n">0</span><span class="o">;</span> <span class="n">m</span> <span class="o">&lt;</span> <span class="n">list</span><span class="o">.</span><span class="na">size</span><span class="o">();</span> <span class="n">m</span><span class="o">++){}</span>   
+  <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">m</span> <span class="o">=</span> <span class="n">0</span><span class="o">;</span> <span class="n">m</span> <span class="o">&lt;</span> <span class="n">list</span><span class="o">.</span><span class="na">size</span><span class="o">(</span><span class="o">)</span><span class="o">;</span> <span class="n">m</span><span class="o">+</span><span class="o">+</span><span class="o">)</span><span class="o">{</span><span class="o">}</span>   
 <span class="o">}</span><span class="k">else</span><span class="o">{</span>       
-  <span class="n">Iterator</span> <span class="n">iter</span> <span class="o">=</span> <span class="n">list</span><span class="o">.</span><span class="na">iterator</span><span class="o">();</span>       
-  <span class="k">while</span><span class="o">(</span><span class="n">iter</span><span class="o">.</span><span class="na">hasNext</span><span class="o">()){}</span>   
-<span class="o">}</span></code></pre></td></tr></table>
+  <span class="n">Iterator</span> <span class="n">iter</span> <span class="o">=</span> <span class="n">list</span><span class="o">.</span><span class="na">iterator</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>       
+  <span class="k">while</span><span class="o">(</span><span class="n">iter</span><span class="o">.</span><span class="na">hasNext</span><span class="o">(</span><span class="o">)</span><span class="o">)</span><span class="o">{</span><span class="o">}</span>   
+<span class="o">}</span>
+</code></pre></td></tr></table>
 </div>
-</div>
-<p>随机访问列表使用循环遍历，顺序访问列表使用迭代器遍历。</p>
-
+</div><p>随机访问列表使用循环遍历，顺序访问列表使用迭代器遍历。</p>
 <p>##JDK 定义</p>
-
 <p><code>List</code> 实现使用的标记接口，用来表明支持快速(通常是固定时间)随机访问。这个接口的主要目的是允许一般的算法更改它们的行为，从而在随机或连续访问列表时提供更好的性能。</p>
-
 <p>将操作随机访问列表(比如 <code>ArrayList</code>)的最好的算法应用到顺序访问列表(比如 <code>LinkedList</code>)时，会产生二次项行为。鼓励一般的列表算法检查给定的列表是否 <code>instanceof</code> 这个接口，防止在顺序访问列表时使用较差的算法，如果需要保证可接受的性能时可以更改算法。</p>
-
 <p>公认的是随机和顺序访问的区别通常是模糊的。例如，当一些 <code>List</code> 实现很大时会提供渐进的线性访问时间，但实际是固定的访问时间。这样的 <code>List</code> 实现通常应该实现此接口。通常来说，一个 <code>List</code> 的实现类应该实现这个接口如果</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code class="language-java" data-lang="java"><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-java" data-lang="java"><span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="n">0</span><span class="o">,</span> <span class="n">n</span><span class="o">=</span><span class="n">list</span><span class="o">.</span><span class="na">size</span><span class="o">();</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span>
-        <span class="n">list</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">i</span><span class="o">);</span></code></pre></td></tr></table>
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="n">0</span><span class="o">,</span> <span class="n">n</span><span class="o">=</span><span class="n">list</span><span class="o">.</span><span class="na">size</span><span class="o">(</span><span class="o">)</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="o">;</span> <span class="n">i</span><span class="o">+</span><span class="o">+</span><span class="o">)</span>
+        <span class="n">list</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">i</span><span class="o">)</span><span class="o">;</span>
+</code></pre></td></tr></table>
 </div>
-</div>
-<p>比</p>
+</div><p>比</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code class="language-java" data-lang="java"><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-java" data-lang="java"> <span class="k">for</span> <span class="o">(</span><span class="n">Iterator</span> <span class="n">i</span><span class="o">=</span><span class="n">list</span><span class="o">.</span><span class="na">iterator</span><span class="o">();</span> <span class="n">i</span><span class="o">.</span><span class="na">hasNext</span><span class="o">();</span> <span class="o">)</span>
-          <span class="n">i</span><span class="o">.</span><span class="na">next</span><span class="o">();</span></code></pre></td></tr></table>
+<pre class="chroma"><code class="language-java" data-lang="java"> <span class="k">for</span> <span class="o">(</span><span class="n">Iterator</span> <span class="n">i</span><span class="o">=</span><span class="n">list</span><span class="o">.</span><span class="na">iterator</span><span class="o">(</span><span class="o">)</span><span class="o">;</span> <span class="n">i</span><span class="o">.</span><span class="na">hasNext</span><span class="o">(</span><span class="o">)</span><span class="o">;</span> <span class="o">)</span>
+          <span class="n">i</span><span class="o">.</span><span class="na">next</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+</code></pre></td></tr></table>
 </div>
-</div>
-<p>快</p>
-
+</div><p>快</p>
 <p>##验证事例</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code class="language-java" data-lang="java"><span class="lnt">  1
+<pre class="chroma"><code><span class="lnt">  1
 </span><span class="lnt">  2
 </span><span class="lnt">  3
 </span><span class="lnt">  4
@@ -326,7 +315,7 @@
 </span><span class="cm"> * 不同遍历算法的效率&lt;/br&gt;
 </span><span class="cm"> * 结论：前者用循环，后者用迭代器
 </span><span class="cm"> */</span>
-<span class="nd">@SuppressWarnings</span><span class="o">({</span><span class="s">&#34;rawtypes&#34;</span><span class="o">,</span> <span class="s">&#34;unchecked&#34;</span><span class="o">})</span>
+<span class="nd">@SuppressWarnings</span><span class="o">(</span><span class="o">{</span><span class="s">&#34;rawtypes&#34;</span><span class="o">,</span> <span class="s">&#34;unchecked&#34;</span><span class="o">}</span><span class="o">)</span>
 <span class="kd">public</span> <span class="kd">class</span> <span class="nc">ListLoopTest</span> <span class="o">{</span>
 
 	<span class="cm">/**
@@ -336,8 +325,8 @@
 </span><span class="cm">	 * @return
 </span><span class="cm">	 */</span>
 	<span class="kd">public</span> <span class="kd">static</span> <span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">List</span> <span class="nf">initList</span><span class="o">(</span><span class="n">List</span> <span class="n">list</span><span class="o">,</span> <span class="kt">int</span> <span class="n">n</span><span class="o">)</span> <span class="o">{</span>
-		<span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span>
-			<span class="n">list</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">i</span><span class="o">);</span>
+		<span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="o">;</span> <span class="n">i</span><span class="o">+</span><span class="o">+</span><span class="o">)</span>
+			<span class="n">list</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">i</span><span class="o">)</span><span class="o">;</span>
 		<span class="k">return</span> <span class="n">list</span><span class="o">;</span>
 	<span class="o">}</span>
 
@@ -347,66 +336,66 @@
 </span><span class="cm">	 * @param list
 </span><span class="cm">	 */</span>
 	<span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">accessList</span><span class="o">(</span><span class="n">List</span> <span class="n">list</span><span class="o">)</span> <span class="o">{</span>
-		<span class="kt">long</span> <span class="n">startTime</span> <span class="o">=</span> <span class="n">System</span><span class="o">.</span><span class="na">currentTimeMillis</span><span class="o">();</span>
+		<span class="kt">long</span> <span class="n">startTime</span> <span class="o">=</span> <span class="n">System</span><span class="o">.</span><span class="na">currentTimeMillis</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
 
 		<span class="k">if</span> <span class="o">(</span><span class="n">list</span> <span class="k">instanceof</span> <span class="n">RandomAccess</span><span class="o">)</span> <span class="o">{</span>
-			<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;实现了 RandomAccess 接口...&#34;</span><span class="o">);</span>
-			<span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">list</span><span class="o">.</span><span class="na">size</span><span class="o">();</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
-				<span class="n">list</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">i</span><span class="o">);</span>
+			<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;实现了 RandomAccess 接口...&#34;</span><span class="o">)</span><span class="o">;</span>
+			<span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">list</span><span class="o">.</span><span class="na">size</span><span class="o">(</span><span class="o">)</span><span class="o">;</span> <span class="n">i</span><span class="o">+</span><span class="o">+</span><span class="o">)</span> <span class="o">{</span>
+				<span class="n">list</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">i</span><span class="o">)</span><span class="o">;</span>
 			<span class="o">}</span>
 		<span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
-			<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;没实现 RandomAccess 接口...&#34;</span><span class="o">);</span>
-			<span class="k">for</span> <span class="o">(</span><span class="n">Iterator</span> <span class="n">iterator</span> <span class="o">=</span> <span class="n">list</span><span class="o">.</span><span class="na">iterator</span><span class="o">();</span> <span class="n">iterator</span><span class="o">.</span><span class="na">hasNext</span><span class="o">();)</span> <span class="o">{</span>
-				<span class="n">iterator</span><span class="o">.</span><span class="na">next</span><span class="o">();</span>
+			<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;没实现 RandomAccess 接口...&#34;</span><span class="o">)</span><span class="o">;</span>
+			<span class="k">for</span> <span class="o">(</span><span class="n">Iterator</span> <span class="n">iterator</span> <span class="o">=</span> <span class="n">list</span><span class="o">.</span><span class="na">iterator</span><span class="o">(</span><span class="o">)</span><span class="o">;</span> <span class="n">iterator</span><span class="o">.</span><span class="na">hasNext</span><span class="o">(</span><span class="o">)</span><span class="o">;</span><span class="o">)</span> <span class="o">{</span>
+				<span class="n">iterator</span><span class="o">.</span><span class="na">next</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
 			<span class="o">}</span>
 		<span class="o">}</span>
 
-		<span class="kt">long</span> <span class="n">endTime</span> <span class="o">=</span> <span class="n">System</span><span class="o">.</span><span class="na">currentTimeMillis</span><span class="o">();</span>
-		<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;遍历时间：&#34;</span> <span class="o">+</span> <span class="o">(</span><span class="n">endTime</span> <span class="o">-</span> <span class="n">startTime</span><span class="o">));</span>
+		<span class="kt">long</span> <span class="n">endTime</span> <span class="o">=</span> <span class="n">System</span><span class="o">.</span><span class="na">currentTimeMillis</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+		<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;遍历时间：&#34;</span> <span class="o">+</span> <span class="o">(</span><span class="n">endTime</span> <span class="o">-</span> <span class="n">startTime</span><span class="o">)</span><span class="o">)</span><span class="o">;</span>
 	<span class="o">}</span>
 
 	<span class="cm">/**
 </span><span class="cm">	 * loop 遍历 list
 </span><span class="cm">	 */</span>
 	<span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">accessListByLoop</span><span class="o">(</span><span class="n">List</span> <span class="n">list</span><span class="o">)</span> <span class="o">{</span>
-		<span class="kt">long</span> <span class="n">startTime</span> <span class="o">=</span> <span class="n">System</span><span class="o">.</span><span class="na">currentTimeMillis</span><span class="o">();</span>
+		<span class="kt">long</span> <span class="n">startTime</span> <span class="o">=</span> <span class="n">System</span><span class="o">.</span><span class="na">currentTimeMillis</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
 
-		<span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">list</span><span class="o">.</span><span class="na">size</span><span class="o">();</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
-			<span class="n">list</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">i</span><span class="o">);</span>
+		<span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">list</span><span class="o">.</span><span class="na">size</span><span class="o">(</span><span class="o">)</span><span class="o">;</span> <span class="n">i</span><span class="o">+</span><span class="o">+</span><span class="o">)</span> <span class="o">{</span>
+			<span class="n">list</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">i</span><span class="o">)</span><span class="o">;</span>
 		<span class="o">}</span>
 
-		<span class="kt">long</span> <span class="n">endTime</span> <span class="o">=</span> <span class="n">System</span><span class="o">.</span><span class="na">currentTimeMillis</span><span class="o">();</span>
-		<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;loop遍历时间：&#34;</span> <span class="o">+</span> <span class="o">(</span><span class="n">endTime</span> <span class="o">-</span> <span class="n">startTime</span><span class="o">));</span>
+		<span class="kt">long</span> <span class="n">endTime</span> <span class="o">=</span> <span class="n">System</span><span class="o">.</span><span class="na">currentTimeMillis</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+		<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;loop遍历时间：&#34;</span> <span class="o">+</span> <span class="o">(</span><span class="n">endTime</span> <span class="o">-</span> <span class="n">startTime</span><span class="o">)</span><span class="o">)</span><span class="o">;</span>
 	<span class="o">}</span>
 
 	<span class="cm">/**
 </span><span class="cm">	 * 迭代器遍历
 </span><span class="cm">	 */</span>
 	<span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">accessListByIterator</span><span class="o">(</span><span class="n">List</span> <span class="n">list</span><span class="o">)</span> <span class="o">{</span>
-		<span class="kt">long</span> <span class="n">startTime</span> <span class="o">=</span> <span class="n">System</span><span class="o">.</span><span class="na">currentTimeMillis</span><span class="o">();</span>
+		<span class="kt">long</span> <span class="n">startTime</span> <span class="o">=</span> <span class="n">System</span><span class="o">.</span><span class="na">currentTimeMillis</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
 
-		<span class="k">for</span> <span class="o">(</span><span class="n">Iterator</span> <span class="n">iterator</span> <span class="o">=</span> <span class="n">list</span><span class="o">.</span><span class="na">iterator</span><span class="o">();</span> <span class="n">iterator</span><span class="o">.</span><span class="na">hasNext</span><span class="o">();)</span> <span class="o">{</span>
-			<span class="n">iterator</span><span class="o">.</span><span class="na">next</span><span class="o">();</span>
+		<span class="k">for</span> <span class="o">(</span><span class="n">Iterator</span> <span class="n">iterator</span> <span class="o">=</span> <span class="n">list</span><span class="o">.</span><span class="na">iterator</span><span class="o">(</span><span class="o">)</span><span class="o">;</span> <span class="n">iterator</span><span class="o">.</span><span class="na">hasNext</span><span class="o">(</span><span class="o">)</span><span class="o">;</span><span class="o">)</span> <span class="o">{</span>
+			<span class="n">iterator</span><span class="o">.</span><span class="na">next</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
 		<span class="o">}</span>
 
-		<span class="kt">long</span> <span class="n">endTime</span> <span class="o">=</span> <span class="n">System</span><span class="o">.</span><span class="na">currentTimeMillis</span><span class="o">();</span>
-		<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;Iterator遍历时间：&#34;</span> <span class="o">+</span> <span class="o">(</span><span class="n">endTime</span> <span class="o">-</span> <span class="n">startTime</span><span class="o">));</span>
+		<span class="kt">long</span> <span class="n">endTime</span> <span class="o">=</span> <span class="n">System</span><span class="o">.</span><span class="na">currentTimeMillis</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+		<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;Iterator遍历时间：&#34;</span> <span class="o">+</span> <span class="o">(</span><span class="n">endTime</span> <span class="o">-</span> <span class="n">startTime</span><span class="o">)</span><span class="o">)</span><span class="o">;</span>
 	<span class="o">}</span>
 
-	<span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
-		<span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">aList</span> <span class="o">=</span> <span class="o">(</span><span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;)</span> <span class="n">initList</span><span class="o">(</span><span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;(),</span> <span class="n">2000000</span><span class="o">);</span>
-		<span class="n">LinkedList</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">lList</span> <span class="o">=</span> <span class="o">(</span><span class="n">LinkedList</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;)</span> <span class="n">initList</span><span class="o">(</span><span class="k">new</span> <span class="n">LinkedList</span><span class="o">&lt;&gt;(),</span> <span class="n">50000</span><span class="o">);</span>
+	<span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[</span><span class="o">]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+		<span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">aList</span> <span class="o">=</span> <span class="o">(</span><span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span><span class="o">)</span> <span class="n">initList</span><span class="o">(</span><span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="o">&gt;</span><span class="o">(</span><span class="o">)</span><span class="o">,</span> <span class="n">2000000</span><span class="o">)</span><span class="o">;</span>
+		<span class="n">LinkedList</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">lList</span> <span class="o">=</span> <span class="o">(</span><span class="n">LinkedList</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span><span class="o">)</span> <span class="n">initList</span><span class="o">(</span><span class="k">new</span> <span class="n">LinkedList</span><span class="o">&lt;</span><span class="o">&gt;</span><span class="o">(</span><span class="o">)</span><span class="o">,</span> <span class="n">50000</span><span class="o">)</span><span class="o">;</span>
 
-		<span class="n">accessList</span><span class="o">(</span><span class="n">aList</span><span class="o">);</span>
-		<span class="n">accessList</span><span class="o">(</span><span class="n">lList</span><span class="o">);</span>
+		<span class="n">accessList</span><span class="o">(</span><span class="n">aList</span><span class="o">)</span><span class="o">;</span>
+		<span class="n">accessList</span><span class="o">(</span><span class="n">lList</span><span class="o">)</span><span class="o">;</span>
 
-		<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;ArrayList&#34;</span><span class="o">);</span>
-		<span class="n">accessListByLoop</span><span class="o">(</span><span class="n">aList</span><span class="o">);</span>
-		<span class="n">accessListByIterator</span><span class="o">(</span><span class="n">aList</span><span class="o">);</span>
+		<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;ArrayList&#34;</span><span class="o">)</span><span class="o">;</span>
+		<span class="n">accessListByLoop</span><span class="o">(</span><span class="n">aList</span><span class="o">)</span><span class="o">;</span>
+		<span class="n">accessListByIterator</span><span class="o">(</span><span class="n">aList</span><span class="o">)</span><span class="o">;</span>
 
-		<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;LinkedList&#34;</span><span class="o">);</span>
-		<span class="n">accessListByLoop</span><span class="o">(</span><span class="n">lList</span><span class="o">);</span>
-		<span class="n">accessListByIterator</span><span class="o">(</span><span class="n">lList</span><span class="o">);</span>
+		<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;LinkedList&#34;</span><span class="o">)</span><span class="o">;</span>
+		<span class="n">accessListByLoop</span><span class="o">(</span><span class="n">lList</span><span class="o">)</span><span class="o">;</span>
+		<span class="n">accessListByIterator</span><span class="o">(</span><span class="n">lList</span><span class="o">)</span><span class="o">;</span>
 	<span class="o">}</span>
 
   <span class="cm">/*
@@ -421,7 +410,8 @@
 </span><span class="cm">  loop遍历时间：1532
 </span><span class="cm">  Iterator遍历时间：1
 </span><span class="cm">  */</span>
-<span class="o">}</span></code></pre></td></tr></table>
+<span class="o">}</span>
+</code></pre></td></tr></table>
 </div>
 </div>
     </div>
@@ -518,7 +508,7 @@
   <span class="copyright-year">
     &copy; 
     2017 - 
-    2019
+    2020
     <span class="heart">
       <i class="iconfont icon-heart"></i>
     </span>

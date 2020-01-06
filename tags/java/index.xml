@@ -7,10 +7,19 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-Hans</language>
     <copyright>ld000</copyright>
-    <lastBuildDate>Fri, 25 Oct 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 24 Nov 2019 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="https://ld000.space/tags/java/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>MyBatis 一级缓存在分布式下的坑</title>
+      <link>https://ld000.space/post/mybatis_scale_localcache/</link>
+      <pubDate>Sun, 24 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://ld000.space/post/mybatis_scale_localcache/</guid>
+      <description>最近生产环境的余额系统在扣减余额时经常出现余额够但是提示余额不足无法扣减的情况。查看代码逻辑，发现会先查询一次判断余额是否够，再实际扣减，之</description>
+    </item>
     
     <item>
       <title>用外置 Tomcat 部署 Spring Boot 应用</title>
@@ -46,9 +55,8 @@
       
       <guid>https://ld000.space/post/aspects_are_not_applied/</guid>
       <description>&lt;blockquote&gt;
-&lt;p&gt;原文：&lt;a href=&#34;http://denis-zhdanov.blogspot.com/2009/07/spring-aop-top-problem-1-aspects-are.html&#34;&gt;http://denis-zhdanov.blogspot.com/2009/07/spring-aop-top-problem-1-aspects-are.html&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;原文：http://denis-zhdanov.blogspot.com/2009/07/spring-aop-top-problem-1-aspects-are.html&lt;/p&gt;
 &lt;/blockquote&gt;
-
 &lt;p&gt;这篇文章继续讨论从 &lt;a href=&#34;http://denis-zhdanov.blogspot.com/2009/05/spring-aop-top-problem-2.html&#34;&gt;Spring AOP top problem #2 - java.lang.ClassCastException: $Proxy7&lt;/a&gt; 开始的话题。在这个话题里，我想要说明一些现在接触 spring AOP 的 spring 用户(特别是新用户)讨论最多(从我的观点看来)的问题。&lt;/p&gt;</description>
     </item>
     

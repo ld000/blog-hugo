@@ -19,9 +19,8 @@
       
       <guid>https://ld000.space/post/aspects_are_not_applied/</guid>
       <description>&lt;blockquote&gt;
-&lt;p&gt;原文：&lt;a href=&#34;http://denis-zhdanov.blogspot.com/2009/07/spring-aop-top-problem-1-aspects-are.html&#34;&gt;http://denis-zhdanov.blogspot.com/2009/07/spring-aop-top-problem-1-aspects-are.html&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;原文：http://denis-zhdanov.blogspot.com/2009/07/spring-aop-top-problem-1-aspects-are.html&lt;/p&gt;
 &lt;/blockquote&gt;
-
 &lt;p&gt;这篇文章继续讨论从 &lt;a href=&#34;http://denis-zhdanov.blogspot.com/2009/05/spring-aop-top-problem-2.html&#34;&gt;Spring AOP top problem #2 - java.lang.ClassCastException: $Proxy7&lt;/a&gt; 开始的话题。在这个话题里，我想要说明一些现在接触 spring AOP 的 spring 用户(特别是新用户)讨论最多(从我的观点看来)的问题。&lt;/p&gt;</description>
     </item>
     
