@@ -73,7 +73,7 @@ tags: ["java"]
 
 `mvn clean package` 打包后放入 tomcat webapps 文件夹里测试下
 
-![](/img/spring_boot_tomcat/Untitled.png)
+![](https://raw.githubusercontent.com/ld000/git-resources/master/img/20200107113901.png)
 
 顺利启动
 
