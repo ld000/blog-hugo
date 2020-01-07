@@ -126,28 +126,13 @@
       <div class="post-meta">
         <span class="post-time"> 2019-10-23 </span>
         
+          <span class="more-meta"> 约 2836 字 </span>
+          <span class="more-meta"> 预计阅读 6 分钟 </span>
         <span id="busuanzi_container_page_pv" class="more-meta"> <span id="busuanzi_value_page_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次阅读 </span>
       </div>
     </header>
 
-    <div class="post-toc" id="post-toc">
-  <h2 class="post-toc-title">文章目录</h2>
-  <div class="post-toc-content always-active">
-    <nav id="TableOfContents">
-  <ul>
-    <li><a href="#实现方法">实现方法</a>
-      <ul>
-        <li><a href="#1-利用-key-排序">1. 利用 key 排序</a></li>
-        <li><a href="#score-存储格式">score 存储格式</a></li>
-        <li><a href="#2-二进制分段">2. 二进制分段</a></li>
-        <li><a href="#3-直接拆分-double">3. 直接拆分 double</a></li>
-      </ul>
-    </li>
-    <li><a href="#总结">总结</a></li>
-  </ul>
-</nav>
-  </div>
-</div>
+    
     <div class="post-content">
       <p>一些需求中经常要我们实现一个排行榜，数据量少的话可以使用 RDB 数据库排序，数据量大可以自己实现算法或者使用 NoSQL 数据库排序，NoSQL 数据库中最方便的可能就是利用 Redis 的 zset 来实现了。 例如要实现一个玩家成就点数的排行榜：</p>
 <div class="highlight"><div class="chroma">
@@ -780,20 +765,23 @@
     </footer>
   </article>
         </div>
-        <div id="disqus_thread"></div>
+        <div id="gitalk-container"></div>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js" crossorigin="anonymous"></script>
     <script type="text/javascript">
-    (function() {
-      
-      
-      if (window.location.hostname === 'localhost') return;
-
-      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-      var disqus_shortname = 'ld000-1';
-      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    })();
+      var gitalk = new Gitalk({
+        id: '2019-10-23 00:00:00 \x2b0000 UTC',
+        title: '让 Redis zset 支持多条件排序',
+        clientID: 'b9c2075b92f449e413c0',
+        clientSecret: 'dfe1cc898f7052f2ef46f587b1ff0783e4465b2c',
+        repo: 'blog-comment',
+        owner: 'ld000',
+        admin: ['ld000'],
+        body: decodeURI(location.href)
+      });
+      gitalk.render('gitalk-container');
     </script>
-    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <noscript>Please enable JavaScript to view the <a href="https://github.com/gitalk/gitalk">comments powered by gitalk.</a></noscript>
 
   
 

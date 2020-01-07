@@ -126,27 +126,13 @@
       <div class="post-meta">
         <span class="post-time"> 2019-11-24 </span>
         
+          <span class="more-meta"> 约 1020 字 </span>
+          <span class="more-meta"> 预计阅读 3 分钟 </span>
         <span id="busuanzi_container_page_pv" class="more-meta"> <span id="busuanzi_value_page_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次阅读 </span>
       </div>
     </header>
 
-    <div class="post-toc" id="post-toc">
-  <h2 class="post-toc-title">文章目录</h2>
-  <div class="post-toc-content always-active">
-    <nav id="TableOfContents">
-  <ul>
-    <li><a href="#一级缓存">一级缓存</a>
-      <ul>
-        <li><a href="#测试1">测试1</a></li>
-        <li><a href="#测试2">测试2</a></li>
-        <li><a href="#关闭一级缓存">关闭一级缓存</a></li>
-      </ul>
-    </li>
-    <li><a href="#总结">总结</a></li>
-  </ul>
-</nav>
-  </div>
-</div>
+    
     <div class="post-content">
       <p>最近生产环境的余额系统在扣减余额时经常出现余额够但是提示余额不足无法扣减的情况。查看代码逻辑，发现会先查询一次判断余额是否够，再实际扣减，之后查看日志发现并没有执行查询语句就返回错误了，推测可能是 MyBatis 一级缓存没有关闭引起的脏数据问题。关闭一级缓存后果然恢复正常了。</p>
 <p>所以有了这篇文章，验证下 MyBatis 一级缓存的生效条件。</p>
@@ -419,20 +405,23 @@ session1: <span class="m">500</span>
     </footer>
   </article>
         </div>
-        <div id="disqus_thread"></div>
+        <div id="gitalk-container"></div>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js" crossorigin="anonymous"></script>
     <script type="text/javascript">
-    (function() {
-      
-      
-      if (window.location.hostname === 'localhost') return;
-
-      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-      var disqus_shortname = 'ld000-1';
-      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    })();
+      var gitalk = new Gitalk({
+        id: '2019-11-24 00:00:00 \x2b0000 UTC',
+        title: 'MyBatis 一级缓存在分布式下的坑',
+        clientID: 'b9c2075b92f449e413c0',
+        clientSecret: 'dfe1cc898f7052f2ef46f587b1ff0783e4465b2c',
+        repo: 'blog-comment',
+        owner: 'ld000',
+        admin: ['ld000'],
+        body: decodeURI(location.href)
+      });
+      gitalk.render('gitalk-container');
     </script>
-    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <noscript>Please enable JavaScript to view the <a href="https://github.com/gitalk/gitalk">comments powered by gitalk.</a></noscript>
 
   
 

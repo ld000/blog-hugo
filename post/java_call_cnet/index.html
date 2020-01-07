@@ -127,22 +127,13 @@
       <div class="post-meta">
         <span class="post-time"> 2017-06-28 </span>
         
+          <span class="more-meta"> 约 755 字 </span>
+          <span class="more-meta"> 预计阅读 2 分钟 </span>
         <span id="busuanzi_container_page_pv" class="more-meta"> <span id="busuanzi_value_page_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次阅读 </span>
       </div>
     </header>
 
-    <div class="post-toc" id="post-toc">
-  <h2 class="post-toc-title">文章目录</h2>
-  <div class="post-toc-content always-active">
-    <nav id="TableOfContents">
-  <ul>
-    <li><a href="#jni4net">jni4net</a></li>
-    <li><a href="#javonet">javonet</a></li>
-    <li><a href="#自己实现一个c-native-dll作为你的c-dll的代理">自己实现一个C++ native dll作为你的C# dll的代理</a></li>
-  </ul>
-</nav>
-  </div>
-</div>
+    
     <div class="post-content">
       <p>java 调用 c# 程序的几种方式。</p>
 <h1 id="native-java">Native Java</h1>
@@ -300,20 +291,23 @@
     </footer>
   </article>
         </div>
-        <div id="disqus_thread"></div>
+        <div id="gitalk-container"></div>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js" crossorigin="anonymous"></script>
     <script type="text/javascript">
-    (function() {
-      
-      
-      if (window.location.hostname === 'localhost') return;
-
-      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-      var disqus_shortname = 'ld000-1';
-      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    })();
+      var gitalk = new Gitalk({
+        id: '2017-06-28 00:00:00 \x2b0000 UTC',
+        title: 'java 调用 c# 的方法',
+        clientID: 'b9c2075b92f449e413c0',
+        clientSecret: 'dfe1cc898f7052f2ef46f587b1ff0783e4465b2c',
+        repo: 'blog-comment',
+        owner: 'ld000',
+        admin: ['ld000'],
+        body: decodeURI(location.href)
+      });
+      gitalk.render('gitalk-container');
     </script>
-    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <noscript>Please enable JavaScript to view the <a href="https://github.com/gitalk/gitalk">comments powered by gitalk.</a></noscript>
 
   
 
