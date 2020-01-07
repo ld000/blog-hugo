@@ -323,7 +323,7 @@
 </code></pre></td></tr></table>
 </div>
 </div><p>我们可以看到 score 是用 double 存储的，它是一个 IEEE 754 标准的 double 浮点数。（IEEE 754 标准的详细存储规则可以搜索其他文章，这里重点分析保留的精度）</p>
-<p><img src="/img/make_redis_zset_support_multiple_sort/redis_zset_1.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/ld000/git-resources/master/img/20200107114011.png" alt=""></p>
 <p>一个 64 位浮点数存储时分为3段</p>
 <ul>
 <li>S:符号位，第一段，占1位，0表示正数，1表示负数。</li>
@@ -357,7 +357,7 @@
 </div>
 </div><p>这样时间就缩小到了300000000以内。</p>
 <p>接下来进行划分，首位标志位不用，剩下63位，然后我划分高33位存分数，1位存标志位，最后29位存时间戳，存储结构是这样的：</p>
-<p><img src="/img/make_redis_zset_support_multiple_sort/redis_zset_2.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/ld000/git-resources/master/img/20200107114033.png" alt=""></p>
 <p>如果要不损失精度，第一段可存储位数 = 53 - 1 - 29 = 23。</p>
 <p>第一段最大值 = 2^33 = 8589934591，不损失精度 = 2^23 = 8388607。</p>
 <p>第三段最大值 = 2^29 = 536870911。</p>
