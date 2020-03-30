@@ -1,7 +1,7 @@
 baseURL = "https://ld000.space"
 languageCode = "zh-Hans"
 defaultContentLanguage = "zh-cn"                             # en / zh-cn / ... (This field determines which i18n file to use)
-title = "ld000"
+title = "Voiddd"
 preserveTaxonomyNames = true
 enableRobotsTXT = true
 enableEmoji = true
@@ -16,12 +16,12 @@ pygmentsCodefencesGuessSyntax = true
 
 hasCJKLanguage = true     # has chinese/japanese/korean ? # 自动检测是否包含 中文\日文\韩文
 paginate = 5                                              # 首页每页显示的文章数
-disqusShortname = "ld000-blog"      # disqus_shortname
+disqusShortname = "Voiddd-blog"      # disqus_shortname
 googleAnalytics = "UA-89678066-1"      # UA-XXXXXXXX-X
-copyright = "ld000"            # default: author.name ↓        # 默认为下面配置的author.name ↓
+copyright = "Voiddd"            # default: author.name ↓        # 默认为下面配置的author.name ↓
 
 [author]                  # essential                     # 必需
-  name = "ld000"
+  name = "Voiddd"
 
 [sitemap]                 # essential                     # 必需
   changefreq = "weekly"
@@ -63,9 +63,9 @@ copyright = "ld000"            # default: author.name ↓        # 默认为下�
   gitRepo = ""
 
   # site info (optional)                                  # 站点信息（可选，不需要的可以直接注释掉）
-  logoTitle = "ld000"        # default: the title value    # 默认值: 上面设置的title值
-  keywords = ["Hugo", "theme","even", "java", "ld000"]
-  description = "ld000 的博客."
+  logoTitle = "Voiddd"        # default: the title value    # 默认值: 上面设置的title值
+  keywords = ["Hugo", "theme","even", "java", "Voiddd"]
+  description = "Voiddd 的博客."
 
   # paginate of archives, tags and categories             # 归档、标签、分类每页显示的文章数目，建议修改为一个较大的值
   archivePaginate = 10
