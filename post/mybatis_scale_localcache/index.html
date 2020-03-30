@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <title>MyBatis 一级缓存在分布式下的坑 - ld000</title>
+  <title>MyBatis 一级缓存在分布式下的坑 - Voiddd</title>
   <meta name="renderer" content="webkit" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
 
@@ -16,14 +16,14 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
 
 
-<meta name="author" content="ld000" /><meta name="description" content="最近生产环境的余额系统在扣减余额时经常出现余额够但是提示余额不足无法扣减的情况。查看代码逻辑，发现会先查询一次判断余额是否够，再实际扣减，之" /><meta name="keywords" content="Hugo, theme, even, java, ld000" />
+<meta name="author" content="Voiddd" /><meta name="description" content="最近生产环境的余额系统在扣减余额时经常出现余额够但是提示余额不足无法扣减的情况。查看代码逻辑，发现会先查询一次判断余额是否够，再实际扣减，之" /><meta name="keywords" content="Hugo, theme, even, java, Voiddd" />
 
 
 
 
 
 
-<meta name="generator" content="Hugo 0.63.0-DEV with theme even" />
+<meta name="generator" content="Hugo 0.69.0-DEV with theme even" />
 
 
 <link rel="canonical" href="https://ld000.space/post/mybatis_scale_localcache/" />
@@ -48,7 +48,7 @@
 <meta itemprop="description" content="最近生产环境的余额系统在扣减余额时经常出现余额够但是提示余额不足无法扣减的情况。查看代码逻辑，发现会先查询一次判断余额是否够，再实际扣减，之">
 <meta itemprop="datePublished" content="2019-11-24T00:00:00&#43;00:00" />
 <meta itemprop="dateModified" content="2019-11-24T00:00:00&#43;00:00" />
-<meta itemprop="wordCount" content="1020">
+<meta itemprop="wordCount" content="1014">
 
 
 
@@ -69,7 +69,7 @@
 <body>
   <div id="mobile-navbar" class="mobile-navbar">
   <div class="mobile-header-logo">
-    <a href="/" class="logo">ld000</a>
+    <a href="/" class="logo">Voiddd</a>
   </div>
   <div class="mobile-navbar-icon">
     <span></span>
@@ -95,7 +95,7 @@
   <div class="container" id="mobile-panel">
     <header id="header" class="header">
         <div class="logo-wrapper">
-  <a href="/" class="logo">ld000</a>
+  <a href="/" class="logo">Voiddd</a>
 </div>
 
 <nav class="site-navbar">
@@ -126,7 +126,7 @@
       <div class="post-meta">
         <span class="post-time"> 2019-11-24 </span>
         
-          <span class="more-meta"> 约 1020 字 </span>
+          <span class="more-meta"> 约 1014 字 </span>
           <span class="more-meta"> 预计阅读 3 分钟 </span>
         
       </div>
@@ -156,16 +156,16 @@
 </span><span class="lnt">11
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kt">void</span> <span class="nf">test1</span><span class="o">(</span><span class="o">)</span> <span class="o">{</span>
-    <span class="n">SqlSession</span> <span class="n">sqlSession</span> <span class="o">=</span> <span class="n">sqlSessionFactory</span><span class="o">.</span><span class="na">openSession</span><span class="o">(</span><span class="kc">true</span><span class="o">)</span><span class="o">;</span>
-    <span class="n">UserWalletMapperExt</span> <span class="n">mapper</span> <span class="o">=</span> <span class="n">sqlSession</span><span class="o">.</span><span class="na">getMapper</span><span class="o">(</span><span class="n">UserWalletMapperExt</span><span class="o">.</span><span class="na">class</span><span class="o">)</span><span class="o">;</span>
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kt">void</span> <span class="nf">test1</span><span class="o">()</span> <span class="o">{</span>
+    <span class="n">SqlSession</span> <span class="n">sqlSession</span> <span class="o">=</span> <span class="n">sqlSessionFactory</span><span class="o">.</span><span class="na">openSession</span><span class="o">(</span><span class="kc">true</span><span class="o">);</span>
+    <span class="n">UserWalletMapperExt</span> <span class="n">mapper</span> <span class="o">=</span> <span class="n">sqlSession</span><span class="o">.</span><span class="na">getMapper</span><span class="o">(</span><span class="n">UserWalletMapperExt</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
 
-    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">mapper</span><span class="o">.</span><span class="na">queryUserBalance</span><span class="o">(</span><span class="n">10L</span><span class="o">,</span> <span class="n">1</span><span class="o">)</span><span class="o">)</span><span class="o">;</span>
-    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">mapper</span><span class="o">.</span><span class="na">queryUserBalance</span><span class="o">(</span><span class="n">10L</span><span class="o">,</span> <span class="n">1</span><span class="o">)</span><span class="o">)</span><span class="o">;</span>
-    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">mapper</span><span class="o">.</span><span class="na">queryUserBalance</span><span class="o">(</span><span class="n">10L</span><span class="o">,</span> <span class="n">1</span><span class="o">)</span><span class="o">)</span><span class="o">;</span>
-    <span class="n">mapper</span><span class="o">.</span><span class="na">addBalanceByType</span><span class="o">(</span><span class="n">10L</span><span class="o">,</span> <span class="n">1</span><span class="o">,</span> <span class="n">100L</span><span class="o">)</span><span class="o">;</span>
-    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">mapper</span><span class="o">.</span><span class="na">queryUserBalance</span><span class="o">(</span><span class="n">10L</span><span class="o">,</span> <span class="n">1</span><span class="o">)</span><span class="o">)</span><span class="o">;</span>
-    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">mapper</span><span class="o">.</span><span class="na">queryUserBalance</span><span class="o">(</span><span class="n">10L</span><span class="o">,</span> <span class="n">1</span><span class="o">)</span><span class="o">)</span><span class="o">;</span>
+    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">mapper</span><span class="o">.</span><span class="na">queryUserBalance</span><span class="o">(</span><span class="n">10L</span><span class="o">,</span> <span class="n">1</span><span class="o">));</span>
+    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">mapper</span><span class="o">.</span><span class="na">queryUserBalance</span><span class="o">(</span><span class="n">10L</span><span class="o">,</span> <span class="n">1</span><span class="o">));</span>
+    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">mapper</span><span class="o">.</span><span class="na">queryUserBalance</span><span class="o">(</span><span class="n">10L</span><span class="o">,</span> <span class="n">1</span><span class="o">));</span>
+    <span class="n">mapper</span><span class="o">.</span><span class="na">addBalanceByType</span><span class="o">(</span><span class="n">10L</span><span class="o">,</span> <span class="n">1</span><span class="o">,</span> <span class="n">100L</span><span class="o">);</span>
+    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">mapper</span><span class="o">.</span><span class="na">queryUserBalance</span><span class="o">(</span><span class="n">10L</span><span class="o">,</span> <span class="n">1</span><span class="o">));</span>
+    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">mapper</span><span class="o">.</span><span class="na">queryUserBalance</span><span class="o">(</span><span class="n">10L</span><span class="o">,</span> <span class="n">1</span><span class="o">));</span>
 <span class="o">}</span>
 </code></pre></td></tr></table>
 </div>
@@ -187,18 +187,18 @@
 </span><span class="lnt">14
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell">...queryUserBalance:debug:181 <span class="o">=</span><span class="o">=</span>&gt;  Preparing: <span class="k">select</span> balance from user_wallet WHERE <span class="nv">user_id</span> <span class="o">=</span> ? and <span class="nb">type</span> <span class="o">=</span> ? 
-...queryUserBalance:debug:181 <span class="o">=</span><span class="o">=</span>&gt; Parameters: 10<span class="o">(</span>Long<span class="o">)</span>, 1<span class="o">(</span>Integer<span class="o">)</span>
-...queryUserBalance:debug:181 &lt;<span class="o">=</span><span class="o">=</span>      Total: <span class="m">1</span>
+<pre class="chroma"><code class="language-shell" data-lang="shell">...queryUserBalance:debug:181 <span class="o">==</span>&gt;  Preparing: <span class="k">select</span> balance from user_wallet WHERE <span class="nv">user_id</span> <span class="o">=</span> ? and <span class="nb">type</span> <span class="o">=</span> ? 
+...queryUserBalance:debug:181 <span class="o">==</span>&gt; Parameters: 10<span class="o">(</span>Long<span class="o">)</span>, 1<span class="o">(</span>Integer<span class="o">)</span>
+...queryUserBalance:debug:181 &lt;<span class="o">==</span>      Total: <span class="m">1</span>
 <span class="m">200</span>
 <span class="m">200</span>
 <span class="m">200</span>
-...addBalanceByType:debug:181 <span class="o">=</span><span class="o">=</span>&gt;  Preparing: update user_wallet <span class="nb">set</span> <span class="nv">balance</span> <span class="o">=</span> balance + ? where <span class="nv">user_id</span> <span class="o">=</span> ? and <span class="nb">type</span> <span class="o">=</span> ? 
-...addBalanceByType:debug:181 <span class="o">=</span><span class="o">=</span>&gt; Parameters: 100<span class="o">(</span>Long<span class="o">)</span>, 10<span class="o">(</span>Long<span class="o">)</span>, 1<span class="o">(</span>Integer<span class="o">)</span>
-...addBalanceByType:debug:181 &lt;<span class="o">=</span><span class="o">=</span>    Updates: <span class="m">1</span>
-...queryUserBalance:debug:181 <span class="o">=</span><span class="o">=</span>&gt;  Preparing: <span class="k">select</span> balance from user_wallet WHERE <span class="nv">user_id</span> <span class="o">=</span> ? and <span class="nb">type</span> <span class="o">=</span> ? 
-...queryUserBalance:debug:181 <span class="o">=</span><span class="o">=</span>&gt; Parameters: 10<span class="o">(</span>Long<span class="o">)</span>, 1<span class="o">(</span>Integer<span class="o">)</span>
-...queryUserBalance:debug:181 &lt;<span class="o">=</span><span class="o">=</span>      Total: <span class="m">1</span>
+...addBalanceByType:debug:181 <span class="o">==</span>&gt;  Preparing: update user_wallet <span class="nb">set</span> <span class="nv">balance</span> <span class="o">=</span> balance + ? where <span class="nv">user_id</span> <span class="o">=</span> ? and <span class="nb">type</span> <span class="o">=</span> ? 
+...addBalanceByType:debug:181 <span class="o">==</span>&gt; Parameters: 100<span class="o">(</span>Long<span class="o">)</span>, 10<span class="o">(</span>Long<span class="o">)</span>, 1<span class="o">(</span>Integer<span class="o">)</span>
+...addBalanceByType:debug:181 &lt;<span class="o">==</span>    Updates: <span class="m">1</span>
+...queryUserBalance:debug:181 <span class="o">==</span>&gt;  Preparing: <span class="k">select</span> balance from user_wallet WHERE <span class="nv">user_id</span> <span class="o">=</span> ? and <span class="nb">type</span> <span class="o">=</span> ? 
+...queryUserBalance:debug:181 <span class="o">==</span>&gt; Parameters: 10<span class="o">(</span>Long<span class="o">)</span>, 1<span class="o">(</span>Integer<span class="o">)</span>
+...queryUserBalance:debug:181 &lt;<span class="o">==</span>      Total: <span class="m">1</span>
 <span class="m">300</span>
 <span class="m">300</span>
 </code></pre></td></tr></table>
@@ -222,18 +222,18 @@
 </span><span class="lnt">13
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kt">void</span> <span class="nf">test2</span><span class="o">(</span><span class="o">)</span> <span class="o">{</span>
-    <span class="n">SqlSession</span> <span class="n">sqlSession1</span> <span class="o">=</span> <span class="n">sqlSessionFactory</span><span class="o">.</span><span class="na">openSession</span><span class="o">(</span><span class="kc">true</span><span class="o">)</span><span class="o">;</span>
-    <span class="n">UserWalletMapperExt</span> <span class="n">mapper1</span> <span class="o">=</span> <span class="n">sqlSession1</span><span class="o">.</span><span class="na">getMapper</span><span class="o">(</span><span class="n">UserWalletMapperExt</span><span class="o">.</span><span class="na">class</span><span class="o">)</span><span class="o">;</span>
-    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;session1: &#34;</span> <span class="o">+</span> <span class="n">mapper1</span><span class="o">.</span><span class="na">queryUserBalance</span><span class="o">(</span><span class="n">10L</span><span class="o">,</span> <span class="n">1</span><span class="o">)</span><span class="o">)</span><span class="o">;</span>
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kt">void</span> <span class="nf">test2</span><span class="o">()</span> <span class="o">{</span>
+    <span class="n">SqlSession</span> <span class="n">sqlSession1</span> <span class="o">=</span> <span class="n">sqlSessionFactory</span><span class="o">.</span><span class="na">openSession</span><span class="o">(</span><span class="kc">true</span><span class="o">);</span>
+    <span class="n">UserWalletMapperExt</span> <span class="n">mapper1</span> <span class="o">=</span> <span class="n">sqlSession1</span><span class="o">.</span><span class="na">getMapper</span><span class="o">(</span><span class="n">UserWalletMapperExt</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;session1: &#34;</span> <span class="o">+</span> <span class="n">mapper1</span><span class="o">.</span><span class="na">queryUserBalance</span><span class="o">(</span><span class="n">10L</span><span class="o">,</span> <span class="n">1</span><span class="o">));</span>
 
-    <span class="n">SqlSession</span> <span class="n">sqlSession2</span> <span class="o">=</span> <span class="n">sqlSessionFactory</span><span class="o">.</span><span class="na">openSession</span><span class="o">(</span><span class="kc">true</span><span class="o">)</span><span class="o">;</span>
-    <span class="n">UserWalletMapperExt</span> <span class="n">mapper2</span> <span class="o">=</span> <span class="n">sqlSession2</span><span class="o">.</span><span class="na">getMapper</span><span class="o">(</span><span class="n">UserWalletMapperExt</span><span class="o">.</span><span class="na">class</span><span class="o">)</span><span class="o">;</span>
-    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;session2: &#34;</span> <span class="o">+</span> <span class="n">mapper2</span><span class="o">.</span><span class="na">queryUserBalance</span><span class="o">(</span><span class="n">10L</span><span class="o">,</span> <span class="n">1</span><span class="o">)</span><span class="o">)</span><span class="o">;</span>
-    <span class="n">mapper2</span><span class="o">.</span><span class="na">addBalanceByType</span><span class="o">(</span><span class="n">10L</span><span class="o">,</span> <span class="n">1</span><span class="o">,</span> <span class="n">100L</span><span class="o">)</span><span class="o">;</span>
-    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;session2: &#34;</span> <span class="o">+</span> <span class="n">mapper2</span><span class="o">.</span><span class="na">queryUserBalance</span><span class="o">(</span><span class="n">10L</span><span class="o">,</span> <span class="n">1</span><span class="o">)</span><span class="o">)</span><span class="o">;</span>
+    <span class="n">SqlSession</span> <span class="n">sqlSession2</span> <span class="o">=</span> <span class="n">sqlSessionFactory</span><span class="o">.</span><span class="na">openSession</span><span class="o">(</span><span class="kc">true</span><span class="o">);</span>
+    <span class="n">UserWalletMapperExt</span> <span class="n">mapper2</span> <span class="o">=</span> <span class="n">sqlSession2</span><span class="o">.</span><span class="na">getMapper</span><span class="o">(</span><span class="n">UserWalletMapperExt</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;session2: &#34;</span> <span class="o">+</span> <span class="n">mapper2</span><span class="o">.</span><span class="na">queryUserBalance</span><span class="o">(</span><span class="n">10L</span><span class="o">,</span> <span class="n">1</span><span class="o">));</span>
+    <span class="n">mapper2</span><span class="o">.</span><span class="na">addBalanceByType</span><span class="o">(</span><span class="n">10L</span><span class="o">,</span> <span class="n">1</span><span class="o">,</span> <span class="n">100L</span><span class="o">);</span>
+    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;session2: &#34;</span> <span class="o">+</span> <span class="n">mapper2</span><span class="o">.</span><span class="na">queryUserBalance</span><span class="o">(</span><span class="n">10L</span><span class="o">,</span> <span class="n">1</span><span class="o">));</span>
 
-    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;session1: &#34;</span> <span class="o">+</span> <span class="n">mapper1</span><span class="o">.</span><span class="na">queryUserBalance</span><span class="o">(</span><span class="n">10L</span><span class="o">,</span> <span class="n">1</span><span class="o">)</span><span class="o">)</span><span class="o">;</span>
+    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;session1: &#34;</span> <span class="o">+</span> <span class="n">mapper1</span><span class="o">.</span><span class="na">queryUserBalance</span><span class="o">(</span><span class="n">10L</span><span class="o">,</span> <span class="n">1</span><span class="o">));</span>
 <span class="o">}</span>
 </code></pre></td></tr></table>
 </div>
@@ -257,20 +257,20 @@
 </span><span class="lnt">16
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell">...queryUserBalance:debug:181 <span class="o">=</span><span class="o">=</span>&gt;  Preparing: <span class="k">select</span> balance from user_wallet WHERE <span class="nv">user_id</span> <span class="o">=</span> ? and <span class="nb">type</span> <span class="o">=</span> ? 
-...queryUserBalance:debug:181 <span class="o">=</span><span class="o">=</span>&gt; Parameters: 10<span class="o">(</span>Long<span class="o">)</span>, 1<span class="o">(</span>Integer<span class="o">)</span>
-...queryUserBalance:debug:181 &lt;<span class="o">=</span><span class="o">=</span>      Total: <span class="m">1</span>
+<pre class="chroma"><code class="language-shell" data-lang="shell">...queryUserBalance:debug:181 <span class="o">==</span>&gt;  Preparing: <span class="k">select</span> balance from user_wallet WHERE <span class="nv">user_id</span> <span class="o">=</span> ? and <span class="nb">type</span> <span class="o">=</span> ? 
+...queryUserBalance:debug:181 <span class="o">==</span>&gt; Parameters: 10<span class="o">(</span>Long<span class="o">)</span>, 1<span class="o">(</span>Integer<span class="o">)</span>
+...queryUserBalance:debug:181 &lt;<span class="o">==</span>      Total: <span class="m">1</span>
 session1: <span class="m">500</span>
-...queryUserBalance:debug:181 <span class="o">=</span><span class="o">=</span>&gt;  Preparing: <span class="k">select</span> balance from user_wallet WHERE <span class="nv">user_id</span> <span class="o">=</span> ? and <span class="nb">type</span> <span class="o">=</span> ? 
-...queryUserBalance:debug:181 <span class="o">=</span><span class="o">=</span>&gt; Parameters: 10<span class="o">(</span>Long<span class="o">)</span>, 1<span class="o">(</span>Integer<span class="o">)</span>
-...queryUserBalance:debug:181 &lt;<span class="o">=</span><span class="o">=</span>      Total: <span class="m">1</span>
+...queryUserBalance:debug:181 <span class="o">==</span>&gt;  Preparing: <span class="k">select</span> balance from user_wallet WHERE <span class="nv">user_id</span> <span class="o">=</span> ? and <span class="nb">type</span> <span class="o">=</span> ? 
+...queryUserBalance:debug:181 <span class="o">==</span>&gt; Parameters: 10<span class="o">(</span>Long<span class="o">)</span>, 1<span class="o">(</span>Integer<span class="o">)</span>
+...queryUserBalance:debug:181 &lt;<span class="o">==</span>      Total: <span class="m">1</span>
 session2: <span class="m">500</span>
-...addBalanceByType:debug:181 <span class="o">=</span><span class="o">=</span>&gt;  Preparing: update user_wallet <span class="nb">set</span> <span class="nv">balance</span> <span class="o">=</span> balance + ? where <span class="nv">user_id</span> <span class="o">=</span> ? and <span class="nb">type</span> <span class="o">=</span> ? 
-...addBalanceByType:debug:181 <span class="o">=</span><span class="o">=</span>&gt; Parameters: 100<span class="o">(</span>Long<span class="o">)</span>, 10<span class="o">(</span>Long<span class="o">)</span>, 1<span class="o">(</span>Integer<span class="o">)</span>
-...addBalanceByType:debug:181 &lt;<span class="o">=</span><span class="o">=</span>    Updates: <span class="m">1</span>
-...queryUserBalance:debug:181 <span class="o">=</span><span class="o">=</span>&gt;  Preparing: <span class="k">select</span> balance from user_wallet WHERE <span class="nv">user_id</span> <span class="o">=</span> ? and <span class="nb">type</span> <span class="o">=</span> ? 
-...queryUserBalance:debug:181 <span class="o">=</span><span class="o">=</span>&gt; Parameters: 10<span class="o">(</span>Long<span class="o">)</span>, 1<span class="o">(</span>Integer<span class="o">)</span>
-...queryUserBalance:debug:181 &lt;<span class="o">=</span><span class="o">=</span>      Total: <span class="m">1</span>
+...addBalanceByType:debug:181 <span class="o">==</span>&gt;  Preparing: update user_wallet <span class="nb">set</span> <span class="nv">balance</span> <span class="o">=</span> balance + ? where <span class="nv">user_id</span> <span class="o">=</span> ? and <span class="nb">type</span> <span class="o">=</span> ? 
+...addBalanceByType:debug:181 <span class="o">==</span>&gt; Parameters: 100<span class="o">(</span>Long<span class="o">)</span>, 10<span class="o">(</span>Long<span class="o">)</span>, 1<span class="o">(</span>Integer<span class="o">)</span>
+...addBalanceByType:debug:181 &lt;<span class="o">==</span>    Updates: <span class="m">1</span>
+...queryUserBalance:debug:181 <span class="o">==</span>&gt;  Preparing: <span class="k">select</span> balance from user_wallet WHERE <span class="nv">user_id</span> <span class="o">=</span> ? and <span class="nb">type</span> <span class="o">=</span> ? 
+...queryUserBalance:debug:181 <span class="o">==</span>&gt; Parameters: 10<span class="o">(</span>Long<span class="o">)</span>, 1<span class="o">(</span>Integer<span class="o">)</span>
+...queryUserBalance:debug:181 &lt;<span class="o">==</span>      Total: <span class="m">1</span>
 session2: <span class="m">600</span>
 session1: <span class="m">500</span>
 </code></pre></td></tr></table>
@@ -287,9 +287,9 @@ session1: <span class="m">500</span>
 </span></code></pre></td>
 <td class="lntd">
 <pre class="chroma"><code class="language-java" data-lang="java"><span class="c1">// 设置全局一级缓存级别为 STATEMENT
-</span><span class="c1"></span><span class="n">org</span><span class="o">.</span><span class="na">apache</span><span class="o">.</span><span class="na">ibatis</span><span class="o">.</span><span class="na">session</span><span class="o">.</span><span class="na">Configuration</span> <span class="n">configuration</span> <span class="o">=</span> <span class="k">new</span> <span class="n">org</span><span class="o">.</span><span class="na">apache</span><span class="o">.</span><span class="na">ibatis</span><span class="o">.</span><span class="na">session</span><span class="o">.</span><span class="na">Configuration</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
-<span class="n">configuration</span><span class="o">.</span><span class="na">setLocalCacheScope</span><span class="o">(</span><span class="n">LocalCacheScope</span><span class="o">.</span><span class="na">STATEMENT</span><span class="o">)</span><span class="o">;</span>
-<span class="n">sqlSessionFactoryBean</span><span class="o">.</span><span class="na">setConfiguration</span><span class="o">(</span><span class="n">configuration</span><span class="o">)</span><span class="o">;</span>
+</span><span class="c1"></span><span class="n">org</span><span class="o">.</span><span class="na">apache</span><span class="o">.</span><span class="na">ibatis</span><span class="o">.</span><span class="na">session</span><span class="o">.</span><span class="na">Configuration</span> <span class="n">configuration</span> <span class="o">=</span> <span class="k">new</span> <span class="n">org</span><span class="o">.</span><span class="na">apache</span><span class="o">.</span><span class="na">ibatis</span><span class="o">.</span><span class="na">session</span><span class="o">.</span><span class="na">Configuration</span><span class="o">();</span>
+<span class="n">configuration</span><span class="o">.</span><span class="na">setLocalCacheScope</span><span class="o">(</span><span class="n">LocalCacheScope</span><span class="o">.</span><span class="na">STATEMENT</span><span class="o">);</span>
+<span class="n">sqlSessionFactoryBean</span><span class="o">.</span><span class="na">setConfiguration</span><span class="o">(</span><span class="n">configuration</span><span class="o">);</span>
 </code></pre></td></tr></table>
 </div>
 </div><div class="highlight"><div class="chroma">
@@ -298,7 +298,7 @@ session1: <span class="m">500</span>
 </span><span class="lnt">2
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-xml" data-lang="xml"><span class="c">&lt;!--</span><span class="c"> 设置单个语句不使用一级缓存 </span><span class="c">--&gt;</span>
+<pre class="chroma"><code class="language-xml" data-lang="xml"><span class="c">&lt;!-- 设置单个语句不使用一级缓存 --&gt;</span>
 <span class="nt">&lt;select</span> <span class="na">id=</span><span class="s">&#34;queryUserBalance&#34;</span> <span class="na">resultType=</span><span class="s">&#34;java.lang.Long&#34;</span> <span class="na">flushCache=</span><span class="s">&#34;true&#34;</span><span class="nt">&gt;</span>
 </code></pre></td></tr></table>
 </div>
@@ -315,13 +315,13 @@ session1: <span class="m">500</span>
 </span><span class="lnt">8
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kt">void</span> <span class="nf">test3</span><span class="o">(</span><span class="o">)</span> <span class="o">{</span>
-    <span class="n">SqlSession</span> <span class="n">sqlSession</span> <span class="o">=</span> <span class="n">sqlSessionFactory</span><span class="o">.</span><span class="na">openSession</span><span class="o">(</span><span class="kc">true</span><span class="o">)</span><span class="o">;</span>
-    <span class="n">UserWalletMapperExt</span> <span class="n">mapper</span> <span class="o">=</span> <span class="n">sqlSession</span><span class="o">.</span><span class="na">getMapper</span><span class="o">(</span><span class="n">UserWalletMapperExt</span><span class="o">.</span><span class="na">class</span><span class="o">)</span><span class="o">;</span>
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kt">void</span> <span class="nf">test3</span><span class="o">()</span> <span class="o">{</span>
+    <span class="n">SqlSession</span> <span class="n">sqlSession</span> <span class="o">=</span> <span class="n">sqlSessionFactory</span><span class="o">.</span><span class="na">openSession</span><span class="o">(</span><span class="kc">true</span><span class="o">);</span>
+    <span class="n">UserWalletMapperExt</span> <span class="n">mapper</span> <span class="o">=</span> <span class="n">sqlSession</span><span class="o">.</span><span class="na">getMapper</span><span class="o">(</span><span class="n">UserWalletMapperExt</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
 
-    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">mapper</span><span class="o">.</span><span class="na">queryUserBalance</span><span class="o">(</span><span class="n">10L</span><span class="o">,</span> <span class="n">1</span><span class="o">)</span><span class="o">)</span><span class="o">;</span>
-    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">mapper</span><span class="o">.</span><span class="na">queryUserBalance</span><span class="o">(</span><span class="n">10L</span><span class="o">,</span> <span class="n">1</span><span class="o">)</span><span class="o">)</span><span class="o">;</span>
-    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">mapper</span><span class="o">.</span><span class="na">queryUserBalance</span><span class="o">(</span><span class="n">10L</span><span class="o">,</span> <span class="n">1</span><span class="o">)</span><span class="o">)</span><span class="o">;</span>
+    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">mapper</span><span class="o">.</span><span class="na">queryUserBalance</span><span class="o">(</span><span class="n">10L</span><span class="o">,</span> <span class="n">1</span><span class="o">));</span>
+    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">mapper</span><span class="o">.</span><span class="na">queryUserBalance</span><span class="o">(</span><span class="n">10L</span><span class="o">,</span> <span class="n">1</span><span class="o">));</span>
+    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">mapper</span><span class="o">.</span><span class="na">queryUserBalance</span><span class="o">(</span><span class="n">10L</span><span class="o">,</span> <span class="n">1</span><span class="o">));</span>
 <span class="o">}</span>
 </code></pre></td></tr></table>
 </div>
@@ -341,17 +341,17 @@ session1: <span class="m">500</span>
 </span><span class="lnt">12
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell">...queryUserBalance:debug:181 <span class="o">=</span><span class="o">=</span>&gt;  Preparing: <span class="k">select</span> balance from user_wallet WHERE <span class="nv">user_id</span> <span class="o">=</span> ? and <span class="nb">type</span> <span class="o">=</span> ? 
-...queryUserBalance:debug:181 <span class="o">=</span><span class="o">=</span>&gt; Parameters: 10<span class="o">(</span>Long<span class="o">)</span>, 1<span class="o">(</span>Integer<span class="o">)</span>
-...queryUserBalance:debug:181 &lt;<span class="o">=</span><span class="o">=</span>      Total: <span class="m">1</span>
+<pre class="chroma"><code class="language-shell" data-lang="shell">...queryUserBalance:debug:181 <span class="o">==</span>&gt;  Preparing: <span class="k">select</span> balance from user_wallet WHERE <span class="nv">user_id</span> <span class="o">=</span> ? and <span class="nb">type</span> <span class="o">=</span> ? 
+...queryUserBalance:debug:181 <span class="o">==</span>&gt; Parameters: 10<span class="o">(</span>Long<span class="o">)</span>, 1<span class="o">(</span>Integer<span class="o">)</span>
+...queryUserBalance:debug:181 &lt;<span class="o">==</span>      Total: <span class="m">1</span>
 <span class="m">600</span>
-...queryUserBalance:debug:181 <span class="o">=</span><span class="o">=</span>&gt;  Preparing: <span class="k">select</span> balance from user_wallet WHERE <span class="nv">user_id</span> <span class="o">=</span> ? and <span class="nb">type</span> <span class="o">=</span> ? 
-...queryUserBalance:debug:181 <span class="o">=</span><span class="o">=</span>&gt; Parameters: 10<span class="o">(</span>Long<span class="o">)</span>, 1<span class="o">(</span>Integer<span class="o">)</span>
-...queryUserBalance:debug:181 &lt;<span class="o">=</span><span class="o">=</span>      Total: <span class="m">1</span>
+...queryUserBalance:debug:181 <span class="o">==</span>&gt;  Preparing: <span class="k">select</span> balance from user_wallet WHERE <span class="nv">user_id</span> <span class="o">=</span> ? and <span class="nb">type</span> <span class="o">=</span> ? 
+...queryUserBalance:debug:181 <span class="o">==</span>&gt; Parameters: 10<span class="o">(</span>Long<span class="o">)</span>, 1<span class="o">(</span>Integer<span class="o">)</span>
+...queryUserBalance:debug:181 &lt;<span class="o">==</span>      Total: <span class="m">1</span>
 <span class="m">600</span>
-...queryUserBalance:debug:181 <span class="o">=</span><span class="o">=</span>&gt;  Preparing: <span class="k">select</span> balance from user_wallet WHERE <span class="nv">user_id</span> <span class="o">=</span> ? and <span class="nb">type</span> <span class="o">=</span> ? 
-...queryUserBalance:debug:181 <span class="o">=</span><span class="o">=</span>&gt; Parameters: 10<span class="o">(</span>Long<span class="o">)</span>, 1<span class="o">(</span>Integer<span class="o">)</span>
-...queryUserBalance:debug:181 &lt;<span class="o">=</span><span class="o">=</span>      Total: <span class="m">1</span>
+...queryUserBalance:debug:181 <span class="o">==</span>&gt;  Preparing: <span class="k">select</span> balance from user_wallet WHERE <span class="nv">user_id</span> <span class="o">=</span> ? and <span class="nb">type</span> <span class="o">=</span> ? 
+...queryUserBalance:debug:181 <span class="o">==</span>&gt; Parameters: 10<span class="o">(</span>Long<span class="o">)</span>, 1<span class="o">(</span>Integer<span class="o">)</span>
+...queryUserBalance:debug:181 &lt;<span class="o">==</span>      Total: <span class="m">1</span>
 <span class="m">600</span>
 </code></pre></td></tr></table>
 </div>
@@ -364,7 +364,7 @@ session1: <span class="m">500</span>
     <div class="post-copyright">
   <p class="copyright-item">
     <span class="item-title">文章作者</span>
-    <span class="item-content">ld000</span>
+    <span class="item-content">Voiddd</span>
   </p>
   <p class="copyright-item">
     <span class="item-title">上次更新</span>
@@ -395,7 +395,11 @@ session1: <span class="m">500</span>
           <a href="/tags/java/">java</a>
           </div>
       <nav class="post-nav">
-        
+        <a class="prev" href="/post/mac_clion_debug_mysql_source/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Mac下用CLion debug MySQL5.7源码</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
         <a class="next" href="/post/spring_boot_tomcat/">
             <span class="next-text nav-default">用外置 Tomcat 部署 Spring Boot 应用</span>
             <span class="next-text nav-mobile">下一篇</span>
@@ -413,7 +417,7 @@ session1: <span class="m">500</span>
       if (window.location.hostname === 'localhost') return;
 
       var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-      var disqus_shortname = 'ld000-blog';
+      var disqus_shortname = 'Voiddd-blog';
       dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
       (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
     })();
@@ -453,7 +457,7 @@ session1: <span class="m">500</span>
     <span class="heart">
       <i class="iconfont icon-heart"></i>
     </span>
-    <span class="author">ld000</span>
+    <span class="author">Voiddd</span>
   </span>
 </div>
     </footer>

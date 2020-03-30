@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>gorm调用sharding-proxy, 参数带单引号sql报错 - Voiddd</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Voiddd" /><meta name="description" content="软件版本 sharding-proxy-3.1.0 MySQL-5.7 正文 最近公司某系统用 go 重构，ORM框架使用 gorm，用上了分库分表，使用 sharding-proxy 作代理。 但是上了 sharding-proxy 之后之前参数中带 &#39; 的 sql 全都报错了。 1" /><meta name="keywords" content="Hugo, theme, even, java, Voiddd" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.69.0-DEV with theme even" />
+
+
+<link rel="canonical" href="https://ld000.space/post/gorm_sharding_proxy_sql_error/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="gorm调用sharding-proxy, 参数带单引号sql报错" />
+<meta property="og:description" content="软件版本 sharding-proxy-3.1.0 MySQL-5.7 正文 最近公司某系统用 go 重构，ORM框架使用 gorm，用上了分库分表，使用 sharding-proxy 作代理。 但是上了 sharding-proxy 之后之前参数中带 &#39; 的 sql 全都报错了。 1" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://ld000.space/post/gorm_sharding_proxy_sql_error/" />
+<meta property="article:published_time" content="2020-03-27T00:00:00+00:00" />
+<meta property="article:modified_time" content="2020-03-27T00:00:00+00:00" />
+<meta itemprop="name" content="gorm调用sharding-proxy, 参数带单引号sql报错">
+<meta itemprop="description" content="软件版本 sharding-proxy-3.1.0 MySQL-5.7 正文 最近公司某系统用 go 重构，ORM框架使用 gorm，用上了分库分表，使用 sharding-proxy 作代理。 但是上了 sharding-proxy 之后之前参数中带 &#39; 的 sql 全都报错了。 1">
+<meta itemprop="datePublished" content="2020-03-27T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2020-03-27T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="2256">
+
+
+
+<meta itemprop="keywords" content="go,gorm,sharding-proxy,MySQL," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="gorm调用sharding-proxy, 参数带单引号sql报错"/>
+<meta name="twitter:description" content="软件版本 sharding-proxy-3.1.0 MySQL-5.7 正文 最近公司某系统用 go 重构，ORM框架使用 gorm，用上了分库分表，使用 sharding-proxy 作代理。 但是上了 sharding-proxy 之后之前参数中带 &#39; 的 sql 全都报错了。 1"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">Voiddd</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">首页</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">归档</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">标签</li>
+      </a><a href="/links/">
+        <li class="mobile-menu-item">友链</li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">关于</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">Voiddd</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">首页</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">归档</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">标签</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/links/">友链</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/about/">关于</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">gorm调用sharding-proxy, 参数带单引号sql报错</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2020-03-27 </span>
+        
+          <span class="more-meta"> 约 2256 字 </span>
+          <span class="more-meta"> 预计阅读 5 分钟 </span>
+        
+      </div>
+    </header>
+
+    
+    <div class="post-content">
+      <h2 id="软件版本">软件版本</h2>
+<p>sharding-proxy-3.1.0</p>
+<p>MySQL-5.7</p>
+<h2 id="正文">正文</h2>
+<p>最近公司某系统用 go 重构，ORM框架使用 gorm，用上了分库分表，使用 sharding-proxy 作代理。</p>
+<p>但是上了 sharding-proxy 之后之前参数中带 <code>'</code> 的 sql 全都报错了。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">    // 报错信息
+    Error 3054: Unknown exception: Illegal input, unterminated <span class="s1">&#39;&#39;</span><span class="err">&#39;</span>.
+</code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go">    <span class="c1">// 执行 sql 的代码
+</span><span class="c1"></span>    <span class="c1">// 这里参数 dd&#39;dd 中有个 &#39;
+</span><span class="c1"></span>    <span class="nx">db</span><span class="p">.</span><span class="nf">Exec</span><span class="p">(</span><span class="s">&#34;update md_user_info set nickname = ? where user_id = ?&#34;</span><span class="p">,</span> <span class="s">&#34;dd&#39;dd&#34;</span><span class="p">,</span> <span class="mi">1000002082</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>怀疑可能是没用占位符，直接拼接sql引发的问题。但是看代码又没发现啥问题，只能 debug 看下。</p>
+<p>中间都没发现问题，直接一路 debug 到最底层 sql 库。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go">    <span class="c1">// go/src/database/sql/sql.go
+</span><span class="c1"></span>    
+    <span class="kd">func</span> <span class="p">(</span><span class="nx">db</span> <span class="o">*</span><span class="nx">DB</span><span class="p">)</span> <span class="nf">execDC</span><span class="p">(</span><span class="nx">ctx</span> <span class="nx">context</span><span class="p">.</span><span class="nx">Context</span><span class="p">,</span> <span class="nx">dc</span> <span class="o">*</span><span class="nx">driverConn</span><span class="p">,</span> <span class="nx">release</span> <span class="kd">func</span><span class="p">(</span><span class="kt">error</span><span class="p">),</span> <span class="nx">query</span> <span class="kt">string</span><span class="p">,</span> <span class="nx">args</span> <span class="p">[]</span><span class="kd">interface</span><span class="p">{})</span> <span class="p">(</span><span class="nx">res</span> <span class="nx">Result</span><span class="p">,</span> <span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+        <span class="cm">/* ... */</span>
+        <span class="k">if</span> <span class="nx">ok</span> <span class="p">{</span>
+            <span class="kd">var</span> <span class="nx">nvdargs</span> <span class="p">[]</span><span class="nx">driver</span><span class="p">.</span><span class="nx">NamedValue</span>
+            <span class="kd">var</span> <span class="nx">resi</span> <span class="nx">driver</span><span class="p">.</span><span class="nx">Result</span>
+            <span class="nf">withLock</span><span class="p">(</span><span class="nx">dc</span><span class="p">,</span> <span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
+                <span class="cm">/* ... */</span>
+                <span class="c1">// 这里执行 statmente
+</span><span class="c1"></span>                <span class="nx">resi</span><span class="p">,</span> <span class="nx">err</span> <span class="p">=</span> <span class="nf">ctxDriverExec</span><span class="p">(</span><span class="nx">ctx</span><span class="p">,</span> <span class="nx">execerCtx</span><span class="p">,</span> <span class="nx">execer</span><span class="p">,</span> <span class="nx">query</span><span class="p">,</span> <span class="nx">nvdargs</span><span class="p">)</span>
+            <span class="p">})</span>
+            <span class="cm">/* ... */</span>
+        <span class="p">}</span>
+    
+        <span class="kd">var</span> <span class="nx">si</span> <span class="nx">driver</span><span class="p">.</span><span class="nx">Stmt</span>
+        <span class="nf">withLock</span><span class="p">(</span><span class="nx">dc</span><span class="p">,</span> <span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
+            <span class="c1">// 这里执行 preparedStatmente
+</span><span class="c1"></span>            <span class="nx">si</span><span class="p">,</span> <span class="nx">err</span> <span class="p">=</span> <span class="nf">ctxDriverPrepare</span><span class="p">(</span><span class="nx">ctx</span><span class="p">,</span> <span class="nx">dc</span><span class="p">.</span><span class="nx">ci</span><span class="p">,</span> <span class="nx">query</span><span class="p">)</span>
+        <span class="p">})</span>
+        <span class="cm">/* ... */</span>
+    <span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>debug 进 <code>ctxDriverExec</code> 方法，走到最后的 mysql 驱动。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go">    <span class="c1">// github.com/go-sql-driver/mysql/connection.go
+</span><span class="c1"></span>    
+    <span class="kd">func</span> <span class="p">(</span><span class="nx">mc</span> <span class="o">*</span><span class="nx">mysqlConn</span><span class="p">)</span> <span class="nf">Exec</span><span class="p">(</span><span class="nx">query</span> <span class="kt">string</span><span class="p">,</span> <span class="nx">args</span> <span class="p">[]</span><span class="nx">driver</span><span class="p">.</span><span class="nx">Value</span><span class="p">)</span> <span class="p">(</span><span class="nx">driver</span><span class="p">.</span><span class="nx">Result</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+        <span class="cm">/* ... */</span>
+            <span class="c1">// 判断 InterpolateParams 参数，如果为 true，就注入参数执行 statmente
+</span><span class="c1"></span>            <span class="c1">// 如果为 false，就跳出回 sql.go 执行 preparedStatmente
+</span><span class="c1"></span>            <span class="k">if</span> <span class="p">!</span><span class="nx">mc</span><span class="p">.</span><span class="nx">cfg</span><span class="p">.</span><span class="nx">InterpolateParams</span> <span class="p">{</span>
+                <span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">driver</span><span class="p">.</span><span class="nx">ErrSkip</span>
+            <span class="p">}</span>
+            <span class="c1">// 注入参数
+</span><span class="c1"></span>            <span class="c1">// try to interpolate the parameters to save extra roundtrips for preparing and closing a statement
+</span><span class="c1"></span>            <span class="nx">prepared</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">mc</span><span class="p">.</span><span class="nf">interpolateParams</span><span class="p">(</span><span class="nx">query</span><span class="p">,</span> <span class="nx">args</span><span class="p">)</span>
+      <span class="cm">/* ... */</span>
+    
+        <span class="c1">// 执行 statmente
+</span><span class="c1"></span>        <span class="nx">err</span> <span class="o">:=</span> <span class="nx">mc</span><span class="p">.</span><span class="nf">exec</span><span class="p">(</span><span class="nx">query</span><span class="p">)</span>
+        <span class="cm">/* ... */</span>
+    <span class="p">}</span>
+    
+    <span class="c1">// 将参数注入 sql
+</span><span class="c1"></span>    <span class="kd">func</span> <span class="p">(</span><span class="nx">mc</span> <span class="o">*</span><span class="nx">mysqlConn</span><span class="p">)</span> <span class="nf">interpolateParams</span><span class="p">(</span><span class="nx">query</span> <span class="kt">string</span><span class="p">,</span> <span class="nx">args</span> <span class="p">[]</span><span class="nx">driver</span><span class="p">.</span><span class="nx">Value</span><span class="p">)</span> <span class="p">(</span><span class="kt">string</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+        <span class="cm">/* ... */</span>
+            <span class="k">case</span> <span class="kt">string</span><span class="p">:</span>
+                <span class="nx">buf</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">buf</span><span class="p">,</span> <span class="sc">&#39;\&#39;&#39;</span><span class="p">)</span>
+                <span class="c1">// 这里用位与和位左移状态位来判断状态
+</span><span class="c1"></span>                <span class="k">if</span> <span class="nx">mc</span><span class="p">.</span><span class="nx">status</span><span class="o">&amp;</span><span class="nx">statusNoBackslashEscapes</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">{</span>
+                    <span class="nx">buf</span> <span class="p">=</span> <span class="nf">escapeStringBackslash</span><span class="p">(</span><span class="nx">buf</span><span class="p">,</span> <span class="nx">v</span><span class="p">)</span>
+                <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                    <span class="nx">buf</span> <span class="p">=</span> <span class="nf">escapeStringQuotes</span><span class="p">(</span><span class="nx">buf</span><span class="p">,</span> <span class="nx">v</span><span class="p">)</span>
+                <span class="p">}</span>
+                <span class="nx">buf</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">buf</span><span class="p">,</span> <span class="sc">&#39;\&#39;&#39;</span><span class="p">)</span>
+        <span class="cm">/* ... */</span>
+    <span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>这里有两个相关参数：</p>
+<p>一个是 <code>statusNoBackslashEscapes</code>，对应 sql_mode <code>NO_BACKSLASH_ESCAPES</code>，表示将反斜杠当作普通字符，而不是转义字符。开启后生成的sql为<code>update md_user_info set nickname = 'dd''dd' where user_id = 1000002082</code>，会把单引号替换成两个单引号(这样单引号会成对，不破坏结构)。</p>
+<p>一个是 <code>InterpolateParams</code>，对应连接参数<code>interpolateParams</code>，判断是否开启客户端 prepare，进行参数转义拼接，开启可以省掉一次和服务端的prepare交互。</p>
+<p>debug 往下走发现参数<code>InterpolateParams</code>是<code>true</code>，发出的sql是<code>update md_user_info set nickname = 'dd\'dd' where user_id = 1000002082</code>，没有问题，然后执行 statement 报错了。</p>
+<p>先返回程序创建数据库连接的地方。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go">    <span class="nx">connString</span> <span class="p">=</span> <span class="nx">fmt</span><span class="p">.</span><span class="nf">Sprintf</span><span class="p">(</span><span class="s">&#34;%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&amp;parseTime=True&amp;loc=Local&amp;interpolateParams=true&#34;</span><span class="p">,</span>
+            <span class="nx">conf</span><span class="p">.</span><span class="nx">User</span><span class="p">,</span> <span class="nx">conf</span><span class="p">.</span><span class="nx">Password</span><span class="p">,</span> <span class="nx">conf</span><span class="p">.</span><span class="nx">Host</span><span class="p">,</span> <span class="nx">conf</span><span class="p">.</span><span class="nx">Port</span><span class="p">,</span> <span class="nx">conf</span><span class="p">.</span><span class="nx">Database</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>果然，参数里拼上了 <code>&amp;interpolateParams=true</code>，去掉这个参数试下，发出的 prepare sql 是<code>update md_user_info set nickname = ? where user_id = ?</code>，执行正常。看来是 sharding-proxy 不支持客户端预编译，接收 sql 时把反斜杠丢掉了，或者没有处理转义符。</p>
+<h2 id="sql-解析">sql 解析</h2>
+<p>先简单介绍下 sql 解析的处理过程。sql 解析分为，词法分析、语法和语义分析、优化、执行代码生成。词法分析主要是把输入转化成一个个 token，语法分析是生成语法树的过程。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">              前端                      中部                后端
+             /   <span class="se">\ </span>                     <span class="p">|</span>                   <span class="p">|</span>
+       词法分析   语法分析                优化             执行代码生成
+</code></pre></td></tr></table>
+</div>
+</div><p>以 <code>update table set name = a</code> 为例。</p>
+<p>词法分析生成6个 token：</p>
+<p><img src="https://raw.githubusercontent.com/ld000/git-resources/master/img/20200327162605.png" alt="https://raw.githubusercontent.com/ld000/git-resources/master/img/20200327162605.png"></p>
+<p>语法分析语法树：</p>
+<p><img src="https://raw.githubusercontent.com/ld000/git-resources/master/img/20200327163231.png" alt="https://raw.githubusercontent.com/ld000/git-resources/master/img/20200327163231.png"></p>
+<h2 id="sql-解析器分析">sql 解析器分析</h2>
+<p>同样的 sql <code>update md_user_info set nickname = 'dd'dd' where user_id = 1000002082</code>，MySQL 正常执行，sharding-proxy 却报错，接下来分析下两者的 sql 解析器都是怎么处理这条 sql 的。</p>
+<p>这里主要分析下词法分析转化成 token 阶段，sharding-proxy 也是在这个阶段报错的。</p>
+<h3 id="sharding-proxy">sharding-proxy</h3>
+<p>首先看下接收到的 sql 是什么，debug 进 <code>SQLParsingEngine</code></p>
+<p><img src="https://raw.githubusercontent.com/ld000/git-resources/master/img/20200326175137.jpg" alt="https://raw.githubusercontent.com/ld000/git-resources/master/img/20200326175137.jpg"></p>
+<p>可以看到接收的 sql 没有问题，接下来看 sql 解析。</p>
+<p>update 语句解析在 <code>AbstractUpdateParser.parse()</code> 处，经过 <code>LexerEngine</code>，最后用 <code>Tokenizer</code> 生成 token。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java">    <span class="c1">// src/main/java/io/shardingsphere/core/parsing/lexer/analyzer/Tokenizer.java
+</span><span class="c1"></span>    
+    <span class="kd">private</span> <span class="n">Token</span> <span class="nf">scanChars</span><span class="o">(</span><span class="kd">final</span> <span class="kt">char</span> <span class="n">terminatedChar</span><span class="o">)</span> <span class="o">{</span>
+        <span class="c1">// 获取 token 的字符串长度
+</span><span class="c1"></span>        <span class="kt">int</span> <span class="n">length</span> <span class="o">=</span> <span class="n">getLengthUntilTerminatedChar</span><span class="o">(</span><span class="n">terminatedChar</span><span class="o">);</span>
+        <span class="c1">// 截取字符串，返回新 token
+</span><span class="c1"></span>        <span class="k">return</span> <span class="k">new</span> <span class="n">Token</span><span class="o">(</span><span class="n">Literals</span><span class="o">.</span><span class="na">CHARS</span><span class="o">,</span> <span class="n">input</span><span class="o">.</span><span class="na">substring</span><span class="o">(</span><span class="n">offset</span> <span class="o">+</span> <span class="n">1</span><span class="o">,</span> <span class="n">offset</span> <span class="o">+</span> <span class="n">length</span> <span class="o">-</span> <span class="n">1</span><span class="o">),</span> <span class="n">offset</span> <span class="o">+</span> <span class="n">length</span><span class="o">);</span>
+    <span class="o">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java">    <span class="c1">// src/main/java/io/shardingsphere/core/parsing/lexer/analyzer/Tokenizer.java
+</span><span class="c1"></span>    
+    <span class="c1">// 获取 token 的字符串长度
+</span><span class="c1"></span>    <span class="kd">private</span> <span class="kt">int</span> <span class="nf">getLengthUntilTerminatedChar</span><span class="o">(</span><span class="kd">final</span> <span class="kt">char</span> <span class="n">terminatedChar</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kt">int</span> <span class="n">length</span> <span class="o">=</span> <span class="n">1</span><span class="o">;</span>
+        <span class="c1">// 当前字符是否是检测字符
+</span><span class="c1"></span>        <span class="k">while</span> <span class="o">(</span><span class="n">terminatedChar</span> <span class="o">!=</span> <span class="n">charAt</span><span class="o">(</span><span class="n">offset</span> <span class="o">+</span> <span class="n">length</span><span class="o">)</span> 
+            <span class="c1">// 判断是否是两个相同字符
+</span><span class="c1"></span>                        <span class="o">||</span> <span class="n">hasEscapeChar</span><span class="o">(</span><span class="n">terminatedChar</span><span class="o">,</span> <span class="n">offset</span> <span class="o">+</span> <span class="n">length</span><span class="o">))</span> <span class="o">{</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">offset</span> <span class="o">+</span> <span class="n">length</span> <span class="o">&gt;=</span> <span class="n">input</span><span class="o">.</span><span class="na">length</span><span class="o">())</span> <span class="o">{</span>
+                <span class="k">throw</span> <span class="k">new</span> <span class="n">UnterminatedCharException</span><span class="o">(</span><span class="n">terminatedChar</span><span class="o">);</span>
+            <span class="o">}</span>
+            <span class="c1">// 处理是否是两个相同字符
+</span><span class="c1"></span>            <span class="k">if</span> <span class="o">(</span><span class="n">hasEscapeChar</span><span class="o">(</span><span class="n">terminatedChar</span><span class="o">,</span> <span class="n">offset</span> <span class="o">+</span> <span class="n">length</span><span class="o">))</span> <span class="o">{</span>
+                <span class="n">length</span><span class="o">++;</span>
+            <span class="o">}</span>
+            <span class="n">length</span><span class="o">++;</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">length</span> <span class="o">+</span> <span class="n">1</span><span class="o">;</span>
+    <span class="o">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>看下 <code>dd'dd</code> 的处理过程，这时 <code>terminatedChar</code> 的值是 <code>'</code> ，剩余要处理的字符串是 <code>'dd\'dd' where user_id = 1000002082</code> ，逐个字符向后检测。</p>
+<p><img src="https://raw.githubusercontent.com/ld000/git-resources/master/img/20200327155726.png" alt="https://raw.githubusercontent.com/ld000/git-resources/master/img/20200327155726.png"></p>
+<p>这里<code>'</code> 会成对解析，如果碰上<code>'</code> 没有成对的情况，就会报错。不处理转义字符。</p>
+<h3 id="mysql">MySQL</h3>
+<p>再看下 MySQL 的解析器。</p>
+<p><img src="https://raw.githubusercontent.com/ld000/git-resources/master/img/20200327143436.png" alt="https://raw.githubusercontent.com/ld000/git-resources/master/img/20200327143436.png"></p>
+<p>看到接收的 sql 和 sharding-proxy 是一样的(多一个反斜杠是因为这里按字符串显示，多一个转义符)</p>
+<p>转化 token 的代码在 sql_lex.cc 的 MYSQLlex → lex_one_token 方法中。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-c" data-lang="c">    <span class="c1">// sql/sql_lex.cc
+</span><span class="c1"></span>    
+    <span class="kt">int</span> <span class="nf">MYSQLlex</span><span class="p">(</span><span class="n">YYSTYPE</span> <span class="o">*</span><span class="n">yylval</span><span class="p">,</span> <span class="n">YYLTYPE</span> <span class="o">*</span><span class="n">yylloc</span><span class="p">,</span> <span class="n">THD</span> <span class="o">*</span><span class="n">thd</span><span class="p">)</span>
+    <span class="p">{</span>
+      <span class="cm">/* ... */</span>
+    
+      <span class="n">token</span><span class="o">=</span> <span class="n">lex_one_token</span><span class="p">(</span><span class="n">yylval</span><span class="p">,</span> <span class="n">thd</span><span class="p">);</span>
+    
+      <span class="cm">/* ... */</span>
+    <span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>普通字符的解析最后会走进 <code>get_text</code> 方法进行截取。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-c" data-lang="c">    <span class="c1">// sql/sql_lex.cc
+</span><span class="c1"></span>    
+    <span class="k">static</span> <span class="kt">char</span> <span class="o">*</span><span class="nf">get_text</span><span class="p">(</span><span class="n">Lex_input_stream</span> <span class="o">*</span><span class="n">lip</span><span class="p">,</span> <span class="kt">int</span> <span class="n">pre_skip</span><span class="p">,</span> <span class="kt">int</span> <span class="n">post_skip</span><span class="p">)</span>
+    <span class="p">{</span>
+      <span class="cm">/* ... */</span>
+    
+        <span class="c1">// 处理转义字符
+</span><span class="c1"></span>        <span class="k">if</span> <span class="p">(</span><span class="n">c</span> <span class="o">==</span> <span class="sc">&#39;\\&#39;</span> <span class="o">&amp;&amp;</span>
+            <span class="o">!</span><span class="p">(</span><span class="n">lip</span><span class="o">-&gt;</span><span class="n">m_thd</span><span class="o">-&gt;</span><span class="n">variables</span><span class="p">.</span><span class="n">sql_mode</span> <span class="o">&amp;</span> <span class="n">MODE_NO_BACKSLASH_ESCAPES</span><span class="p">))</span>
+        <span class="p">{</span>                    <span class="c1">// Escaped character
+</span><span class="c1"></span>          <span class="n">found_escape</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span>
+          <span class="k">if</span> <span class="p">(</span><span class="n">lip</span><span class="o">-&gt;</span><span class="n">eof</span><span class="p">())</span>
+        <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+          <span class="n">lip</span><span class="o">-&gt;</span><span class="n">yySkip</span><span class="p">();</span>
+        <span class="p">}</span>
+    
+      <span class="cm">/* ... */</span>
+    <span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>这里有个处理转义字符的逻辑，如果当前字符是反斜杠，就向后跳两个字符，跳过转义字符。</p>
+<p><img src="https://raw.githubusercontent.com/ld000/git-resources/master/img/20200327160823.png" alt="https://raw.githubusercontent.com/ld000/git-resources/master/img/20200327160823.png"></p>
+<p>最终的 token 列表。(token 是个 int，对应关系在 sql_yacc.h 中)</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">    <span class="m">865</span> UPDATE_SYM      update 
+    <span class="m">484</span> IDENT_QUOTED    md_user_info 
+    <span class="m">757</span> SET             <span class="nb">set</span> 
+    <span class="m">484</span> IDENT_QUOTED    nickname 
+    <span class="m">415</span> <span class="nv">EQ</span>              <span class="o">=</span> 
+    <span class="m">828</span> TEXT_STRING     dd<span class="err">&#39;</span>dd
+    <span class="m">891</span> WHERE           where 
+    <span class="m">484</span> IDENT_QUOTED    user_id 
+    <span class="m">415</span> <span class="nv">EQ</span>              <span class="o">=</span> 
+    <span class="m">629</span> NUM             <span class="m">1000002082</span>
+    <span class="m">411</span> END_OF_INPUT
+</code></pre></td></tr></table>
+</div>
+</div><p>可以看到 sharding-proxy 因为没有处理开启客户端预编译的情况，解析报错了。</p>
+<h2 id="sharding-proxy-修改">sharding-proxy 修改</h2>
+<p>修改也很简单，加上处理转义字符的逻辑就可以了，修改 <code>Tokenizer</code> 的 <code>getLengthUntilTerminatedChar</code> 方法，增加处理转义字符的逻辑。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java">    <span class="c1">// src/main/java/io/shardingsphere/core/parsing/lexer/analyzer/Tokenizer.java
+</span><span class="c1"></span>    
+    <span class="kd">private</span> <span class="kt">int</span> <span class="nf">getLengthUntilTerminatedChar</span><span class="o">(</span><span class="kd">final</span> <span class="kt">char</span> <span class="n">terminatedChar</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kt">int</span> <span class="n">length</span> <span class="o">=</span> <span class="n">1</span><span class="o">;</span>
+        <span class="k">while</span> <span class="o">(</span><span class="n">terminatedChar</span> <span class="o">!=</span> <span class="n">charAt</span><span class="o">(</span><span class="n">offset</span> <span class="o">+</span> <span class="n">length</span><span class="o">)</span> <span class="o">||</span> <span class="n">hasEscapeChar</span><span class="o">(</span><span class="n">terminatedChar</span><span class="o">,</span> <span class="n">offset</span> <span class="o">+</span> <span class="n">length</span><span class="o">)</span>
+        <span class="o">)</span> <span class="o">{</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">offset</span> <span class="o">+</span> <span class="n">length</span> <span class="o">&gt;=</span> <span class="n">input</span><span class="o">.</span><span class="na">length</span><span class="o">())</span> <span class="o">{</span>
+                <span class="k">throw</span> <span class="k">new</span> <span class="n">UnterminatedCharException</span><span class="o">(</span><span class="n">terminatedChar</span><span class="o">);</span>
+            <span class="o">}</span>
+    
+            <span class="c1">// 增加处理转义字符
+</span><span class="c1"></span>            <span class="k">if</span> <span class="o">(</span><span class="sc">&#39;\\&#39;</span> <span class="o">==</span> <span class="n">charAt</span><span class="o">(</span><span class="n">offset</span> <span class="o">+</span> <span class="n">length</span><span class="o">))</span> <span class="o">{</span>
+                <span class="n">length</span><span class="o">++;</span>
+            <span class="o">}</span> <span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="n">hasEscapeChar</span><span class="o">(</span><span class="n">terminatedChar</span><span class="o">,</span> <span class="n">offset</span> <span class="o">+</span> <span class="n">length</span><span class="o">))</span> <span class="o">{</span>
+                <span class="n">length</span><span class="o">++;</span>
+            <span class="o">}</span>
+            <span class="n">length</span><span class="o">++;</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">length</span> <span class="o">+</span> <span class="n">1</span><span class="o">;</span>
+    <span class="o">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>这里忽略了sql_mode=NO_BACKSLASH_ESCAPES 的情况，因为 sharding-jdbc 里没有传递相关参数，包括客户端预编译的相关参数也没传递。</p>
+<h2 id="其他">其他</h2>
+<p>在没修改的情况下顺手用 Java 也测试下 sharding-jdbc 是否支持客户端预编译。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java">    <span class="n">Class</span><span class="o">.</span><span class="na">forName</span><span class="o">(</span><span class="s">&#34;com.mysql.jdbc.Driver&#34;</span><span class="o">);</span>
+    <span class="n">String</span> <span class="n">url</span> <span class="o">=</span> <span class="s">&#34;jdbc:mysql://localhost:3307/xxx?useServerPrepStmts=false&#34;</span><span class="o">;</span>
+    <span class="n">String</span> <span class="n">username</span> <span class="o">=</span> <span class="s">&#34;xxx&#34;</span><span class="o">;</span>
+    <span class="n">String</span> <span class="n">password</span> <span class="o">=</span> <span class="s">&#34;xxx&#34;</span><span class="o">;</span>
+    <span class="n">Connection</span> <span class="n">conn</span> <span class="o">=</span> <span class="n">DriverManager</span><span class="o">.</span><span class="na">getConnection</span><span class="o">(</span><span class="n">url</span><span class="o">,</span> <span class="n">username</span><span class="o">,</span> <span class="n">password</span><span class="o">);</span>
+    <span class="n">PreparedStatement</span> <span class="n">st</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+    <span class="n">String</span> <span class="n">sql</span> <span class="o">=</span> <span class="s">&#34;update md_user_info set nickname = ? where user_id = ?&#34;</span><span class="o">;</span>
+    
+    <span class="n">st</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="na">prepareStatement</span><span class="o">(</span><span class="n">sql</span><span class="o">);</span>
+    <span class="n">st</span><span class="o">.</span><span class="na">setString</span><span class="o">(</span><span class="n">1</span><span class="o">,</span> <span class="s">&#34;dd&#39;dd&#34;</span><span class="o">);</span>
+    <span class="n">st</span><span class="o">.</span><span class="na">setLong</span><span class="o">(</span><span class="n">2</span><span class="o">,</span> <span class="n">1000002082</span><span class="o">);</span>
+    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">st</span><span class="o">.</span><span class="na">execute</span><span class="o">());</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>Java 库的客户端预编译参数是<code>useServerPrepStmts</code>，默认值就是 false，表示关闭服务端预编译，开启客户端预编译，为了方便看我就写上了。执行一下，果然报错了。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">    Exception in thread <span class="s2">&#34;main&#34;</span> java.sql.SQLException: Unknown exception: Illegal input, unterminated <span class="s1">&#39;&#39;</span><span class="err">&#39;</span>.
+</code></pre></td></tr></table>
+</div>
+</div>
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Voiddd</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2020-03-27
+        
+    </span>
+  </p>
+  
+  
+</div>
+<div class="post-reward">
+  <input type="checkbox" name="reward" id="reward" hidden />
+  <label class="reward-button" for="reward">赞赏支持</label>
+  <div class="qr-code">
+    
+    <label class="qr-code-image" for="reward">
+        <img class="image" src="/WechatIMG1.jpeg">
+        <span>微信打赏</span>
+      </label>
+    <label class="qr-code-image" for="reward">
+        <img class="image" src="/WechatIMG2.jpeg">
+        <span>支付宝打赏</span>
+      </label>
+  </div>
+</div><footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/go/">go</a>
+          <a href="/tags/gorm/">gorm</a>
+          <a href="/tags/sharding-proxy/">sharding-proxy</a>
+          <a href="/tags/mysql/">MySQL</a>
+          </div>
+      <nav class="post-nav">
+        
+        <a class="next" href="/post/mac_clion_debug_mysql_source/">
+            <span class="next-text nav-default">Mac下用CLion debug MySQL5.7源码</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        <div id="disqus_thread"></div>
+    <script type="text/javascript">
+    (function() {
+      
+      
+      if (window.location.hostname === 'localhost') return;
+
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      var disqus_shortname = 'Voiddd-blog';
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:lidong9144@163.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://github.com/ld000" class="iconfont icon-github" title="github"></a>
+  <a href="https://ld000.space/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2017 - 
+    2020
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Voiddd</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-89678066-1', 'auto');
+	ga('set', 'anonymizeIp', true);
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+
+
+
+
+
+
+</body>
+</html>

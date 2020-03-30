@@ -1,16 +1,25 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>java on ld000</title>
+    <title>java on Voiddd</title>
     <link>https://ld000.space/tags/java/</link>
-    <description>Recent content in java on ld000</description>
+    <description>Recent content in java on Voiddd</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-Hans</language>
-    <copyright>ld000</copyright>
-    <lastBuildDate>Sun, 24 Nov 2019 00:00:00 +0000</lastBuildDate>
+    <copyright>Voiddd</copyright>
+    <lastBuildDate>Thu, 26 Mar 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="https://ld000.space/tags/java/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Mac下用CLion debug MySQL5.7源码</title>
+      <link>https://ld000.space/post/mac_clion_debug_mysql_source/</link>
+      <pubDate>Thu, 26 Mar 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://ld000.space/post/mac_clion_debug_mysql_source/</guid>
+      <description>编译安装 MySQL 首先从 github 下载 mysql 源码 1 https://github.com/mysql/mysql-server 接下来编译安装 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 // 进到源码目录 cd /Users/d/c/mysql-server-5.7 // cmake cmake \ -DCMAKE_INSTALL_PREFIX=/Users/d/c/mysql_build \ -DMYSQL_DATADIR=/Users/d/c/mysql_build/data \ -DSYSCONFDIR=/Users/d/c/mysql_build \ -DMYSQL_UNIX_ADDR=/Users/d/c/mysql_build/data/mysql.sock \ -DWITH_DEBUG=1 \ -DDOWNLOAD_BOOST=1 \ -DWITH_BOOST=/Users/d/c/boost \</description>
+    </item>
     
     <item>
       <title>MyBatis 一级缓存在分布式下的坑</title>

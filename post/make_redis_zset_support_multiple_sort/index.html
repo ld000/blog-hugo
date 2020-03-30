@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <title>让 Redis zset 支持多条件排序 - ld000</title>
+  <title>让 Redis zset 支持多条件排序 - Voiddd</title>
   <meta name="renderer" content="webkit" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
 
@@ -16,14 +16,14 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
 
 
-<meta name="author" content="ld000" /><meta name="description" content="一些需求中经常要我们实现一个排行榜，数据量少的话可以使用 RDB 数据库排序，数据量大可以自己实现算法或者使用 NoSQL 数据库排序，NoSQL 数据库中最方便" /><meta name="keywords" content="Hugo, theme, even, java, ld000" />
+<meta name="author" content="Voiddd" /><meta name="description" content="一些需求中经常要我们实现一个排行榜，数据量少的话可以使用 RDB 数据库排序，数据量大可以自己实现算法或者使用 NoSQL 数据库排序，NoSQL 数据库中最方便" /><meta name="keywords" content="Hugo, theme, even, java, Voiddd" />
 
 
 
 
 
 
-<meta name="generator" content="Hugo 0.63.0-DEV with theme even" />
+<meta name="generator" content="Hugo 0.69.0-DEV with theme even" />
 
 
 <link rel="canonical" href="https://ld000.space/post/make_redis_zset_support_multiple_sort/" />
@@ -69,7 +69,7 @@
 <body>
   <div id="mobile-navbar" class="mobile-navbar">
   <div class="mobile-header-logo">
-    <a href="/" class="logo">ld000</a>
+    <a href="/" class="logo">Voiddd</a>
   </div>
   <div class="mobile-navbar-icon">
     <span></span>
@@ -95,7 +95,7 @@
   <div class="container" id="mobile-panel">
     <header id="header" class="header">
         <div class="logo-wrapper">
-  <a href="/" class="logo">ld000</a>
+  <a href="/" class="logo">Voiddd</a>
 </div>
 
 <nav class="site-navbar">
@@ -302,7 +302,7 @@
     
             <span class="c1">// 跨度
 </span><span class="c1"></span>            <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">span</span><span class="p">;</span>
-        <span class="p">}</span> <span class="n">level</span><span class="p">[</span><span class="p">]</span><span class="p">;</span>
+        <span class="p">}</span> <span class="n">level</span><span class="p">[];</span>
     
     <span class="p">}</span> <span class="n">zskiplistNode</span><span class="p">;</span>
 </code></pre></td></tr></table>
@@ -337,7 +337,7 @@
 </span></code></pre></td>
 <td class="lntd">
 <pre class="chroma"><code class="language-java" data-lang="java">    <span class="kt">int</span> <span class="n">MAX_SECOND</span> <span class="o">=</span> <span class="n">1861891200</span><span class="o">;</span> <span class="c1">// 2029.1.1 0:0:0
-</span><span class="c1"></span>    <span class="kt">int</span> <span class="n">sts</span> <span class="o">=</span> <span class="o">(</span><span class="n">MAX_SECOND</span> <span class="o">-</span> <span class="o">(</span><span class="kt">int</span><span class="o">)</span><span class="o">(</span><span class="n">ts</span> <span class="o">/</span> <span class="n">1000</span><span class="o">)</span><span class="o">)</span>
+</span><span class="c1"></span>    <span class="kt">int</span> <span class="n">sts</span> <span class="o">=</span> <span class="o">(</span><span class="n">MAX_SECOND</span> <span class="o">-</span> <span class="o">(</span><span class="kt">int</span><span class="o">)(</span><span class="n">ts</span> <span class="o">/</span> <span class="n">1000</span><span class="o">))</span>
 </code></pre></td></tr></table>
 </div>
 </div><p>这样时间就缩小到了300000000以内。</p>
@@ -385,25 +385,25 @@
     <span class="kt">int</span> <span class="n">size2</span> <span class="o">=</span> <span class="n">1</span><span class="o">;</span>
     <span class="kt">int</span> <span class="n">size3</span> <span class="o">=</span> <span class="n">29</span><span class="o">;</span>
     
-    <span class="kt">long</span> <span class="n">d1Max</span> <span class="o">=</span> <span class="n">maxBySize</span><span class="o">(</span><span class="n">size1</span><span class="o">)</span><span class="o">;</span>
-    <span class="kt">long</span> <span class="n">d2Max</span> <span class="o">=</span> <span class="n">maxBySize</span><span class="o">(</span><span class="n">size2</span><span class="o">)</span><span class="o">;</span>
-    <span class="kt">long</span> <span class="n">d3Max</span> <span class="o">=</span> <span class="n">maxBySize</span><span class="o">(</span><span class="n">size3</span><span class="o">)</span><span class="o">;</span>
+    <span class="kt">long</span> <span class="n">d1Max</span> <span class="o">=</span> <span class="n">maxBySize</span><span class="o">(</span><span class="n">size1</span><span class="o">);</span>
+    <span class="kt">long</span> <span class="n">d2Max</span> <span class="o">=</span> <span class="n">maxBySize</span><span class="o">(</span><span class="n">size2</span><span class="o">);</span>
+    <span class="kt">long</span> <span class="n">d3Max</span> <span class="o">=</span> <span class="n">maxBySize</span><span class="o">(</span><span class="n">size3</span><span class="o">);</span>
     
     <span class="c1">// 计算 score
 </span><span class="c1"></span>    <span class="kd">public</span> <span class="kt">long</span> <span class="nf">genScore</span><span class="o">(</span><span class="kt">long</span> <span class="n">d1</span><span class="o">,</span> <span class="kt">long</span> <span class="n">d2</span><span class="o">,</span> <span class="kt">long</span> <span class="n">d3</span><span class="o">)</span> <span class="o">{</span>
-        <span class="k">return</span> <span class="o">(</span><span class="o">(</span><span class="n">d1</span> <span class="o">&amp;</span> <span class="n">d1Max</span><span class="o">)</span> <span class="o">&lt;</span><span class="o">&lt;</span> <span class="o">(</span><span class="n">size2</span> <span class="o">+</span> <span class="n">size3</span><span class="o">)</span><span class="o">)</span> <span class="o">|</span> <span class="o">(</span><span class="o">(</span><span class="n">d2</span> <span class="o">&amp;</span> <span class="n">d2Max</span><span class="o">)</span> <span class="o">&lt;</span><span class="o">&lt;</span> <span class="n">size3</span><span class="o">)</span> <span class="o">|</span> <span class="o">(</span><span class="n">d3</span> <span class="o">&amp;</span> <span class="n">d3Max</span><span class="o">)</span><span class="o">;</span>
+        <span class="k">return</span> <span class="o">((</span><span class="n">d1</span> <span class="o">&amp;</span> <span class="n">d1Max</span><span class="o">)</span> <span class="o">&lt;&lt;</span> <span class="o">(</span><span class="n">size2</span> <span class="o">+</span> <span class="n">size3</span><span class="o">))</span> <span class="o">|</span> <span class="o">((</span><span class="n">d2</span> <span class="o">&amp;</span> <span class="n">d2Max</span><span class="o">)</span> <span class="o">&lt;&lt;</span> <span class="n">size3</span><span class="o">)</span> <span class="o">|</span> <span class="o">(</span><span class="n">d3</span> <span class="o">&amp;</span> <span class="n">d3Max</span><span class="o">);</span>
     <span class="o">}</span>
     
     <span class="c1">// 计算增加 value 值
 </span><span class="c1"></span>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">incValue</span><span class="o">(</span><span class="kt">long</span> <span class="n">d1</span><span class="o">)</span> <span class="o">{</span>    
-        <span class="k">return</span> <span class="o">(</span><span class="o">(</span><span class="n">d1</span> <span class="o">&amp;</span> <span class="n">d1Max</span><span class="o">)</span> <span class="o">&lt;</span><span class="o">&lt;</span> <span class="o">(</span><span class="n">size2</span> <span class="o">+</span> <span class="n">size3</span><span class="o">)</span><span class="o">)</span> <span class="o">|</span> <span class="o">(</span><span class="o">(</span><span class="n">0</span> <span class="o">&amp;</span> <span class="n">d2Max</span><span class="o">)</span> <span class="o">&lt;</span><span class="o">&lt;</span> <span class="n">size3</span><span class="o">)</span> <span class="o">|</span> <span class="o">(</span><span class="n">0</span> <span class="o">&amp;</span> <span class="n">d3Max</span><span class="o">)</span><span class="o">;</span>
+        <span class="k">return</span> <span class="o">((</span><span class="n">d1</span> <span class="o">&amp;</span> <span class="n">d1Max</span><span class="o">)</span> <span class="o">&lt;&lt;</span> <span class="o">(</span><span class="n">size2</span> <span class="o">+</span> <span class="n">size3</span><span class="o">))</span> <span class="o">|</span> <span class="o">((</span><span class="n">0</span> <span class="o">&amp;</span> <span class="n">d2Max</span><span class="o">)</span> <span class="o">&lt;&lt;</span> <span class="n">size3</span><span class="o">)</span> <span class="o">|</span> <span class="o">(</span><span class="n">0</span> <span class="o">&amp;</span> <span class="n">d3Max</span><span class="o">);</span>
     <span class="o">}</span>
     
     <span class="c1">// 根据二进制长度计算最大值
 </span><span class="c1"></span>    <span class="kd">private</span> <span class="kt">long</span> <span class="nf">maxBySize</span><span class="o">(</span><span class="kt">int</span> <span class="n">len</span><span class="o">)</span> <span class="o">{</span>
         <span class="kt">long</span> <span class="n">r</span> <span class="o">=</span> <span class="n">0</span><span class="o">;</span>
-        <span class="k">while</span> <span class="o">(</span><span class="n">len</span><span class="o">-</span><span class="o">-</span> <span class="o">&gt;</span> <span class="n">0</span><span class="o">)</span> <span class="o">{</span>
-            <span class="n">r</span> <span class="o">=</span> <span class="o">(</span><span class="o">(</span><span class="n">r</span> <span class="o">&lt;</span><span class="o">&lt;</span> <span class="n">1</span><span class="o">)</span> <span class="o">|</span> <span class="n">1</span><span class="o">)</span><span class="o">;</span>
+        <span class="k">while</span> <span class="o">(</span><span class="n">len</span><span class="o">--</span> <span class="o">&gt;</span> <span class="n">0</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">r</span> <span class="o">=</span> <span class="o">((</span><span class="n">r</span> <span class="o">&lt;&lt;</span> <span class="n">1</span><span class="o">)</span> <span class="o">|</span> <span class="n">1</span><span class="o">);</span>
         <span class="o">}</span>
     
         <span class="k">return</span> <span class="n">r</span><span class="o">;</span>
@@ -500,39 +500,39 @@
 </span><span class="cm">     * @return
 </span><span class="cm">     */</span>
     <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">setD</span><span class="o">(</span><span class="n">String</span> <span class="n">key</span><span class="o">,</span> <span class="n">String</span> <span class="n">value</span><span class="o">,</span> <span class="n">Long</span> <span class="n">d2</span><span class="o">,</span> <span class="n">Long</span> <span class="n">d3</span><span class="o">)</span> <span class="o">{</span>
-        <span class="kt">long</span> <span class="n">start</span> <span class="o">=</span> <span class="n">System</span><span class="o">.</span><span class="na">currentTimeMillis</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+        <span class="kt">long</span> <span class="n">start</span> <span class="o">=</span> <span class="n">System</span><span class="o">.</span><span class="na">currentTimeMillis</span><span class="o">();</span>
         <span class="n">Long</span> <span class="n">oldScore</span><span class="o">;</span>
         <span class="kt">long</span> <span class="n">score</span><span class="o">;</span>
-        <span class="kt">byte</span><span class="o">[</span><span class="o">]</span> <span class="n">originBytes</span><span class="o">;</span>
+        <span class="kt">byte</span><span class="o">[]</span> <span class="n">originBytes</span><span class="o">;</span>
     
         <span class="k">do</span> <span class="o">{</span>
-            <span class="k">if</span> <span class="o">(</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">currentTimeMillis</span><span class="o">(</span><span class="o">)</span> <span class="o">-</span> <span class="n">start</span><span class="o">)</span> <span class="o">&gt;</span> <span class="n">2000</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">if</span> <span class="o">((</span><span class="n">System</span><span class="o">.</span><span class="na">currentTimeMillis</span><span class="o">()</span> <span class="o">-</span> <span class="n">start</span><span class="o">)</span> <span class="o">&gt;</span> <span class="n">2000</span><span class="o">)</span> <span class="o">{</span>
                 <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
             <span class="o">}</span>
     
             <span class="kt">long</span> <span class="n">d1</span> <span class="o">=</span> <span class="n">0</span><span class="o">;</span>
     
-            <span class="n">originBytes</span> <span class="o">=</span> <span class="n">zscoreBytes</span><span class="o">(</span><span class="n">key</span><span class="o">,</span> <span class="n">value</span><span class="o">)</span><span class="o">;</span>
-            <span class="n">oldScore</span> <span class="o">=</span> <span class="n">convertZscore</span><span class="o">(</span><span class="n">originBytes</span><span class="o">)</span><span class="o">;</span>
+            <span class="n">originBytes</span> <span class="o">=</span> <span class="n">zscoreBytes</span><span class="o">(</span><span class="n">key</span><span class="o">,</span> <span class="n">value</span><span class="o">);</span>
+            <span class="n">oldScore</span> <span class="o">=</span> <span class="n">convertZscore</span><span class="o">(</span><span class="n">originBytes</span><span class="o">);</span>
     
-            <span class="k">if</span> <span class="o">(</span><span class="n">originBytes</span> <span class="o">!</span><span class="o">=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">originBytes</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
                 <span class="c1">// 根据 score 获取原始值
-</span><span class="c1"></span>                <span class="n">d1</span> <span class="o">=</span> <span class="n">getD1ByScore</span><span class="o">(</span><span class="n">oldScore</span><span class="o">)</span><span class="o">;</span>
+</span><span class="c1"></span>                <span class="n">d1</span> <span class="o">=</span> <span class="n">getD1ByScore</span><span class="o">(</span><span class="n">oldScore</span><span class="o">);</span>
             <span class="o">}</span>
             <span class="c1">// 如果不设置新值就获取原始值
-</span><span class="c1"></span>            <span class="k">if</span> <span class="o">(</span><span class="n">d2</span> <span class="o">=</span><span class="o">=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+</span><span class="c1"></span>            <span class="k">if</span> <span class="o">(</span><span class="n">d2</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
                 <span class="c1">// 根据 score 获取原始值
-</span><span class="c1"></span>                <span class="n">d2</span> <span class="o">=</span> <span class="n">getD2ByScore</span><span class="o">(</span><span class="n">oldScore</span><span class="o">)</span><span class="o">;</span>
+</span><span class="c1"></span>                <span class="n">d2</span> <span class="o">=</span> <span class="n">getD2ByScore</span><span class="o">(</span><span class="n">oldScore</span><span class="o">);</span>
             <span class="o">}</span>
     				<span class="c1">// 如果不设置新值就获取原始值
-</span><span class="c1"></span>            <span class="k">if</span> <span class="o">(</span><span class="n">d3</span> <span class="o">=</span><span class="o">=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+</span><span class="c1"></span>            <span class="k">if</span> <span class="o">(</span><span class="n">d3</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
                 <span class="c1">// 根据 score 获取原始值
-</span><span class="c1"></span>                <span class="n">d3</span> <span class="o">=</span> <span class="n">getD3ByScore</span><span class="o">(</span><span class="n">oldScore</span><span class="o">)</span><span class="o">;</span>
+</span><span class="c1"></span>                <span class="n">d3</span> <span class="o">=</span> <span class="n">getD3ByScore</span><span class="o">(</span><span class="n">oldScore</span><span class="o">);</span>
             <span class="o">}</span>
     
     				<span class="c1">// 生成新值
-</span><span class="c1"></span>            <span class="n">score</span> <span class="o">=</span> <span class="n">genScore</span><span class="o">(</span><span class="n">d1</span><span class="o">,</span> <span class="n">d2</span><span class="o">,</span> <span class="n">d3</span><span class="o">)</span><span class="o">;</span>
-        <span class="o">}</span> <span class="k">while</span> <span class="o">(</span><span class="o">!</span><span class="n">compareAndSetDimension</span><span class="o">(</span><span class="n">key</span><span class="o">,</span> <span class="n">value</span><span class="o">,</span> <span class="n">originBytes</span><span class="o">,</span> <span class="n">score</span><span class="o">)</span><span class="o">)</span><span class="o">;</span>
+</span><span class="c1"></span>            <span class="n">score</span> <span class="o">=</span> <span class="n">genScore</span><span class="o">(</span><span class="n">d1</span><span class="o">,</span> <span class="n">d2</span><span class="o">,</span> <span class="n">d3</span><span class="o">);</span>
+        <span class="o">}</span> <span class="k">while</span> <span class="o">(!</span><span class="n">compareAndSetDimension</span><span class="o">(</span><span class="n">key</span><span class="o">,</span> <span class="n">value</span><span class="o">,</span> <span class="n">originBytes</span><span class="o">,</span> <span class="n">score</span><span class="o">));</span>
     
         <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
     <span class="o">}</span>
@@ -544,25 +544,25 @@
                     <span class="s">&#34; then redis.call(&#39;zadd&#39;,KEYS[1],ARGV[3],ARGV[1]) return 1 else return 0 end&#34;</span><span class="o">;</span>
     
     <span class="c1">// CAS 设置值
-</span><span class="c1"></span>    <span class="kd">private</span> <span class="kt">boolean</span> <span class="nf">compareAndSetDimension</span><span class="o">(</span><span class="n">String</span> <span class="n">setKey</span><span class="o">,</span> <span class="n">String</span> <span class="n">key</span><span class="o">,</span> <span class="kt">byte</span><span class="o">[</span><span class="o">]</span> <span class="n">oldScore</span><span class="o">,</span> <span class="kt">long</span> <span class="n">newScore</span><span class="o">)</span> <span class="o">{</span>
-        <span class="n">Long</span> <span class="n">result</span> <span class="o">=</span> <span class="n">redisTemplate</span><span class="o">.</span><span class="na">execute</span><span class="o">(</span><span class="o">(</span><span class="n">RedisCallback</span><span class="o">&lt;</span><span class="n">Long</span><span class="o">&gt;</span><span class="o">)</span> <span class="n">connection</span> <span class="o">-</span><span class="o">&gt;</span> <span class="o">{</span>
+</span><span class="c1"></span>    <span class="kd">private</span> <span class="kt">boolean</span> <span class="nf">compareAndSetDimension</span><span class="o">(</span><span class="n">String</span> <span class="n">setKey</span><span class="o">,</span> <span class="n">String</span> <span class="n">key</span><span class="o">,</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">oldScore</span><span class="o">,</span> <span class="kt">long</span> <span class="n">newScore</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">Long</span> <span class="n">result</span> <span class="o">=</span> <span class="n">redisTemplate</span><span class="o">.</span><span class="na">execute</span><span class="o">((</span><span class="n">RedisCallback</span><span class="o">&lt;</span><span class="n">Long</span><span class="o">&gt;)</span> <span class="n">connection</span> <span class="o">-&gt;</span> <span class="o">{</span>
             <span class="k">try</span> <span class="o">{</span>
-                <span class="k">return</span> <span class="n">connection</span><span class="o">.</span><span class="na">eval</span><span class="o">(</span><span class="n">script</span><span class="o">.</span><span class="na">getBytes</span><span class="o">(</span><span class="o">)</span><span class="o">,</span> <span class="n">ReturnType</span><span class="o">.</span><span class="na">fromJavaType</span><span class="o">(</span><span class="n">Long</span><span class="o">.</span><span class="na">class</span><span class="o">)</span><span class="o">,</span> <span class="n">1</span><span class="o">,</span> <span class="n">setKey</span><span class="o">.</span><span class="na">getBytes</span><span class="o">(</span><span class="o">)</span><span class="o">,</span>
-                        <span class="n">key</span><span class="o">.</span><span class="na">getBytes</span><span class="o">(</span><span class="o">)</span><span class="o">,</span> <span class="n">oldScore</span><span class="o">,</span> <span class="n">om</span><span class="o">.</span><span class="na">writeValueAsBytes</span><span class="o">(</span><span class="n">newScore</span><span class="o">)</span><span class="o">)</span><span class="o">;</span>
+                <span class="k">return</span> <span class="n">connection</span><span class="o">.</span><span class="na">eval</span><span class="o">(</span><span class="n">script</span><span class="o">.</span><span class="na">getBytes</span><span class="o">(),</span> <span class="n">ReturnType</span><span class="o">.</span><span class="na">fromJavaType</span><span class="o">(</span><span class="n">Long</span><span class="o">.</span><span class="na">class</span><span class="o">),</span> <span class="n">1</span><span class="o">,</span> <span class="n">setKey</span><span class="o">.</span><span class="na">getBytes</span><span class="o">(),</span>
+                        <span class="n">key</span><span class="o">.</span><span class="na">getBytes</span><span class="o">(),</span> <span class="n">oldScore</span><span class="o">,</span> <span class="n">om</span><span class="o">.</span><span class="na">writeValueAsBytes</span><span class="o">(</span><span class="n">newScore</span><span class="o">));</span>
             <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">JsonProcessingException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
-                <span class="k">throw</span> <span class="k">new</span> <span class="n">RuntimeException</span><span class="o">(</span><span class="n">e</span><span class="o">)</span><span class="o">;</span>
+                <span class="k">throw</span> <span class="k">new</span> <span class="n">RuntimeException</span><span class="o">(</span><span class="n">e</span><span class="o">);</span>
             <span class="o">}</span>
-        <span class="o">}</span><span class="o">)</span><span class="o">;</span>
+        <span class="o">});</span>
     
-        <span class="k">return</span> <span class="n">SUCCESS</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="n">result</span><span class="o">)</span><span class="o">;</span>
+        <span class="k">return</span> <span class="n">SUCCESS</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="n">result</span><span class="o">);</span>
     <span class="o">}</span>
     
     <span class="c1">// 获取原始值
-</span><span class="c1"></span>    <span class="kd">public</span> <span class="kt">byte</span><span class="o">[</span><span class="o">]</span> <span class="nf">zscoreBytes</span><span class="o">(</span><span class="n">String</span> <span class="n">key</span><span class="o">,</span> <span class="n">String</span> <span class="n">value</span><span class="o">)</span> <span class="o">{</span>
+</span><span class="c1"></span>    <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">zscoreBytes</span><span class="o">(</span><span class="n">String</span> <span class="n">key</span><span class="o">,</span> <span class="n">String</span> <span class="n">value</span><span class="o">)</span> <span class="o">{</span>
         <span class="n">String</span> <span class="n">script</span> <span class="o">=</span> <span class="s">&#34;return redis.call(&#39;zscore&#39;, KEYS[1], ARGV[1])&#34;</span><span class="o">;</span>
-        <span class="k">return</span> <span class="n">redisTemplate</span><span class="o">.</span><span class="na">execute</span><span class="o">(</span><span class="o">(</span><span class="n">RedisCallback</span><span class="o">&lt;</span><span class="kt">byte</span><span class="o">[</span><span class="o">]</span><span class="o">&gt;</span><span class="o">)</span> <span class="n">connection</span> <span class="o">-</span><span class="o">&gt;</span> <span class="n">connection</span><span class="o">.</span><span class="na">eval</span><span class="o">(</span><span class="n">script</span><span class="o">.</span><span class="na">getBytes</span><span class="o">(</span><span class="o">)</span><span class="o">,</span>
-                <span class="n">ReturnType</span><span class="o">.</span><span class="na">fromJavaType</span><span class="o">(</span><span class="n">String</span><span class="o">.</span><span class="na">class</span><span class="o">)</span><span class="o">,</span>
-                <span class="n">1</span><span class="o">,</span> <span class="n">key</span><span class="o">.</span><span class="na">getBytes</span><span class="o">(</span><span class="o">)</span><span class="o">,</span> <span class="n">value</span><span class="o">.</span><span class="na">getBytes</span><span class="o">(</span><span class="o">)</span><span class="o">)</span><span class="o">)</span><span class="o">;</span>
+        <span class="k">return</span> <span class="n">redisTemplate</span><span class="o">.</span><span class="na">execute</span><span class="o">((</span><span class="n">RedisCallback</span><span class="o">&lt;</span><span class="kt">byte</span><span class="o">[]&gt;)</span> <span class="n">connection</span> <span class="o">-&gt;</span> <span class="n">connection</span><span class="o">.</span><span class="na">eval</span><span class="o">(</span><span class="n">script</span><span class="o">.</span><span class="na">getBytes</span><span class="o">(),</span>
+                <span class="n">ReturnType</span><span class="o">.</span><span class="na">fromJavaType</span><span class="o">(</span><span class="n">String</span><span class="o">.</span><span class="na">class</span><span class="o">),</span>
+                <span class="n">1</span><span class="o">,</span> <span class="n">key</span><span class="o">.</span><span class="na">getBytes</span><span class="o">(),</span> <span class="n">value</span><span class="o">.</span><span class="na">getBytes</span><span class="o">()));</span>
     <span class="o">}</span>
 </code></pre></td></tr></table>
 </div>
@@ -582,9 +582,9 @@
 <pre class="chroma"><code class="language-java" data-lang="java">    <span class="c1">// class RedisCommandBuilder
 </span><span class="c1"></span>    
     <span class="n">Command</span><span class="o">&lt;</span><span class="n">K</span><span class="o">,</span> <span class="n">V</span><span class="o">,</span> <span class="n">Double</span><span class="o">&gt;</span> <span class="nf">zscore</span><span class="o">(</span><span class="n">K</span> <span class="n">key</span><span class="o">,</span> <span class="n">V</span> <span class="n">member</span><span class="o">)</span> <span class="o">{</span>
-        <span class="n">notNullKey</span><span class="o">(</span><span class="n">key</span><span class="o">)</span><span class="o">;</span>
+        <span class="n">notNullKey</span><span class="o">(</span><span class="n">key</span><span class="o">);</span>
     
-        <span class="k">return</span> <span class="n">createCommand</span><span class="o">(</span><span class="n">ZSCORE</span><span class="o">,</span> <span class="k">new</span> <span class="n">DoubleOutput</span><span class="o">&lt;</span><span class="o">&gt;</span><span class="o">(</span><span class="n">codec</span><span class="o">)</span><span class="o">,</span> <span class="n">key</span><span class="o">,</span> <span class="n">member</span><span class="o">)</span><span class="o">;</span>
+        <span class="k">return</span> <span class="n">createCommand</span><span class="o">(</span><span class="n">ZSCORE</span><span class="o">,</span> <span class="k">new</span> <span class="n">DoubleOutput</span><span class="o">&lt;&gt;(</span><span class="n">codec</span><span class="o">),</span> <span class="n">key</span><span class="o">,</span> <span class="n">member</span><span class="o">);</span>
     <span class="o">}</span>
 </code></pre></td></tr></table>
 </div>
@@ -610,13 +610,13 @@
 </span><span class="c1"></span>    <span class="kd">public</span> <span class="kd">class</span> <span class="nc">DoubleOutput</span><span class="o">&lt;</span><span class="n">K</span><span class="o">,</span> <span class="n">V</span><span class="o">&gt;</span> <span class="kd">extends</span> <span class="n">CommandOutput</span><span class="o">&lt;</span><span class="n">K</span><span class="o">,</span> <span class="n">V</span><span class="o">,</span> <span class="n">Double</span><span class="o">&gt;</span> <span class="o">{</span>
     
         <span class="kd">public</span> <span class="nf">DoubleOutput</span><span class="o">(</span><span class="n">RedisCodec</span><span class="o">&lt;</span><span class="n">K</span><span class="o">,</span> <span class="n">V</span><span class="o">&gt;</span> <span class="n">codec</span><span class="o">)</span> <span class="o">{</span>
-            <span class="kd">super</span><span class="o">(</span><span class="n">codec</span><span class="o">,</span> <span class="kc">null</span><span class="o">)</span><span class="o">;</span>
+            <span class="kd">super</span><span class="o">(</span><span class="n">codec</span><span class="o">,</span> <span class="kc">null</span><span class="o">);</span>
         <span class="o">}</span>
     
         <span class="c1">// 方法参数 bytes 就是 Redis 返回的原始值了，是个字符串
 </span><span class="c1"></span>        <span class="nd">@Override</span>
         <span class="kd">public</span> <span class="kt">void</span> <span class="nf">set</span><span class="o">(</span><span class="n">ByteBuffer</span> <span class="n">bytes</span><span class="o">)</span> <span class="o">{</span>
-            <span class="n">output</span> <span class="o">=</span> <span class="o">(</span><span class="n">bytes</span> <span class="o">=</span><span class="o">=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">?</span> <span class="kc">null</span> <span class="o">:</span> <span class="n">parseDouble</span><span class="o">(</span><span class="n">decodeAscii</span><span class="o">(</span><span class="n">bytes</span><span class="o">)</span><span class="o">)</span><span class="o">;</span>
+            <span class="n">output</span> <span class="o">=</span> <span class="o">(</span><span class="n">bytes</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">?</span> <span class="kc">null</span> <span class="o">:</span> <span class="n">parseDouble</span><span class="o">(</span><span class="n">decodeAscii</span><span class="o">(</span><span class="n">bytes</span><span class="o">));</span>
         <span class="o">}</span>
     <span class="o">}</span>
 </code></pre></td></tr></table>
@@ -629,7 +629,7 @@
 </span></code></pre></td>
 <td class="lntd">
 <pre class="chroma"><code class="language-java" data-lang="java">    <span class="n">String</span> <span class="n">a</span> <span class="o">=</span> <span class="s">&#34;1.3094266712875436e+18&#34;</span><span class="o">;</span>
-    <span class="kt">long</span> <span class="n">value</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BigDecimal</span><span class="o">(</span><span class="n">a</span><span class="o">)</span><span class="o">.</span><span class="na">longValue</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+    <span class="kt">long</span> <span class="n">value</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BigDecimal</span><span class="o">(</span><span class="n">a</span><span class="o">).</span><span class="na">longValue</span><span class="o">();</span>
 </code></pre></td></tr></table>
 </div>
 </div><p>所以要不损失精度的话，可以修改下原始方法重新打个包或者用 lua 取出来原始的字符串再转成自己需要的值。</p>
@@ -720,7 +720,7 @@
     <div class="post-copyright">
   <p class="copyright-item">
     <span class="item-title">文章作者</span>
-    <span class="item-content">ld000</span>
+    <span class="item-content">Voiddd</span>
   </p>
   <p class="copyright-item">
     <span class="item-title">上次更新</span>
@@ -773,7 +773,7 @@
       if (window.location.hostname === 'localhost') return;
 
       var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-      var disqus_shortname = 'ld000-blog';
+      var disqus_shortname = 'Voiddd-blog';
       dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
       (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
     })();
@@ -813,7 +813,7 @@
     <span class="heart">
       <i class="iconfont icon-heart"></i>
     </span>
-    <span class="author">ld000</span>
+    <span class="author">Voiddd</span>
   </span>
 </div>
     </footer>

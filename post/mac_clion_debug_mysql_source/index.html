@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Mac下用CLion debug MySQL5.7源码 - Voiddd</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Voiddd" /><meta name="description" content="编译安装 MySQL 首先从 github 下载 mysql 源码 1 https://github.com/mysql/mysql-server 接下来编译安装 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 // 进到源码目录 cd /Users/d/c/mysql-server-5.7 // cmake cmake \ -DCMAKE_INSTALL_PREFIX=/Users/d/c/mysql_build \ -DMYSQL_DATADIR=/Users/d/c/mysql_build/data \ -DSYSCONFDIR=/Users/d/c/mysql_build \ -DMYSQL_UNIX_ADDR=/Users/d/c/mysql_build/data/mysql.sock \ -DWITH_DEBUG=1 \ -DDOWNLOAD_BOOST=1 \ -DWITH_BOOST=/Users/d/c/boost \" /><meta name="keywords" content="Hugo, theme, even, java, Voiddd" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.69.0-DEV with theme even" />
+
+
+<link rel="canonical" href="https://ld000.space/post/mac_clion_debug_mysql_source/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Mac下用CLion debug MySQL5.7源码" />
+<meta property="og:description" content="编译安装 MySQL 首先从 github 下载 mysql 源码 1 https://github.com/mysql/mysql-server 接下来编译安装 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 // 进到源码目录 cd /Users/d/c/mysql-server-5.7 // cmake cmake \ -DCMAKE_INSTALL_PREFIX=/Users/d/c/mysql_build \ -DMYSQL_DATADIR=/Users/d/c/mysql_build/data \ -DSYSCONFDIR=/Users/d/c/mysql_build \ -DMYSQL_UNIX_ADDR=/Users/d/c/mysql_build/data/mysql.sock \ -DWITH_DEBUG=1 \ -DDOWNLOAD_BOOST=1 \ -DWITH_BOOST=/Users/d/c/boost \" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://ld000.space/post/mac_clion_debug_mysql_source/" />
+<meta property="article:published_time" content="2020-03-26T00:00:00+00:00" />
+<meta property="article:modified_time" content="2020-03-26T00:00:00+00:00" />
+<meta itemprop="name" content="Mac下用CLion debug MySQL5.7源码">
+<meta itemprop="description" content="编译安装 MySQL 首先从 github 下载 mysql 源码 1 https://github.com/mysql/mysql-server 接下来编译安装 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 // 进到源码目录 cd /Users/d/c/mysql-server-5.7 // cmake cmake \ -DCMAKE_INSTALL_PREFIX=/Users/d/c/mysql_build \ -DMYSQL_DATADIR=/Users/d/c/mysql_build/data \ -DSYSCONFDIR=/Users/d/c/mysql_build \ -DMYSQL_UNIX_ADDR=/Users/d/c/mysql_build/data/mysql.sock \ -DWITH_DEBUG=1 \ -DDOWNLOAD_BOOST=1 \ -DWITH_BOOST=/Users/d/c/boost \">
+<meta itemprop="datePublished" content="2020-03-26T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2020-03-26T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="243">
+
+
+
+<meta itemprop="keywords" content="java,CLion,MySQL," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Mac下用CLion debug MySQL5.7源码"/>
+<meta name="twitter:description" content="编译安装 MySQL 首先从 github 下载 mysql 源码 1 https://github.com/mysql/mysql-server 接下来编译安装 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 // 进到源码目录 cd /Users/d/c/mysql-server-5.7 // cmake cmake \ -DCMAKE_INSTALL_PREFIX=/Users/d/c/mysql_build \ -DMYSQL_DATADIR=/Users/d/c/mysql_build/data \ -DSYSCONFDIR=/Users/d/c/mysql_build \ -DMYSQL_UNIX_ADDR=/Users/d/c/mysql_build/data/mysql.sock \ -DWITH_DEBUG=1 \ -DDOWNLOAD_BOOST=1 \ -DWITH_BOOST=/Users/d/c/boost \"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">Voiddd</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">首页</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">归档</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">标签</li>
+      </a><a href="/links/">
+        <li class="mobile-menu-item">友链</li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">关于</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">Voiddd</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">首页</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">归档</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">标签</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/links/">友链</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/about/">关于</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Mac下用CLion debug MySQL5.7源码</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2020-03-26 </span>
+        
+          <span class="more-meta"> 约 243 字 </span>
+          <span class="more-meta"> 预计阅读 1 分钟 </span>
+        
+      </div>
+    </header>
+
+    
+    <div class="post-content">
+      <h2 id="编译安装-mysql">编译安装 MySQL</h2>
+<p>首先从 github 下载 mysql 源码</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">    https://github.com/mysql/mysql-server
+</code></pre></td></tr></table>
+</div>
+</div><p>接下来编译安装</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">    // 进到源码目录
+    <span class="nb">cd</span> /Users/d/c/mysql-server-5.7
+    
+    // cmake
+    cmake <span class="se">\
+</span><span class="se"></span>    -DCMAKE_INSTALL_PREFIX<span class="o">=</span>/Users/d/c/mysql_build <span class="se">\
+</span><span class="se"></span>    -DMYSQL_DATADIR<span class="o">=</span>/Users/d/c/mysql_build/data <span class="se">\
+</span><span class="se"></span>    -DSYSCONFDIR<span class="o">=</span>/Users/d/c/mysql_build <span class="se">\
+</span><span class="se"></span>    -DMYSQL_UNIX_ADDR<span class="o">=</span>/Users/d/c/mysql_build/data/mysql.sock <span class="se">\
+</span><span class="se"></span>    -DWITH_DEBUG<span class="o">=</span><span class="m">1</span> <span class="se">\
+</span><span class="se"></span>    -DDOWNLOAD_BOOST<span class="o">=</span><span class="m">1</span> <span class="se">\
+</span><span class="se"></span>    -DWITH_BOOST<span class="o">=</span>/Users/d/c/boost <span class="se">\
+</span><span class="se"></span>    -DWITH_SSL<span class="o">=</span>/usr/local/opt/openssl@1.1
+    
+    // install
+    make <span class="o">&amp;&amp;</span> make install
+    
+    // 初始化数据库
+    <span class="nb">cd</span> /Users/d/c/mysql_build
+    bin/mysqld --basedir<span class="o">=</span>/Users/d/c/mysql_build --datadir<span class="o">=</span>/Users/d/c/mysql_build/data --initialize-insecure
+</code></pre></td></tr></table>
+</div>
+</div><p><code>-DDOWNLOAD_BOOST=1 -DWITH_BOOST=/Users/d/c/boost</code> 这两个参数指定 boost 路径，之后会自动下载 boost。</p>
+<p><code>-DWITH_SSL=/usr/local/opt/openssl@1.1</code> 指定 openssl 路径，不指定有可能会报以下错误</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">    Cannot find appropriate system libraries <span class="k">for</span> <span class="nv">WITH_SSL</span><span class="o">=</span>system.
+    Make sure you have specified a supported SSL version.
+    Valid options are :
+    system <span class="o">(</span>use the OS openssl library<span class="o">)</span>,
+    yes <span class="o">(</span>synonym <span class="k">for</span> system<span class="o">)</span>,
+    &lt;/path/to/custom/openssl/installation&gt;
+    
+    CMake Error at cmake/ssl.cmake:63 <span class="o">(</span>MESSAGE<span class="o">)</span>:
+    Please install the appropriate openssl developer package.
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="配置clion">配置CLion</h2>
+<p>打开 mysql 源码目录，修改 cmake 配置</p>
+<p><img src="https://raw.githubusercontent.com/ld000/git-resources/master/img/20200326121222.jpg" alt="https://raw.githubusercontent.com/ld000/git-resources/master/img/20200326121222.jpg"></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-shell" data-lang="shell">    -DCMAKE_INSTALL_PREFIX<span class="o">=</span>/Users/d/c/mysql_build -DMYSQL_DATADIR<span class="o">=</span>/Users/d/c/mysql_build/data -DSYSCONFDIR<span class="o">=</span>/Users/d/c/mysql_build -DMYSQL_UNIX_ADDR<span class="o">=</span>/Users/d/c/mysql_build/data/mysql.sock -DWITH_DEBUG<span class="o">=</span><span class="m">1</span> -DDOWNLOAD_BOOST<span class="o">=</span><span class="m">1</span> -DWITH_BOOST<span class="o">=</span>/Users/d/c/boost -DWITH_SSL<span class="o">=</span>/usr/local/opt/openssl@1.1
+</code></pre></td></tr></table>
+</div>
+</div><p>之后选择 mysqld，然后点击 debug 按钮就可以开始调试了。</p>
+<p><img src="https://raw.githubusercontent.com/ld000/git-resources/master/img/20200326122342.jpg" alt="https://raw.githubusercontent.com/ld000/git-resources/master/img/20200326122342.jpg"></p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Voiddd</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2020-03-26
+        
+    </span>
+  </p>
+  
+  
+</div>
+<div class="post-reward">
+  <input type="checkbox" name="reward" id="reward" hidden />
+  <label class="reward-button" for="reward">赞赏支持</label>
+  <div class="qr-code">
+    
+    <label class="qr-code-image" for="reward">
+        <img class="image" src="/WechatIMG1.jpeg">
+        <span>微信打赏</span>
+      </label>
+    <label class="qr-code-image" for="reward">
+        <img class="image" src="/WechatIMG2.jpeg">
+        <span>支付宝打赏</span>
+      </label>
+  </div>
+</div><footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/java/">java</a>
+          <a href="/tags/clion/">CLion</a>
+          <a href="/tags/mysql/">MySQL</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/gorm_sharding_proxy_sql_error/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">gorm调用sharding-proxy, 参数带单引号sql报错</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/mybatis_scale_localcache/">
+            <span class="next-text nav-default">MyBatis 一级缓存在分布式下的坑</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        <div id="disqus_thread"></div>
+    <script type="text/javascript">
+    (function() {
+      
+      
+      if (window.location.hostname === 'localhost') return;
+
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      var disqus_shortname = 'Voiddd-blog';
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:lidong9144@163.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://github.com/ld000" class="iconfont icon-github" title="github"></a>
+  <a href="https://ld000.space/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2017 - 
+    2020
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Voiddd</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-89678066-1', 'auto');
+	ga('set', 'anonymizeIp', true);
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+
+
+
+
+
+
+</body>
+</html>

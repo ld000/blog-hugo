@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>ld000</title>
+    <title>Voiddd</title>
     <link>https://ld000.space/</link>
-    <description>Recent content on ld000</description>
+    <description>Recent content on Voiddd</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-Hans</language>
-    <copyright>ld000</copyright>
-    <lastBuildDate>Sun, 24 Nov 2019 00:00:00 +0000</lastBuildDate>
+    <copyright>Voiddd</copyright>
+    <lastBuildDate>Wed, 09 Apr 2014 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="https://ld000.space/index.xml" rel="self" type="application/rss+xml" />
     
@@ -28,6 +28,24 @@
       
       <guid>https://ld000.space/about/</guid>
       <description>90后码农，现在帝都搬砖，天天CRUD的过程中还坚持总结与学习新技术 有空就会分享一些自己的开发总结和实用资源，欢迎关注~ GitHub 掘金</description>
+    </item>
+    
+    <item>
+      <title>gorm调用sharding-proxy, 参数带单引号sql报错</title>
+      <link>https://ld000.space/post/gorm_sharding_proxy_sql_error/</link>
+      <pubDate>Fri, 27 Mar 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://ld000.space/post/gorm_sharding_proxy_sql_error/</guid>
+      <description>软件版本 sharding-proxy-3.1.0 MySQL-5.7 正文 最近公司某系统用 go 重构，ORM框架使用 gorm，用上了分库分表，使用 sharding-proxy 作代理。 但是上了 sharding-proxy 之后之前参数中带 &#39; 的 sql 全都报错了。 1</description>
+    </item>
+    
+    <item>
+      <title>Mac下用CLion debug MySQL5.7源码</title>
+      <link>https://ld000.space/post/mac_clion_debug_mysql_source/</link>
+      <pubDate>Thu, 26 Mar 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://ld000.space/post/mac_clion_debug_mysql_source/</guid>
+      <description>编译安装 MySQL 首先从 github 下载 mysql 源码 1 https://github.com/mysql/mysql-server 接下来编译安装 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 // 进到源码目录 cd /Users/d/c/mysql-server-5.7 // cmake cmake \ -DCMAKE_INSTALL_PREFIX=/Users/d/c/mysql_build \ -DMYSQL_DATADIR=/Users/d/c/mysql_build/data \ -DSYSCONFDIR=/Users/d/c/mysql_build \ -DMYSQL_UNIX_ADDR=/Users/d/c/mysql_build/data/mysql.sock \ -DWITH_DEBUG=1 \ -DDOWNLOAD_BOOST=1 \ -DWITH_BOOST=/Users/d/c/boost \</description>
     </item>
     
     <item>
