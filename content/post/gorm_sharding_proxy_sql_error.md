@@ -137,6 +137,21 @@ debug 往下走发现参数`InterpolateParams`是`true`，发出的sql是`update
 
 这里主要分析下词法分析转化成 token 阶段，sharding-proxy 也是在这个阶段报错的。
 
+正常解析这条 sql 应该生成10个 token：
+
+```shell
+    update
+    md_user_info
+    set
+    nickname
+    =
+    dd'dd
+    where
+    user_id
+    =
+    1000002082
+```
+
 ### sharding-proxy
 
 首先看下接收到的 sql 是什么，debug 进 `SQLParsingEngine` 
