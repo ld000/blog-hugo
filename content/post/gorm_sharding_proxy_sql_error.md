@@ -117,8 +117,8 @@ connString = fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc
 
 ```shell
             前端                      中部                后端
-            /   \                      |                   |
-    词法分析   语法分析                优化             执行代码生成
+           /   \                      |                   |
+     词法分析   语法分析                优化             执行代码生成
 ```
 
 以 `update table set name = a` 为例。
