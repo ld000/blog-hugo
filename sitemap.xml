@@ -1,220 +1,159 @@
-<?xml-stylesheet type="text/xsl" href="https://ld000.space/sitemap.xsl"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
     <loc>https://ld000.space/links/</loc>
-    <lastmod>2014-04-09T00:00:00+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
+    <lastmod>2020-04-08T10:54:08+00:00</lastmod>
   </url>
   
   <url>
     <loc>https://ld000.space/about/</loc>
-    <lastmod>2014-04-09T00:00:00+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
+    <lastmod>2020-04-08T10:54:08+00:00</lastmod>
   </url>
   
   <url>
     <loc>https://ld000.space/tags/go/</loc>
-    <lastmod>2020-03-27T00:00:00+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
+    <lastmod>2020-04-08T10:54:08+00:00</lastmod>
   </url>
   
   <url>
     <loc>https://ld000.space/tags/gorm/</loc>
-    <lastmod>2020-03-27T00:00:00+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
+    <lastmod>2020-04-08T10:54:08+00:00</lastmod>
   </url>
   
   <url>
     <loc>https://ld000.space/post/gorm_sharding_proxy_sql_error/</loc>
-    <lastmod>2020-03-27T00:00:00+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
+    <lastmod>2020-04-08T10:54:08+00:00</lastmod>
   </url>
   
   <url>
     <loc>https://ld000.space/tags/mysql/</loc>
-    <lastmod>2020-03-27T00:00:00+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
+    <lastmod>2020-04-08T10:54:08+00:00</lastmod>
   </url>
   
   <url>
     <loc>https://ld000.space/post/</loc>
-    <lastmod>2020-03-27T00:00:00+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
+    <lastmod>2020-04-08T10:54:08+00:00</lastmod>
   </url>
   
   <url>
     <loc>https://ld000.space/tags/sharding-proxy/</loc>
-    <lastmod>2020-03-27T00:00:00+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
+    <lastmod>2020-04-08T10:54:08+00:00</lastmod>
   </url>
   
   <url>
     <loc>https://ld000.space/tags/</loc>
-    <lastmod>2020-03-27T00:00:00+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
+    <lastmod>2020-04-08T10:54:08+00:00</lastmod>
   </url>
   
   <url>
     <loc>https://ld000.space/tags/clion/</loc>
-    <lastmod>2020-03-26T00:00:00+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
+    <lastmod>2020-04-08T10:54:08+00:00</lastmod>
   </url>
   
   <url>
     <loc>https://ld000.space/tags/java/</loc>
-    <lastmod>2020-03-26T00:00:00+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
+    <lastmod>2020-04-08T10:54:08+00:00</lastmod>
   </url>
   
   <url>
     <loc>https://ld000.space/post/mac_clion_debug_mysql_source/</loc>
-    <lastmod>2020-03-26T00:00:00+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
+    <lastmod>2020-04-08T10:54:08+00:00</lastmod>
   </url>
   
   <url>
     <loc>https://ld000.space/post/mybatis_scale_localcache/</loc>
-    <lastmod>2019-11-24T00:00:00+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
+    <lastmod>2020-04-08T10:54:08+00:00</lastmod>
   </url>
   
   <url>
     <loc>https://ld000.space/post/spring_boot_tomcat/</loc>
-    <lastmod>2019-10-25T00:00:00+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
+    <lastmod>2020-04-08T10:54:08+00:00</lastmod>
   </url>
   
   <url>
     <loc>https://ld000.space/post/make_redis_zset_support_multiple_sort/</loc>
-    <lastmod>2019-10-23T00:00:00+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
+    <lastmod>2020-04-08T10:54:08+00:00</lastmod>
   </url>
   
   <url>
     <loc>https://ld000.space/tags/automater/</loc>
-    <lastmod>2019-09-15T00:00:00+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
+    <lastmod>2020-04-08T10:54:08+00:00</lastmod>
   </url>
   
   <url>
     <loc>https://ld000.space/post/automator_brewfile/</loc>
-    <lastmod>2019-09-15T00:00:00+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
+    <lastmod>2020-04-08T10:54:08+00:00</lastmod>
   </url>
   
   <url>
     <loc>https://ld000.space/tags/cas/</loc>
-    <lastmod>2018-07-23T00:00:00+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
+    <lastmod>2020-04-08T10:54:08+00:00</lastmod>
   </url>
   
   <url>
     <loc>https://ld000.space/tags/discuz/</loc>
-    <lastmod>2018-07-23T00:00:00+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
+    <lastmod>2020-04-08T10:54:08+00:00</lastmod>
   </url>
   
   <url>
     <loc>https://ld000.space/post/discuz_cas/</loc>
-    <lastmod>2018-07-23T00:00:00+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
+    <lastmod>2020-04-08T10:54:08+00:00</lastmod>
   </url>
   
   <url>
     <loc>https://ld000.space/post/java_call_cnet/</loc>
-    <lastmod>2017-06-28T00:00:00+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
+    <lastmod>2020-04-08T10:54:08+00:00</lastmod>
   </url>
   
   <url>
     <loc>https://ld000.space/tags/aspect/</loc>
-    <lastmod>2017-06-12T00:00:00+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
+    <lastmod>2020-04-08T10:54:08+00:00</lastmod>
   </url>
   
   <url>
     <loc>https://ld000.space/tags/spring/</loc>
-    <lastmod>2017-06-12T00:00:00+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
+    <lastmod>2020-04-08T10:54:08+00:00</lastmod>
   </url>
   
   <url>
     <loc>https://ld000.space/post/aspects_are_not_applied/</loc>
-    <lastmod>2017-06-12T00:00:00+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
+    <lastmod>2020-04-08T10:54:08+00:00</lastmod>
   </url>
   
   <url>
     <loc>https://ld000.space/tags/html/</loc>
-    <lastmod>2016-12-20T00:00:00+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
+    <lastmod>2020-04-08T10:54:08+00:00</lastmod>
   </url>
   
   <url>
     <loc>https://ld000.space/post/xyms/</loc>
-    <lastmod>2016-12-20T00:00:00+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
+    <lastmod>2020-04-08T10:54:08+00:00</lastmod>
   </url>
   
   <url>
     <loc>https://ld000.space/tags/github-pages/</loc>
-    <lastmod>2016-12-16T00:00:00+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
+    <lastmod>2020-04-08T10:54:08+00:00</lastmod>
   </url>
   
   <url>
     <loc>https://ld000.space/post/github-pages-jekyll/</loc>
-    <lastmod>2016-12-16T00:00:00+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
+    <lastmod>2020-04-08T10:54:08+00:00</lastmod>
   </url>
   
   <url>
     <loc>https://ld000.space/post/random-access/</loc>
-    <lastmod>2016-03-19T00:00:00+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
+    <lastmod>2020-04-08T10:54:08+00:00</lastmod>
   </url>
   
   <url>
     <loc>https://ld000.space/</loc>
-    <lastmod>2014-04-09T00:00:00+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
+    <lastmod>2020-04-08T10:54:08+00:00</lastmod>
   </url>
   
   <url>
     <loc>https://ld000.space/categories/</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
   </url>
   
 </urlset>
