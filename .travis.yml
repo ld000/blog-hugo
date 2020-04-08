@@ -23,8 +23,9 @@ script:
     - mkdir hugo
     - cd hugo
     - curl -L "${URL}/v${HUGO}/hugo_extended_${HUGO}_Linux-64bit.tar.gz" | gunzip | tar xvf -
-    - rm -rf public
-    - hugo
+    - cd ..
+    # - rm -rf public
+    - ./hugo/hugo
 deploy:
   provider: pages
   skip_cleanup: true
