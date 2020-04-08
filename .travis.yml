@@ -1,10 +1,28 @@
-language: go
+language: node_js
+nodejs:
+  - "node"
 go:
 - master
 git:
     depth: 1
-install: go get -v github.com/gohugoio/hugo
+
+env:
+  HUGO=0.68.3
+  URL=https://github.com/gohugoio/hugo/releases/download
+
+before_install:
+  - npm install -g n
+  - sudo pip install urllib3[secure] awscli --upgrade --user
+
+# install: go get -v github.com/gohugoio/hugo
+
 script:
+    # don't build hugo all the time. the easy way would have been:
+    # - go get hugo
+    # ... but we don't want to build that all the time :)
+    - mkdir hugo
+    - cd hugo
+    - curl -L "${URL}/v${HUGO}/hugo_extended_${HUGO}_Linux-64bit.tar.gz" | gunzip | tar xvf -
     - rm -rf public
     - hugo
 deploy:
