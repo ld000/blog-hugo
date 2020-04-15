@@ -24,7 +24,7 @@ MemoryPoolMXBean 是 Java 内存池的管理接口，如果要做内存监控，
     CodeHeap 'non-profiled nmethods'
 ```
 
-## Metaspace
+## Perm Gen
 
 ### JDK7
 
@@ -33,6 +33,8 @@ ParallelGC:  `PS Perm Gen`
 ConcMarkSweepGC: `CMS Perm Gen`
 
 SerialGC: `Perm Gen`
+
+## Metaspace
 
 ### JDK8 之后
 
