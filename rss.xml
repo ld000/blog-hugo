@@ -23,10 +23,219 @@
         
             <copyright>[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh)</copyright>
         
-        <lastBuildDate>Wed, 15 Apr 2020 03:34:54 +0000</lastBuildDate>
+        <lastBuildDate>Mon, 14 Sep 2020 10:04:17 +0000</lastBuildDate>
         
             <atom:link rel="self" type="application/rss+xml" href="https://ld000.space/rss.xml" />
         
+        
+            <item>
+                <title>sharding-proxy 连接缓存导致 fullGC 内存不释放</title>
+                <link>https://ld000.space/post/sharding_proxy_cache/</link>
+                <guid isPermaLink="true">https://ld000.space/post/sharding_proxy_cache/</guid>
+                <pubDate>Mon, 25 May 2020 00:00:00 +0000</pubDate>
+                
+                    <author>voidd247@outlook.com (Voiddd)</author>
+                
+                <copyright>[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh)</copyright>
+                
+                    <description><![CDATA[<p>sharding-proxy版本：3.1.0</p>
+<p>之前公司使用了 sharding-proxy 作为数据库分库分表代理。</p>
+<p>在运行一段时间后，出现大量连接超时，触发了线上报警。观察内存发现内存几乎占满了，频繁触发 fullGC。内存无法释放。</p>
+<p><img src="https://raw.githubusercontent.com/ld000/git-resources/master/img/20200710103616.png" alt="https://raw.githubusercontent.com/ld000/git-resources/master/img/20200710103616.png"></p>
+<p>一时无法确定原因，先将流量都切到一台备用 sharding-proxy，然后执行 <code>jmap</code> 导出内存到MAT里进行分析。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">jmap -dump,format<span class="o">=</span>b,file<span class="o">=</span>proxy.hprof <span class="o">[</span>pid<span class="o">]</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>可以看到1.8G的内存都被 Guava 的 cache 占用了。猜测是用了强引用，缓存没有释放。</p>
+<p><img src="https://raw.githubusercontent.com/ld000/git-resources/master/img/20200710114017.png" alt="https://raw.githubusercontent.com/ld000/git-resources/master/img/20200710114017.png"></p>
+<p>点击Details查看详细信息，可以看到是 <code>ChannelRegistry</code> 这个类里的缓存。</p>
+<p><img src="https://raw.githubusercontent.com/ld000/git-resources/master/img/20200710115710.png" alt="https://raw.githubusercontent.com/ld000/git-resources/master/img/20200710115710.png"></p>
+<p>接下来分析下代码，</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">final</span> <span class="kd">class</span> <span class="nc">ChannelRegistry</span> <span class="o">{</span>
+    
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">ChannelRegistry</span> <span class="n">INSTANCE</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ChannelRegistry</span><span class="o">();</span>
+    
+    <span class="c1">// TODO :wangkai do not use cache, should use map, and add unregister feature
+</span><span class="c1"></span>    <span class="kd">public</span> <span class="kd">final</span> <span class="n">Cache</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">Integer</span><span class="o">&gt;</span> <span class="n">connectionIds</span> <span class="o">=</span> <span class="n">CacheBuilder</span><span class="o">.</span><span class="na">newBuilder</span><span class="o">().</span><span class="na">build</span><span class="o">();</span>
+    
+    <span class="cm">/**
+</span><span class="cm">     * Get instance of channel registry.
+</span><span class="cm">     *
+</span><span class="cm">     * @return instance of channel registry
+</span><span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">ChannelRegistry</span> <span class="nf">getInstance</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">INSTANCE</span><span class="o">;</span>
+    <span class="o">}</span>
+    
+    <span class="cm">/**
+</span><span class="cm">     * Put connection id by channel ID.
+</span><span class="cm">     *
+</span><span class="cm">     * @param channelId netty channel ID
+</span><span class="cm">     * @param connectionId database connection ID
+</span><span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">putConnectionId</span><span class="o">(</span><span class="kd">final</span> <span class="n">String</span> <span class="n">channelId</span><span class="o">,</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">connectionId</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">connectionIds</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">channelId</span><span class="o">,</span> <span class="n">connectionId</span><span class="o">);</span>
+        <span class="c1">// 自己加的日志
+</span><span class="c1"></span>        <span class="n">log</span><span class="o">.</span><span class="na">info</span><span class="o">(</span><span class="s">&#34;put channel cache, key: {}, value: {}&#34;</span><span class="o">,</span> <span class="n">channelId</span><span class="o">,</span> <span class="n">connectionId</span><span class="o">);</span>
+    <span class="o">}</span>
+    
+    <span class="cm">/**
+</span><span class="cm">     * Get connection id by channel ID.
+</span><span class="cm">     *
+</span><span class="cm">     * @param channelId netty channel ID
+</span><span class="cm">     * @return connectionId database connection ID
+</span><span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">getConnectionId</span><span class="o">(</span><span class="kd">final</span> <span class="n">String</span> <span class="n">channelId</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">Integer</span> <span class="n">result</span> <span class="o">=</span> <span class="n">connectionIds</span><span class="o">.</span><span class="na">getIfPresent</span><span class="o">(</span><span class="n">channelId</span><span class="o">);</span>
+        <span class="n">Preconditions</span><span class="o">.</span><span class="na">checkNotNull</span><span class="o">(</span><span class="n">result</span><span class="o">,</span> <span class="n">String</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&#34;Can not get connection id via channel id: %s&#34;</span><span class="o">,</span> <span class="n">channelId</span><span class="o">));</span>
+        <span class="k">return</span> <span class="n">result</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>默认构造器创建了一个强引用缓存，里面缓存了netty连接和对应的数据库连接。只有 put 方法，没有释放方法。</p>
+<p>每次有新的netty连接，都会创建一个缓存元素，造成这个缓存越来越大，而且不会释放。</p>
+<p>为了确定是这个问题，我在 <code>putConnectionId</code> 方法里加了日志部署测试</p>
+<p><img src="https://raw.githubusercontent.com/ld000/git-resources/master/img/20200818084548.png" alt="https://raw.githubusercontent.com/ld000/git-resources/master/img/20200818084548.png"></p>
+<p>部署后，发现日志里频繁的 put cache，可以确定就是这个原因导致内存无法释放。连接创建这么频繁是因为运维在前面挂了一层 Aliyun SLB 负载，SLB 会频繁的创建探活连接。</p>
+<h2 id="修复">修复</h2>
+<p>修改也比较简单，sharding-proxy 分为 backend 和 frontend 两部分。backend 负责与 MySQL 示例交互，默认使用 JDBC 连接，不会使用这个缓存，不需要修改。要修改的只有 frontend 部分，这部分负责和连接 sharding-proxy 的客户端交互，使用的 Netty。</p>
+<p>首先修改 <code>io.shardingsphere.shardingproxy.runtime.ChannelRegistry</code>，添加一个释放缓存的方法。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kt">void</span> <span class="nf">invalidate</span><span class="o">(</span><span class="kd">final</span> <span class="n">String</span> <span class="n">channelId</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">connectionIds</span><span class="o">.</span><span class="na">invalidate</span><span class="o">(</span><span class="n">channelId</span><span class="o">);</span>
+<span class="o">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>然后修改 <code>io.shardingsphere.shardingproxy.frontend.common.FrontendHandler</code>，这是连接处理的父类，继承的是Netty的ChannelInboundHandlerAdapter。我们修改 <code>channelInactive</code> 方法，添加一个剩余资源处理逻辑，并添加一个抽象方法供子类继承。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="nd">@Override</span>
+<span class="nd">@SneakyThrows</span>
+<span class="kd">public</span> <span class="kd">final</span> <span class="kt">void</span> <span class="nf">channelInactive</span><span class="o">(</span><span class="kd">final</span> <span class="n">ChannelHandlerContext</span> <span class="n">context</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">context</span><span class="o">.</span><span class="na">fireChannelInactive</span><span class="o">();</span>
+    <span class="n">backendConnection</span><span class="o">.</span><span class="na">close</span><span class="o">(</span><span class="kc">true</span><span class="o">);</span>
+    <span class="n">ChannelThreadExecutorGroup</span><span class="o">.</span><span class="na">getInstance</span><span class="o">().</span><span class="na">unregister</span><span class="o">(</span><span class="n">context</span><span class="o">.</span><span class="na">channel</span><span class="o">().</span><span class="na">id</span><span class="o">());</span>
+    <span class="c1">// 添加的资源处理逻辑
+</span><span class="c1"></span>    <span class="n">inactive</span><span class="o">(</span><span class="n">context</span><span class="o">);</span>
+<span class="o">}</span>
+
+<span class="c1">// 添加的抽象方法
+</span><span class="c1"></span><span class="kd">protected</span> <span class="kd">abstract</span> <span class="kt">void</span> <span class="nf">inactive</span><span class="o">(</span><span class="kd">final</span> <span class="n">ChannelHandlerContext</span> <span class="n">context</span><span class="o">);</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>最后，修改<code>FrontendHandler</code>的子类，继承刚刚的抽象方法。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="nd">@Override</span>
+<span class="kd">protected</span> <span class="kt">void</span> <span class="nf">inactive</span><span class="o">(</span><span class="n">ChannelHandlerContext</span> <span class="n">context</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">ChannelRegistry</span><span class="o">.</span><span class="na">getInstance</span><span class="o">().</span><span class="na">invalidate</span><span class="o">(</span><span class="n">context</span><span class="o">.</span><span class="na">channel</span><span class="o">().</span><span class="na">id</span><span class="o">().</span><span class="na">asShortText</span><span class="o">());</span>
+<span class="o">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>这样，连接断开后就会自动释放缓存了。</p>
+]]></description>
+                
+                
+                
+                
+                
+                    
+                        
+                    
+                        
+                            
+                                
+                                
+                                
+                                    <category domain="https://ld000.space/tags/java/">java</category>
+                                
+                            
+                                
+                                
+                                
+                                    <category domain="https://ld000.space/tags/sharding-proxy/">sharding-proxy</category>
+                                
+                            
+                        
+                    
+                
+            </item>
         
             <item>
                 <title>MemoryPoolMXBean 各内存池名字</title>
