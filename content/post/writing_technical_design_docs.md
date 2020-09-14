@@ -1,7 +1,7 @@
 ---
-title: [翻译]写技术设计文档
+title: (翻译)写技术设计文档
 date: 2020-09-01
-tags: []
+tags: [""]
 ---
 
 > 原文：[https://medium.com/machine-words/writing-technical-design-docs-71f446e42f2e](https://medium.com/machine-words/writing-technical-design-docs-71f446e42f2e)
