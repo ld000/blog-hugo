@@ -4,7 +4,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom" xml:lang="zh-CN">
     <title type="text">Voiddd</title>
     <subtitle type="html">MemE 是一个强大且可高度定制的 GoHugo 博客主题，专为个人博客设计。</subtitle>
-    <updated>2020-09-14T10:07:28+00:00</updated>
+    <updated>2020-09-14T12:15:47+00:00</updated>
     <id>https://ld000.space/</id>
     <link rel="alternate" type="text/html" href="https://ld000.space/" />
     <link rel="self" type="application/atom+xml" href="https://ld000.space/atom.xml" />
@@ -17,10 +17,122 @@
     <rights>[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh)</rights>
     <generator uri="https://gohugo.io/" version="0.68.3">Hugo</generator>
         <entry>
+            <title type="text">(翻译)写技术设计文档</title>
+            <link rel="alternate" type="text/html" href="https://ld000.space/post/writing_technical_design_docs/" />
+            <id>https://ld000.space/post/writing_technical_design_docs/</id>
+            <updated>2020-09-14T12:15:27+00:00</updated>
+            <published>2020-09-01T00:00:00+00:00</published>
+            <author>
+                    <name>Voiddd</name>
+                    <uri>https://ld000.space</uri>
+                    <email>voidd247@outlook.com</email>
+                    </author>
+            <rights>[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh)</rights>
+    
+    <summary type="html"><![CDATA[原文：https://medium.com/machine-words/writin……]]></summary>
+            
+                <content type="html"><![CDATA[<blockquote>
+<p>原文：<a href="https://medium.com/machine-words/writing-technical-design-docs-71f446e42f2e">https://medium.com/machine-words/writing-technical-design-docs-71f446e42f2e</a></p>
+</blockquote>
+<p>软件工程师一个重要的技能就是写技术设计文档(TDDs)，也被称为工程设计文档(EDDs)。这篇文章我会谈些如何写好技术文档的建议和需要避免哪些错误。</p>
+<p>提醒：不同的团队对技术设计会有不同的标准和习惯。对于技术设计没有全行业的标准，也不能有，不同的开发团队对他们的场景会有不同的需求。我要描述的是基于我经验的一个可能的答案。</p>
+<h2 id="设计过程">设计过程</h2>
+<p>让我们从基本开始：<strong>什么是技术设计文档，它如何适合设计过程</strong>？</p>
+<p>一个技术设计文档描述了给定技术问题的一个解决方案。他是一个设计说明，或者设计蓝图，对于一个软件程序或者功能。</p>
+<p>技术设计文档的主要功能是和团队成员沟通要完成工作的技术细节。然而，有另一个目的也很重要：写技术设计文档的过程强迫你组织你的想法，考虑设计的每个方面，确认你没有疏漏任何事。</p>
+<p>技术设计文档经常是大型开发步骤如下几步中的一步：</p>
+<ol>
+<li>**确定产品需求。**通常用产品需求文档（PRD）描述。PRD 定义了从用户或外界代理看系统需要做什么。</li>
+<li><strong>确定技术需求</strong>。产品需求翻译成技术需求 - 之前是系统需要完成什么，现在是怎么完成。这步的输出是技术需求文档（TRD）。</li>
+<li><strong>技术设计</strong>。这步包含上一步需求实现的技术描述。输出是 TDD。</li>
+<li><strong>实现</strong>。实现需求的步骤。</li>
+<li><strong>测试</strong>。基于 PRD TRD 进行测试确保实现了需求。</li>
+</ol>
+<p>每步之间通常会有评审过程来保证没有错误。如果发现任何错误，误解或者歧义，必须在进入下一步前纠正。</p>
+<p>这些步骤不是固定的，可以根据实际情况改变。例如：</p>
+<ul>
+<li>对于不是很复杂的小型功能，步骤2和3经常会合并成一个文档。</li>
+<li>如果功能需要实现很多未知功能或者需要一些调查，在最后的技术设计前可能需要先进行概念验证。</li>
+</ul>
+<p>这个过程会发生在不同的开发粒度上。PRD / TRD / TDD 也许会包括一整个系统的设计，或者只有一个功能。在大多数情况下，这个过程是连环的 - 每个设计/实现基于前一步的工作。</p>
+<p>TRD 和 TDD 的界线有时会比较模糊。例如，假设你要开发一个用 RESTful API 通讯的服务。如果目标是调用一个已经开发完有文档的 API，那么这个 API 的描述是需求的一部分，应该包含在 TRD 中。如果目标是开发一个新 API，那么这个 API 的描述是设计的一部分，应该包含在 TDD 中。（然而，需求文档仍然需要些什么 API 需要完成）</p>
+<h2 id="写-tdd">写 TDD</h2>
+<p>目前，最佳实践是在合作文档系统上写技术文档，像 Google Docs 或 Confluence；然而，这不是必须的。重要的是有个方法让你的团队成员能评论文档和指出错误和疏漏。</p>
+<p>大多数 TDD 在1到10页之间。虽然 TDD 没有长度上限，但是太长的文档难以编辑和阅读。考虑把文档拆成单独步骤或者实现阶段。</p>
+<p>图解法很有帮助；有很多在线工具可以在文档中添加图，像 <a href="https://www.draw.io/">draw.io</a>) 或者 <a href="https://www.lucidchart.com/">Lucidchart</a>。你也可以用像 <a href="https://inkscape.org/">Inkscape</a> 的离线工具来生成 SVG 图。</p>
+<p>该文件应详尽；理想情况下，TDD作者以外的其他人应该可以按书面形式实施设计。例如，如果设计指定了一个 API 的实现，每个 API 端点都应该被记录。如果存在细微的设计选择，则应将其标出。</p>
+<h3 id="避免常见写作错误">避免常见写作错误</h3>
+<p>我在TDD中遇到的最常见的错误可能是缺乏上下文。就是说，作者用他们能解决的尽可能少的文字写下了解决问题的方式。但他们没有提供有关问题所在，为什么需要解决或选择该特定解决方案的后果的任何信息。</p>
+<p>而且，请务必记住可能的读者是谁，以及他们的理解水平。如果你用了一个读者可能不懂的术语，应该给它加个定义。</p>
+<p>良好的预发和拼写也是有帮助的。而且，避免文字游戏或者“可爱”的拼写；程序员喜欢玩文字游戏，我见过不止一例过度的文字游戏导致因为误解导致浪费团队精力。可以偶尔为功能和系统选择幽默或者出彩，容易记住的名字，这样可以帮助人们记住他们。但是不要通过它来炫耀你多么聪明。</p>
+<p>既然说到名字，要小心的选择他们；Mark Twain写过，“选择正确的单词，而不是第二个表亲”(Choose the right word, not it’s second cousin.)词汇量不多的工程师有个通病就是把一个词一遍又一遍的用在不同的事物上，导致混乱。例如，给一个类命名为&quot;DataManager&quot;是模糊的并且一点没说明它实际是做什么的；同样，叫&quot;utils&quot; 的包或目录可能包含任何东西。如果你需要一个更好的或更专业的词，可以查阅同义词库例如WordNet。</p>
+<h2 id="tdd模板">TDD模板</h2>
+<p>当写TDD时，有一个标准模板是有用的。下面是我在很多工程中使用的一个模板。记住这个模板根据实际使用的地方做修改；你可以删除不需要的部分，添加其他部分，或者修改标题。</p>
+<hr>
+<h1 id="标题tdd">&lt;标题&gt;TDD</h1>
+<p>作者：&lt;你的名字&gt;</p>
+<h1 id="介绍">介绍</h1>
+<h2 id="基本原理">基本原理</h2>
+<p>你想要做什么？现在的东西有什么问题？</p>
+<h2 id="背景">背景</h2>
+<p>描述理解文档所需的历史背景，包括遗留注意事项。</p>
+<h2 id="术语">术语</h2>
+<p>如果文档使用了特殊的单词或术语，列在这里。</p>
+<h2 id="非目标">非目标</h2>
+<p>如果有相关问题你决定不在这个设计中解决，但是有些人希望你解决，列在这里。</p>
+<h1 id="设计">设计</h1>
+<p>首先对解决方案进行简要的描述，下面的章节会详细描述。</p>
+<h2 id="系统架构">系统架构</h2>
+<p>如果设计由多个大型组件之间的协作组成，在此处列出这些组件，或者更好地包括设计图。</p>
+<h2 id="数据模型">数据模型</h2>
+<p>描述数据怎么存储。这里可能包括数据库设计。</p>
+<h2 id="接口api定义">接口/API定义</h2>
+<p>描述组件之间如何交互。例如，如果有个 REST 接口，写出 URL，传输数据结构和参数。</p>
+<h2 id="业务逻辑">业务逻辑</h2>
+<p>如果设计需要特殊的算法或逻辑，描述他们。</p>
+<h2 id="迁移策略">迁移策略</h2>
+<p>如果设计引起对现有系统的非向后兼容更改，请描述依赖于系统的实体将要迁移到新设计的过程。</p>
+<h1 id="影响">影响</h1>
+<p>描述设计对系统整体性能，安全性和其他方面的潜在影响。</p>
+<h1 id="风险">风险</h1>
+<p>如果有任何风险或未知数，请在此处列出。另外，如果还有其他研究要做，也要提及。</p>
+<h1 id="备选方案">备选方案</h1>
+<p>如果还有其他可能的解决方案被考虑和拒绝，请在此处列出它们，以及未选择它们的原因。</p>
+<hr>
+<p>当然，这些部分只是起点。您可以根据需要添加其他部分，例如“设计注意事项”，“摘要”，“参考”，“致谢”等。</p>
+<h2 id="tdd生命周期">TDD生命周期</h2>
+<p>在系统构建过程中，TDD将作为参考，以协调从事该项目的团队成员的活动。但是，在构建完成之后，TDD将继续存在并用作系统工作方式的文档。您可能要区分“当前”和“存档” TDD。</p>
+<p>然而，有两个方面需要注意：</p>
+<p>首先，随着系统的不断发展，TDD很快就会过时。使用已有两年历史的TDD作为参考的工程师可能会浪费大量时间来试图理解系统为何无法如所描述的那样工作。理想情况下，陈旧的TDD将被标记为已过时或已取代；实际上，这很少发生，因为团队倾向于专注于当前而不是过去的工作。 （使文档保持最新是每个工程团队都在努力的挑战。）</p>
+<p>其次，TDD可能不包括与系统接口所需的所有信息。 TDD可能仅涵盖对现有系统的一组更改，在这种情况下，您将需要查阅较早的文档（如果存在）以了解整体情况。 TDD主要关注实现细节，这与那些只想调用API的人无关。</p>
+<p>因此，不应将TDD视为实际用户或API参考文档的适当替代品。</p>
+<h2 id="最后">最后</h2>
+<p>网络上还有许多其他文章，解释了如何编写出色的设计文档。不要只读这篇文章！阅读其他内容，然后选择适合您的各种想法。</p>
+]]></content>
+            
+            
+            
+            
+            
+                
+                    
+                
+                    
+                        
+                            
+                            
+                            
+                        
+                    
+                
+            
+        </entry>
+    
+        <entry>
             <title type="text">sharding-proxy 连接缓存导致 fullGC 内存不释放</title>
             <link rel="alternate" type="text/html" href="https://ld000.space/post/sharding_proxy_cache/" />
             <id>https://ld000.space/post/sharding_proxy_cache/</id>
-            <updated>2020-09-14T10:07:08+00:00</updated>
+            <updated>2020-09-14T12:15:27+00:00</updated>
             <published>2020-05-25T00:00:00+00:00</published>
             <author>
                     <name>Voiddd</name>
@@ -234,7 +346,7 @@
             <title type="text">MemoryPoolMXBean 各内存池名字</title>
             <link rel="alternate" type="text/html" href="https://ld000.space/post/java_memorypoolmxbean/" />
             <id>https://ld000.space/post/java_memorypoolmxbean/</id>
-            <updated>2020-09-14T10:07:08+00:00</updated>
+            <updated>2020-09-14T12:15:27+00:00</updated>
             <published>2020-04-13T00:00:00+00:00</published>
             <author>
                     <name>Voiddd</name>
@@ -308,7 +420,7 @@
             <title type="text">gorm调用sharding-proxy, 参数带单引号sql报错</title>
             <link rel="alternate" type="text/html" href="https://ld000.space/post/gorm_sharding_proxy_sql_error/" />
             <id>https://ld000.space/post/gorm_sharding_proxy_sql_error/</id>
-            <updated>2020-09-14T10:07:08+00:00</updated>
+            <updated>2020-09-14T12:15:27+00:00</updated>
             <published>2020-03-27T00:00:00+00:00</published>
             <author>
                     <name>Voiddd</name>
@@ -853,7 +965,7 @@ where
             <title type="text">Mac下用CLion debug MySQL5.7源码</title>
             <link rel="alternate" type="text/html" href="https://ld000.space/post/mac_clion_debug_mysql_source/" />
             <id>https://ld000.space/post/mac_clion_debug_mysql_source/</id>
-            <updated>2020-09-14T10:07:08+00:00</updated>
+            <updated>2020-09-14T12:15:27+00:00</updated>
             <published>2020-03-26T00:00:00+00:00</published>
             <author>
                     <name>Voiddd</name>
@@ -998,7 +1110,7 @@ where
             <title type="text">MyBatis 一级缓存在分布式下的坑</title>
             <link rel="alternate" type="text/html" href="https://ld000.space/post/mybatis_scale_localcache/" />
             <id>https://ld000.space/post/mybatis_scale_localcache/</id>
-            <updated>2020-09-14T10:07:08+00:00</updated>
+            <updated>2020-09-14T12:15:27+00:00</updated>
             <published>2019-11-24T00:00:00+00:00</published>
             <author>
                     <name>Voiddd</name>
@@ -1259,7 +1371,7 @@ session1: <span class="m">500</span>
             <title type="text">用外置 Tomcat 部署 Spring Boot 应用</title>
             <link rel="alternate" type="text/html" href="https://ld000.space/post/spring_boot_tomcat/" />
             <id>https://ld000.space/post/spring_boot_tomcat/</id>
-            <updated>2020-09-14T10:07:08+00:00</updated>
+            <updated>2020-09-14T12:15:27+00:00</updated>
             <published>2019-10-25T00:00:00+00:00</published>
             <author>
                     <name>Voiddd</name>
@@ -1517,7 +1629,7 @@ session1: <span class="m">500</span>
             <title type="text">让 Redis zset 支持多条件排序</title>
             <link rel="alternate" type="text/html" href="https://ld000.space/post/make_redis_zset_support_multiple_sort/" />
             <id>https://ld000.space/post/make_redis_zset_support_multiple_sort/</id>
-            <updated>2020-09-14T10:07:08+00:00</updated>
+            <updated>2020-09-14T12:15:27+00:00</updated>
             <published>2019-10-23T00:00:00+00:00</published>
             <author>
                     <name>Voiddd</name>
@@ -2127,7 +2239,7 @@ session1: <span class="m">500</span>
             <title type="text">MacOS 用 automater 自动备份安装的软件列表</title>
             <link rel="alternate" type="text/html" href="https://ld000.space/post/automator_brewfile/" />
             <id>https://ld000.space/post/automator_brewfile/</id>
-            <updated>2020-09-14T10:07:08+00:00</updated>
+            <updated>2020-09-14T12:15:27+00:00</updated>
             <published>2019-09-15T00:00:00+00:00</published>
             <author>
                     <name>Voiddd</name>
@@ -2287,7 +2399,7 @@ session1: <span class="m">500</span>
             <title type="text">discuz 接入 cas</title>
             <link rel="alternate" type="text/html" href="https://ld000.space/post/discuz_cas/" />
             <id>https://ld000.space/post/discuz_cas/</id>
-            <updated>2020-09-14T10:07:08+00:00</updated>
+            <updated>2020-09-14T12:15:27+00:00</updated>
             <published>2018-07-23T00:00:00+00:00</published>
             <author>
                     <name>Voiddd</name>
@@ -2749,7 +2861,7 @@ $url_forward = &#39;forum.php&#39;;
             <title type="text">java 调用 c# 的方法</title>
             <link rel="alternate" type="text/html" href="https://ld000.space/post/java_call_cnet/" />
             <id>https://ld000.space/post/java_call_cnet/</id>
-            <updated>2020-09-14T10:07:08+00:00</updated>
+            <updated>2020-09-14T12:15:27+00:00</updated>
             <published>2017-06-28T00:00:00+00:00</published>
             <author>
                     <name>Voiddd</name>
@@ -2891,7 +3003,7 @@ $url_forward = &#39;forum.php&#39;;
             <title type="text">翻译: Spring AOP 讨论最多的问题 #1 - aspects 没有生效</title>
             <link rel="alternate" type="text/html" href="https://ld000.space/post/aspects_are_not_applied/" />
             <id>https://ld000.space/post/aspects_are_not_applied/</id>
-            <updated>2020-09-14T10:07:08+00:00</updated>
+            <updated>2020-09-14T12:15:27+00:00</updated>
             <published>2017-06-12T00:00:00+00:00</published>
             <author>
                     <name>Voiddd</name>
@@ -3204,7 +3316,7 @@ AopService.service()
             <title type="text">响应模式</title>
             <link rel="alternate" type="text/html" href="https://ld000.space/post/xyms/" />
             <id>https://ld000.space/post/xyms/</id>
-            <updated>2020-09-14T10:07:08+00:00</updated>
+            <updated>2020-09-14T12:15:27+00:00</updated>
             <published>2016-12-20T00:00:00+00:00</published>
             <author>
                     <name>Voiddd</name>
@@ -3856,7 +3968,7 @@ AopService.service()
             <title type="text">搭建一个基于 github-pages 和 jekyll 的免费博客</title>
             <link rel="alternate" type="text/html" href="https://ld000.space/post/github-pages-jekyll/" />
             <id>https://ld000.space/post/github-pages-jekyll/</id>
-            <updated>2020-09-14T10:07:08+00:00</updated>
+            <updated>2020-09-14T12:15:27+00:00</updated>
             <published>2016-12-16T00:00:00+00:00</published>
             <author>
                     <name>Voiddd</name>
@@ -4219,7 +4331,7 @@ bundle update
             <title type="text">RandomAccess 接口使用</title>
             <link rel="alternate" type="text/html" href="https://ld000.space/post/random-access/" />
             <id>https://ld000.space/post/random-access/</id>
-            <updated>2020-09-14T10:07:08+00:00</updated>
+            <updated>2020-09-14T12:15:27+00:00</updated>
             <published>2016-03-19T00:00:00+00:00</published>
             <author>
                     <name>Voiddd</name>
