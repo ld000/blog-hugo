@@ -4,7 +4,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom" xml:lang="zh-CN">
     <title type="text">Voiddd</title>
     <subtitle type="html">MemE 是一个强大且可高度定制的 GoHugo 博客主题，专为个人博客设计。</subtitle>
-    <updated>2020-09-15T02:46:16+00:00</updated>
+    <updated>2020-09-15T07:36:41+00:00</updated>
     <id>https://ld000.space/</id>
     <link rel="alternate" type="text/html" href="https://ld000.space/" />
     <link rel="self" type="application/atom+xml" href="https://ld000.space/atom.xml" />
@@ -20,7 +20,7 @@
             <title type="text">(翻译)写技术设计文档</title>
             <link rel="alternate" type="text/html" href="https://ld000.space/post/writing_technical_design_docs/" />
             <id>https://ld000.space/post/writing_technical_design_docs/</id>
-            <updated>2020-09-15T02:45:55+00:00</updated>
+            <updated>2020-09-15T07:36:20+00:00</updated>
             <published>2020-09-01T00:00:00+00:00</published>
             <author>
                     <name>Voiddd</name>
@@ -132,7 +132,7 @@
             <title type="text">sharding-proxy 连接缓存导致 fullGC 内存不释放</title>
             <link rel="alternate" type="text/html" href="https://ld000.space/post/sharding_proxy_cache/" />
             <id>https://ld000.space/post/sharding_proxy_cache/</id>
-            <updated>2020-09-15T02:45:55+00:00</updated>
+            <updated>2020-09-15T07:36:20+00:00</updated>
             <published>2020-05-25T00:00:00+00:00</published>
             <author>
                     <name>Voiddd</name>
@@ -146,7 +146,7 @@
                 <content type="html"><![CDATA[<p>sharding-proxy版本：3.1.0</p>
 <p>之前公司使用了 sharding-proxy 作为数据库分库分表代理。</p>
 <p>在运行一段时间后，出现大量连接超时，触发了线上报警。观察内存发现内存几乎占满了，频繁触发 fullGC。内存无法释放。</p>
-<p><img src="https://raw.githubusercontent.com/ld000/git-resources/master/img/20200710103616.png" alt="https://raw.githubusercontent.com/ld000/git-resources/master/img/20200710103616.png"></p>
+<p><img src="https://void.oss-cn-beijing.aliyuncs.com/img/20200710103616.png" alt="https://void.oss-cn-beijing.aliyuncs.com/img/20200710103616.png"></p>
 <p>一时无法确定原因，先将流量都切到一台备用 sharding-proxy，然后执行 <code>jmap</code> 导出内存到MAT里进行分析。</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -157,9 +157,9 @@
 </code></pre></td></tr></table>
 </div>
 </div><p>可以看到1.8G的内存都被 Guava 的 cache 占用了。猜测是用了强引用，缓存没有释放。</p>
-<p><img src="https://raw.githubusercontent.com/ld000/git-resources/master/img/20200710114017.png" alt="https://raw.githubusercontent.com/ld000/git-resources/master/img/20200710114017.png"></p>
+<p><img src="https://void.oss-cn-beijing.aliyuncs.com/img/20200710114017.png" alt="https://void.oss-cn-beijing.aliyuncs.com/img/20200710114017.png"></p>
 <p>点击Details查看详细信息，可以看到是 <code>ChannelRegistry</code> 这个类里的缓存。</p>
-<p><img src="https://raw.githubusercontent.com/ld000/git-resources/master/img/20200710115710.png" alt="https://raw.githubusercontent.com/ld000/git-resources/master/img/20200710115710.png"></p>
+<p><img src="https://void.oss-cn-beijing.aliyuncs.com/img/20200710115710.png" alt="https://void.oss-cn-beijing.aliyuncs.com/img/20200710115710.png"></p>
 <p>接下来分析下代码，</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -250,7 +250,7 @@
 </div><p>默认构造器创建了一个强引用缓存，里面缓存了netty连接和对应的数据库连接。只有 put 方法，没有释放方法。</p>
 <p>每次有新的netty连接，都会创建一个缓存元素，造成这个缓存越来越大，而且不会释放。</p>
 <p>为了确定是这个问题，我在 <code>putConnectionId</code> 方法里加了日志部署测试</p>
-<p><img src="https://raw.githubusercontent.com/ld000/git-resources/master/img/20200818084548.png" alt="https://raw.githubusercontent.com/ld000/git-resources/master/img/20200818084548.png"></p>
+<p><img src="https://void.oss-cn-beijing.aliyuncs.com/img/20200818084548.png" alt="https://void.oss-cn-beijing.aliyuncs.com/img/20200818084548.png"></p>
 <p>部署后，发现日志里频繁的 put cache，可以确定就是这个原因导致内存无法释放。连接创建这么频繁是因为运维在前面挂了一层 Aliyun SLB 负载，SLB 会频繁的创建探活连接。</p>
 <h2 id="修复">修复</h2>
 <p>修改也比较简单，sharding-proxy 分为 backend 和 frontend 两部分。backend 负责与 MySQL 示例交互，默认使用 JDBC 连接，不会使用这个缓存，不需要修改。要修改的只有 frontend 部分，这部分负责和连接 sharding-proxy 的客户端交互，使用的 Netty。</p>
@@ -346,7 +346,7 @@
             <title type="text">MemoryPoolMXBean 各内存池名字</title>
             <link rel="alternate" type="text/html" href="https://ld000.space/post/java_memorypoolmxbean/" />
             <id>https://ld000.space/post/java_memorypoolmxbean/</id>
-            <updated>2020-09-15T02:45:55+00:00</updated>
+            <updated>2020-09-15T07:36:20+00:00</updated>
             <published>2020-04-13T00:00:00+00:00</published>
             <author>
                     <name>Voiddd</name>
@@ -420,7 +420,7 @@
             <title type="text">gorm调用sharding-proxy, 参数带单引号sql报错</title>
             <link rel="alternate" type="text/html" href="https://ld000.space/post/gorm_sharding_proxy_sql_error/" />
             <id>https://ld000.space/post/gorm_sharding_proxy_sql_error/</id>
-            <updated>2020-09-15T02:45:55+00:00</updated>
+            <updated>2020-09-15T07:36:20+00:00</updated>
             <published>2020-03-27T00:00:00+00:00</published>
             <author>
                     <name>Voiddd</name>
@@ -616,9 +616,9 @@ Error 3054: Unknown exception: Illegal input, unterminated <span class="s1">&#39
 </div>
 </div><p>以 <code>update table set name = a</code> 为例。</p>
 <p>词法分析生成6个 token：</p>
-<p><img src="https://raw.githubusercontent.com/ld000/git-resources/master/img/20200327162605.png" alt="https://raw.githubusercontent.com/ld000/git-resources/master/img/20200327162605.png"></p>
+<p><img src="https://void.oss-cn-beijing.aliyuncs.com/img/20200327162605.png" alt="https://void.oss-cn-beijing.aliyuncs.com/img/20200327162605.png"></p>
 <p>语法分析语法树：</p>
-<p><img src="https://raw.githubusercontent.com/ld000/git-resources/master/img/20200327163231.png" alt="https://raw.githubusercontent.com/ld000/git-resources/master/img/20200327163231.png"></p>
+<p><img src="https://void.oss-cn-beijing.aliyuncs.com/img/20200327163231.png" alt="https://void.oss-cn-beijing.aliyuncs.com/img/20200327163231.png"></p>
 <h2 id="sql-解析器分析">sql 解析器分析</h2>
 <p>同样的 sql <code>update md_user_info set nickname = 'dd'dd' where user_id = 1000002082</code>，MySQL 正常执行，sharding-proxy 却报错，接下来分析下两者的 sql 解析器都是怎么处理这条 sql 的。</p>
 <p>这里主要分析下词法分析转化成 token 阶段，sharding-proxy 也是在这个阶段报错的。</p>
@@ -651,7 +651,7 @@ where
 </div>
 </div><h3 id="sharding-proxy">sharding-proxy</h3>
 <p>首先看下接收到的 sql 是什么，debug 进 <code>SQLParsingEngine</code></p>
-<p><img src="https://raw.githubusercontent.com/ld000/git-resources/master/img/20200326175137.jpg" alt="https://raw.githubusercontent.com/ld000/git-resources/master/img/20200326175137.jpg"></p>
+<p><img src="https://void.oss-cn-beijing.aliyuncs.com/img/20200326175137.jpg" alt="https://void.oss-cn-beijing.aliyuncs.com/img/20200326175137.jpg"></p>
 <p>可以看到接收的 sql 没有问题，接下来看 sql 解析。</p>
 <p>update 语句解析在 <code>AbstractUpdateParser.parse()</code> 处，经过 <code>LexerEngine</code>，最后用 <code>Tokenizer</code> 生成 token。</p>
 <div class="highlight"><div class="chroma">
@@ -723,11 +723,11 @@ where
 </code></pre></td></tr></table>
 </div>
 </div><p>看下 <code>dd'dd</code> 的处理过程，这时 <code>terminatedChar</code> 的值是 <code>'</code> ，剩余要处理的字符串是 <code>'dd\'dd' where user_id = 1000002082</code> ，逐个字符向后检测。</p>
-<p><img src="https://raw.githubusercontent.com/ld000/git-resources/master/img/20200327155726.png" alt="https://raw.githubusercontent.com/ld000/git-resources/master/img/20200327155726.png"></p>
+<p><img src="https://void.oss-cn-beijing.aliyuncs.com/img/20200327155726.png" alt="https://void.oss-cn-beijing.aliyuncs.com/img/20200327155726.png"></p>
 <p>这里<code>'</code> 会成对解析，如果碰上<code>'</code> 没有成对的情况，就会报错。不处理转义字符。</p>
 <h3 id="mysql">MySQL</h3>
 <p>再看下 MySQL 的解析器。</p>
-<p><img src="https://raw.githubusercontent.com/ld000/git-resources/master/img/20200327143436.png" alt="https://raw.githubusercontent.com/ld000/git-resources/master/img/20200327143436.png"></p>
+<p><img src="https://void.oss-cn-beijing.aliyuncs.com/img/20200327143436.png" alt="https://void.oss-cn-beijing.aliyuncs.com/img/20200327143436.png"></p>
 <p>看到接收的 sql 和 sharding-proxy 是一样的(多一个反斜杠是因为这里按字符串显示，多一个转义符)</p>
 <p>转化 token 的代码在 sql_lex.cc 的 MYSQLlex → lex_one_token 方法中。</p>
 <div class="highlight"><div class="chroma">
@@ -800,7 +800,7 @@ where
 </code></pre></td></tr></table>
 </div>
 </div><p>这里有个处理转义字符的逻辑，如果当前字符是反斜杠，就向后跳两个字符，跳过转义字符。</p>
-<p><img src="https://raw.githubusercontent.com/ld000/git-resources/master/img/20200327160823.png" alt="https://raw.githubusercontent.com/ld000/git-resources/master/img/20200327160823.png"></p>
+<p><img src="https://void.oss-cn-beijing.aliyuncs.com/img/20200327160823.png" alt="https://void.oss-cn-beijing.aliyuncs.com/img/20200327160823.png"></p>
 <p>最终的 token 列表。(token 是个 int，对应关系在 sql_yacc.h 中)</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -965,7 +965,7 @@ where
             <title type="text">Mac下用CLion debug MySQL5.7源码</title>
             <link rel="alternate" type="text/html" href="https://ld000.space/post/mac_clion_debug_mysql_source/" />
             <id>https://ld000.space/post/mac_clion_debug_mysql_source/</id>
-            <updated>2020-09-15T02:45:55+00:00</updated>
+            <updated>2020-09-15T07:36:20+00:00</updated>
             <published>2020-03-26T00:00:00+00:00</published>
             <author>
                     <name>Voiddd</name>
@@ -1061,7 +1061,7 @@ where
 </div>
 </div><h2 id="配置clion">配置CLion</h2>
 <p>打开 mysql 源码目录，修改 cmake 配置</p>
-<p><img src="https://raw.githubusercontent.com/ld000/git-resources/master/img/20200326121222.jpg" alt="https://raw.githubusercontent.com/ld000/git-resources/master/img/20200326121222.jpg"></p>
+<p><img src="https://void.oss-cn-beijing.aliyuncs.com/img/20200326121222.jpg" alt="https://void.oss-cn-beijing.aliyuncs.com/img/20200326121222.jpg"></p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre class="chroma"><code><span class="lnt">1
@@ -1071,7 +1071,7 @@ where
 </code></pre></td></tr></table>
 </div>
 </div><p>之后选择 mysqld，然后点击 debug 按钮就可以开始调试了。</p>
-<p><img src="https://raw.githubusercontent.com/ld000/git-resources/master/img/20200326122342.jpg" alt="https://raw.githubusercontent.com/ld000/git-resources/master/img/20200326122342.jpg"></p>
+<p><img src="https://void.oss-cn-beijing.aliyuncs.com/img/20200326122342.jpg" alt="https://void.oss-cn-beijing.aliyuncs.com/img/20200326122342.jpg"></p>
 ]]></content>
             
             
@@ -1110,7 +1110,7 @@ where
             <title type="text">MyBatis 一级缓存在分布式下的坑</title>
             <link rel="alternate" type="text/html" href="https://ld000.space/post/mybatis_scale_localcache/" />
             <id>https://ld000.space/post/mybatis_scale_localcache/</id>
-            <updated>2020-09-15T02:45:55+00:00</updated>
+            <updated>2020-09-15T07:36:20+00:00</updated>
             <published>2019-11-24T00:00:00+00:00</published>
             <author>
                     <name>Voiddd</name>
@@ -1371,7 +1371,7 @@ session1: <span class="m">500</span>
             <title type="text">用外置 Tomcat 部署 Spring Boot 应用</title>
             <link rel="alternate" type="text/html" href="https://ld000.space/post/spring_boot_tomcat/" />
             <id>https://ld000.space/post/spring_boot_tomcat/</id>
-            <updated>2020-09-15T02:45:55+00:00</updated>
+            <updated>2020-09-15T07:36:20+00:00</updated>
             <published>2019-10-25T00:00:00+00:00</published>
             <author>
                     <name>Voiddd</name>
@@ -1487,7 +1487,7 @@ session1: <span class="m">500</span>
 </div><p>这样就修改好了</p>
 <h2 id="测试">测试</h2>
 <p><code>mvn clean package</code> 打包后放入 tomcat webapps 文件夹里测试下</p>
-<p><img src="https://raw.githubusercontent.com/ld000/git-resources/master/img/20200107113901.png" alt=""></p>
+<p><img src="https://void.oss-cn-beijing.aliyuncs.com/img/20200107113901.png" alt=""></p>
 <p>顺利启动</p>
 <h2 id="启动后运行">启动后运行</h2>
 <p>直接用 Spring Boot 内置容器启动应用时，一些启动后运行的代码可以直接写在 main 方法里</p>
@@ -1629,7 +1629,7 @@ session1: <span class="m">500</span>
             <title type="text">让 Redis zset 支持多条件排序</title>
             <link rel="alternate" type="text/html" href="https://ld000.space/post/make_redis_zset_support_multiple_sort/" />
             <id>https://ld000.space/post/make_redis_zset_support_multiple_sort/</id>
-            <updated>2020-09-15T02:45:55+00:00</updated>
+            <updated>2020-09-15T07:36:20+00:00</updated>
             <published>2019-10-23T00:00:00+00:00</published>
             <author>
                     <name>Voiddd</name>
@@ -1814,7 +1814,7 @@ session1: <span class="m">500</span>
 </code></pre></td></tr></table>
 </div>
 </div><p>我们可以看到 score 是用 double 存储的，它是一个 IEEE 754 标准的 double 浮点数。（IEEE 754 标准的详细存储规则可以搜索其他文章，这里重点分析保留的精度）</p>
-<p><img src="https://raw.githubusercontent.com/ld000/git-resources/master/img/20200107114011.png" alt=""></p>
+<p><img src="https://void.oss-cn-beijing.aliyuncs.com/img/20200107114011.png" alt=""></p>
 <p>一个 64 位浮点数存储时分为3段</p>
 <ul>
 <li>S:符号位，第一段，占1位，0表示正数，1表示负数。</li>
@@ -1841,7 +1841,7 @@ session1: <span class="m">500</span>
 </div>
 </div><p>这样时间就缩小到了300000000以内。</p>
 <p>接下来进行划分，首位标志位不用，剩下63位，然后我划分高33位存分数，1位存标志位，最后29位存时间戳，存储结构是这样的：</p>
-<p><img src="https://raw.githubusercontent.com/ld000/git-resources/master/img/20200107114033.png" alt=""></p>
+<p><img src="https://void.oss-cn-beijing.aliyuncs.com/img/20200107114033.png" alt=""></p>
 <p>如果要不损失精度，第一段可存储位数 = 53 - 1 - 29 = 23。</p>
 <p>第一段最大值 = 2^33 = 8589934591，不损失精度 = 2^23 = 8388607。</p>
 <p>第三段最大值 = 2^29 = 536870911。</p>
@@ -2239,7 +2239,7 @@ session1: <span class="m">500</span>
             <title type="text">MacOS 用 automater 自动备份安装的软件列表</title>
             <link rel="alternate" type="text/html" href="https://ld000.space/post/automator_brewfile/" />
             <id>https://ld000.space/post/automator_brewfile/</id>
-            <updated>2020-09-15T02:45:55+00:00</updated>
+            <updated>2020-09-15T07:36:20+00:00</updated>
             <published>2019-09-15T00:00:00+00:00</published>
             <author>
                     <name>Voiddd</name>
@@ -2399,7 +2399,7 @@ session1: <span class="m">500</span>
             <title type="text">discuz 接入 cas</title>
             <link rel="alternate" type="text/html" href="https://ld000.space/post/discuz_cas/" />
             <id>https://ld000.space/post/discuz_cas/</id>
-            <updated>2020-09-15T02:45:55+00:00</updated>
+            <updated>2020-09-15T07:36:20+00:00</updated>
             <published>2018-07-23T00:00:00+00:00</published>
             <author>
                     <name>Voiddd</name>
@@ -2861,7 +2861,7 @@ $url_forward = &#39;forum.php&#39;;
             <title type="text">java 调用 c# 的方法</title>
             <link rel="alternate" type="text/html" href="https://ld000.space/post/java_call_cnet/" />
             <id>https://ld000.space/post/java_call_cnet/</id>
-            <updated>2020-09-15T02:45:55+00:00</updated>
+            <updated>2020-09-15T07:36:20+00:00</updated>
             <published>2017-06-28T00:00:00+00:00</published>
             <author>
                     <name>Voiddd</name>
@@ -3003,7 +3003,7 @@ $url_forward = &#39;forum.php&#39;;
             <title type="text">翻译: Spring AOP 讨论最多的问题 #1 - aspects 没有生效</title>
             <link rel="alternate" type="text/html" href="https://ld000.space/post/aspects_are_not_applied/" />
             <id>https://ld000.space/post/aspects_are_not_applied/</id>
-            <updated>2020-09-15T02:45:55+00:00</updated>
+            <updated>2020-09-15T07:36:20+00:00</updated>
             <published>2017-06-12T00:00:00+00:00</published>
             <author>
                     <name>Voiddd</name>
@@ -3316,7 +3316,7 @@ AopService.service()
             <title type="text">响应模式</title>
             <link rel="alternate" type="text/html" href="https://ld000.space/post/xyms/" />
             <id>https://ld000.space/post/xyms/</id>
-            <updated>2020-09-15T02:45:55+00:00</updated>
+            <updated>2020-09-15T07:36:20+00:00</updated>
             <published>2016-12-20T00:00:00+00:00</published>
             <author>
                     <name>Voiddd</name>
@@ -3968,7 +3968,7 @@ AopService.service()
             <title type="text">搭建一个基于 github-pages 和 jekyll 的免费博客</title>
             <link rel="alternate" type="text/html" href="https://ld000.space/post/github-pages-jekyll/" />
             <id>https://ld000.space/post/github-pages-jekyll/</id>
-            <updated>2020-09-15T02:45:55+00:00</updated>
+            <updated>2020-09-15T07:36:20+00:00</updated>
             <published>2016-12-16T00:00:00+00:00</published>
             <author>
                     <name>Voiddd</name>
@@ -4331,7 +4331,7 @@ bundle update
             <title type="text">RandomAccess 接口使用</title>
             <link rel="alternate" type="text/html" href="https://ld000.space/post/random-access/" />
             <id>https://ld000.space/post/random-access/</id>
-            <updated>2020-09-15T02:45:55+00:00</updated>
+            <updated>2020-09-15T07:36:20+00:00</updated>
             <published>2016-03-19T00:00:00+00:00</published>
             <author>
                     <name>Voiddd</name>
