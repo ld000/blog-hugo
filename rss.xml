@@ -23,7 +23,7 @@
         
             <copyright>[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh)</copyright>
         
-        <lastBuildDate>Mon, 14 Sep 2020 12:15:47 +0000</lastBuildDate>
+        <lastBuildDate>Tue, 15 Sep 2020 02:46:16 +0000</lastBuildDate>
         
             <atom:link rel="self" type="application/rss+xml" href="https://ld000.space/rss.xml" />
         
@@ -49,7 +49,7 @@
 <p>技术设计文档的主要功能是和团队成员沟通要完成工作的技术细节。然而，有另一个目的也很重要：写技术设计文档的过程强迫你组织你的想法，考虑设计的每个方面，确认你没有疏漏任何事。</p>
 <p>技术设计文档经常是大型开发步骤如下几步中的一步：</p>
 <ol>
-<li>**确定产品需求。**通常用产品需求文档（PRD）描述。PRD 定义了从用户或外界代理看系统需要做什么。</li>
+<li><strong>确定产品需求</strong>通常用产品需求文档（PRD）描述。PRD 定义了从用户或外界代理看系统需要做什么。</li>
 <li><strong>确定技术需求</strong>。产品需求翻译成技术需求 - 之前是系统需要完成什么，现在是怎么完成。这步的输出是技术需求文档（TRD）。</li>
 <li><strong>技术设计</strong>。这步包含上一步需求实现的技术描述。输出是 TDD。</li>
 <li><strong>实现</strong>。实现需求的步骤。</li>
