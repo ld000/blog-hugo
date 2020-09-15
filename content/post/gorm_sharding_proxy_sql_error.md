@@ -125,11 +125,11 @@ connString = fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc
 
 词法分析生成6个 token：
 
-![https://raw.githubusercontent.com/ld000/git-resources/master/img/20200327162605.png](https://raw.githubusercontent.com/ld000/git-resources/master/img/20200327162605.png)
+![https://void.oss-cn-beijing.aliyuncs.com/img/20200327162605.png](https://void.oss-cn-beijing.aliyuncs.com/img/20200327162605.png)
 
 语法分析语法树：
 
-![https://raw.githubusercontent.com/ld000/git-resources/master/img/20200327163231.png](https://raw.githubusercontent.com/ld000/git-resources/master/img/20200327163231.png)
+![https://void.oss-cn-beijing.aliyuncs.com/img/20200327163231.png](https://void.oss-cn-beijing.aliyuncs.com/img/20200327163231.png)
 
 ## sql 解析器分析
 
@@ -156,7 +156,7 @@ user_id
 
 首先看下接收到的 sql 是什么，debug 进 `SQLParsingEngine` 
 
-![https://raw.githubusercontent.com/ld000/git-resources/master/img/20200326175137.jpg](https://raw.githubusercontent.com/ld000/git-resources/master/img/20200326175137.jpg)
+![https://void.oss-cn-beijing.aliyuncs.com/img/20200326175137.jpg](https://void.oss-cn-beijing.aliyuncs.com/img/20200326175137.jpg)
 
 可以看到接收的 sql 没有问题，接下来看 sql 解析。
 
@@ -198,7 +198,7 @@ private int getLengthUntilTerminatedChar(final char terminatedChar) {
 
 看下 `dd'dd` 的处理过程，这时 `terminatedChar` 的值是 `'` ，剩余要处理的字符串是 `'dd\'dd' where user_id = 1000002082` ，逐个字符向后检测。
 
-![https://raw.githubusercontent.com/ld000/git-resources/master/img/20200327155726.png](https://raw.githubusercontent.com/ld000/git-resources/master/img/20200327155726.png)
+![https://void.oss-cn-beijing.aliyuncs.com/img/20200327155726.png](https://void.oss-cn-beijing.aliyuncs.com/img/20200327155726.png)
 
 这里`'` 会成对解析，如果碰上`'` 没有成对的情况，就会报错。不处理转义字符。
 
@@ -206,7 +206,7 @@ private int getLengthUntilTerminatedChar(final char terminatedChar) {
 
 再看下 MySQL 的解析器。
 
-![https://raw.githubusercontent.com/ld000/git-resources/master/img/20200327143436.png](https://raw.githubusercontent.com/ld000/git-resources/master/img/20200327143436.png)
+![https://void.oss-cn-beijing.aliyuncs.com/img/20200327143436.png](https://void.oss-cn-beijing.aliyuncs.com/img/20200327143436.png)
 
 看到接收的 sql 和 sharding-proxy 是一样的(多一个反斜杠是因为这里按字符串显示，多一个转义符)
 
@@ -250,7 +250,7 @@ static char *get_text(Lex_input_stream *lip, int pre_skip, int post_skip)
 
 这里有个处理转义字符的逻辑，如果当前字符是反斜杠，就向后跳两个字符，跳过转义字符。
 
-![https://raw.githubusercontent.com/ld000/git-resources/master/img/20200327160823.png](https://raw.githubusercontent.com/ld000/git-resources/master/img/20200327160823.png)
+![https://void.oss-cn-beijing.aliyuncs.com/img/20200327160823.png](https://void.oss-cn-beijing.aliyuncs.com/img/20200327160823.png)
 
 最终的 token 列表。(token 是个 int，对应关系在 sql_yacc.h 中)
 

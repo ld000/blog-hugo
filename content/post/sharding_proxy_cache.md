@@ -10,7 +10,7 @@ sharding-proxy版本：3.1.0
 
 在运行一段时间后，出现大量连接超时，触发了线上报警。观察内存发现内存几乎占满了，频繁触发 fullGC。内存无法释放。
 
-![https://raw.githubusercontent.com/ld000/git-resources/master/img/20200710103616.png](https://raw.githubusercontent.com/ld000/git-resources/master/img/20200710103616.png)
+![https://void.oss-cn-beijing.aliyuncs.com/img/20200710103616.png](https://void.oss-cn-beijing.aliyuncs.com/img/20200710103616.png)
 
 一时无法确定原因，先将流量都切到一台备用 sharding-proxy，然后执行 `jmap` 导出内存到MAT里进行分析。
 
@@ -20,11 +20,11 @@ jmap -dump,format=b,file=proxy.hprof [pid]
 
 可以看到1.8G的内存都被 Guava 的 cache 占用了。猜测是用了强引用，缓存没有释放。
 
-![https://raw.githubusercontent.com/ld000/git-resources/master/img/20200710114017.png](https://raw.githubusercontent.com/ld000/git-resources/master/img/20200710114017.png)
+![https://void.oss-cn-beijing.aliyuncs.com/img/20200710114017.png](https://void.oss-cn-beijing.aliyuncs.com/img/20200710114017.png)
 
 点击Details查看详细信息，可以看到是 `ChannelRegistry` 这个类里的缓存。
 
-![https://raw.githubusercontent.com/ld000/git-resources/master/img/20200710115710.png](https://raw.githubusercontent.com/ld000/git-resources/master/img/20200710115710.png)
+![https://void.oss-cn-beijing.aliyuncs.com/img/20200710115710.png](https://void.oss-cn-beijing.aliyuncs.com/img/20200710115710.png)
 
 接下来分析下代码，
 
@@ -77,7 +77,7 @@ public final class ChannelRegistry {
 
 为了确定是这个问题，我在 `putConnectionId` 方法里加了日志部署测试
 
-![https://raw.githubusercontent.com/ld000/git-resources/master/img/20200818084548.png](https://raw.githubusercontent.com/ld000/git-resources/master/img/20200818084548.png)
+![https://void.oss-cn-beijing.aliyuncs.com/img/20200818084548.png](https://void.oss-cn-beijing.aliyuncs.com/img/20200818084548.png)
 
 部署后，发现日志里频繁的 put cache，可以确定就是这个原因导致内存无法释放。连接创建这么频繁是因为运维在前面挂了一层 Aliyun SLB 负载，SLB 会频繁的创建探活连接。
 

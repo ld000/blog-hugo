@@ -57,7 +57,7 @@ tags: ["java", "CLion", "MySQL"]
 
 打开 mysql 源码目录，修改 cmake 配置
 
-![https://raw.githubusercontent.com/ld000/git-resources/master/img/20200326121222.jpg](https://raw.githubusercontent.com/ld000/git-resources/master/img/20200326121222.jpg)
+![https://void.oss-cn-beijing.aliyuncs.com/img/20200326121222.jpg](https://void.oss-cn-beijing.aliyuncs.com/img/20200326121222.jpg)
 
 ```shell
     -DCMAKE_INSTALL_PREFIX=/Users/d/c/mysql_build -DMYSQL_DATADIR=/Users/d/c/mysql_build/data -DSYSCONFDIR=/Users/d/c/mysql_build -DMYSQL_UNIX_ADDR=/Users/d/c/mysql_build/data/mysql.sock -DWITH_DEBUG=1 -DDOWNLOAD_BOOST=1 -DWITH_BOOST=/Users/d/c/boost -DWITH_SSL=/usr/local/opt/openssl@1.1
@@ -65,4 +65,4 @@ tags: ["java", "CLion", "MySQL"]
 
 之后选择 mysqld，然后点击 debug 按钮就可以开始调试了。
 
-![https://raw.githubusercontent.com/ld000/git-resources/master/img/20200326122342.jpg](https://raw.githubusercontent.com/ld000/git-resources/master/img/20200326122342.jpg)
+![https://void.oss-cn-beijing.aliyuncs.com/img/20200326122342.jpg](https://void.oss-cn-beijing.aliyuncs.com/img/20200326122342.jpg)
