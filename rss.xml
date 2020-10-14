@@ -23,10 +23,522 @@
         
             <copyright>[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh)</copyright>
         
-        <lastBuildDate>Tue, 15 Sep 2020 07:36:41 +0000</lastBuildDate>
+        <lastBuildDate>Wed, 14 Oct 2020 08:09:44 +0000</lastBuildDate>
         
             <atom:link rel="self" type="application/rss+xml" href="https://ld000.space/rss.xml" />
         
+        
+            <item>
+                <title>给 traefik 添加插件</title>
+                <link>https://ld000.space/post/traefik_add_middleware/</link>
+                <guid isPermaLink="true">https://ld000.space/post/traefik_add_middleware/</guid>
+                <pubDate>Mon, 12 Oct 2020 00:00:00 +0000</pubDate>
+                
+                    <author>voidd247@outlook.com (Voiddd)</author>
+                
+                <copyright>[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh)</copyright>
+                
+                    <description><![CDATA[<p>版本：2.2.8</p>
+<p>Traefik 默认带很多插件，但是可能一些我们的个性化需求原生插件并不支持，这时候就需要自己开发插件了。在 2.3 版本之前 Traefik 不支持外挂插件，所以如果要添加插件的话我们需要修改源码。</p>
+<p>下面就以添加个验证token的插件作为演示。</p>
+<p>这个插件获取请求在header中添加的token，之后请求后端服务校验token是否正确，正确就继续请求后端，错误就直接返回错误信息。</p>
+<h2 id="代码修改">代码修改</h2>
+<p>我们要修改3个地方，</p>
+<h3 id="添加插件执行文件">添加插件执行文件</h3>
+<p>在 <code>pkg/middleware/auth</code>文件夹中添加插件主逻辑文件，这个位置可以根据自己需求修改。</p>
+<p><img src="https://void.oss-cn-beijing.aliyuncs.com/img/20201014142902.png" alt="https://void.oss-cn-beijing.aliyuncs.com/img/20201014142902.png"></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">  1
+</span><span class="lnt">  2
+</span><span class="lnt">  3
+</span><span class="lnt">  4
+</span><span class="lnt">  5
+</span><span class="lnt">  6
+</span><span class="lnt">  7
+</span><span class="lnt">  8
+</span><span class="lnt">  9
+</span><span class="lnt"> 10
+</span><span class="lnt"> 11
+</span><span class="lnt"> 12
+</span><span class="lnt"> 13
+</span><span class="lnt"> 14
+</span><span class="lnt"> 15
+</span><span class="lnt"> 16
+</span><span class="lnt"> 17
+</span><span class="lnt"> 18
+</span><span class="lnt"> 19
+</span><span class="lnt"> 20
+</span><span class="lnt"> 21
+</span><span class="lnt"> 22
+</span><span class="lnt"> 23
+</span><span class="lnt"> 24
+</span><span class="lnt"> 25
+</span><span class="lnt"> 26
+</span><span class="lnt"> 27
+</span><span class="lnt"> 28
+</span><span class="lnt"> 29
+</span><span class="lnt"> 30
+</span><span class="lnt"> 31
+</span><span class="lnt"> 32
+</span><span class="lnt"> 33
+</span><span class="lnt"> 34
+</span><span class="lnt"> 35
+</span><span class="lnt"> 36
+</span><span class="lnt"> 37
+</span><span class="lnt"> 38
+</span><span class="lnt"> 39
+</span><span class="lnt"> 40
+</span><span class="lnt"> 41
+</span><span class="lnt"> 42
+</span><span class="lnt"> 43
+</span><span class="lnt"> 44
+</span><span class="lnt"> 45
+</span><span class="lnt"> 46
+</span><span class="lnt"> 47
+</span><span class="lnt"> 48
+</span><span class="lnt"> 49
+</span><span class="lnt"> 50
+</span><span class="lnt"> 51
+</span><span class="lnt"> 52
+</span><span class="lnt"> 53
+</span><span class="lnt"> 54
+</span><span class="lnt"> 55
+</span><span class="lnt"> 56
+</span><span class="lnt"> 57
+</span><span class="lnt"> 58
+</span><span class="lnt"> 59
+</span><span class="lnt"> 60
+</span><span class="lnt"> 61
+</span><span class="lnt"> 62
+</span><span class="lnt"> 63
+</span><span class="lnt"> 64
+</span><span class="lnt"> 65
+</span><span class="lnt"> 66
+</span><span class="lnt"> 67
+</span><span class="lnt"> 68
+</span><span class="lnt"> 69
+</span><span class="lnt"> 70
+</span><span class="lnt"> 71
+</span><span class="lnt"> 72
+</span><span class="lnt"> 73
+</span><span class="lnt"> 74
+</span><span class="lnt"> 75
+</span><span class="lnt"> 76
+</span><span class="lnt"> 77
+</span><span class="lnt"> 78
+</span><span class="lnt"> 79
+</span><span class="lnt"> 80
+</span><span class="lnt"> 81
+</span><span class="lnt"> 82
+</span><span class="lnt"> 83
+</span><span class="lnt"> 84
+</span><span class="lnt"> 85
+</span><span class="lnt"> 86
+</span><span class="lnt"> 87
+</span><span class="lnt"> 88
+</span><span class="lnt"> 89
+</span><span class="lnt"> 90
+</span><span class="lnt"> 91
+</span><span class="lnt"> 92
+</span><span class="lnt"> 93
+</span><span class="lnt"> 94
+</span><span class="lnt"> 95
+</span><span class="lnt"> 96
+</span><span class="lnt"> 97
+</span><span class="lnt"> 98
+</span><span class="lnt"> 99
+</span><span class="lnt">100
+</span><span class="lnt">101
+</span><span class="lnt">102
+</span><span class="lnt">103
+</span><span class="lnt">104
+</span><span class="lnt">105
+</span><span class="lnt">106
+</span><span class="lnt">107
+</span><span class="lnt">108
+</span><span class="lnt">109
+</span><span class="lnt">110
+</span><span class="lnt">111
+</span><span class="lnt">112
+</span><span class="lnt">113
+</span><span class="lnt">114
+</span><span class="lnt">115
+</span><span class="lnt">116
+</span><span class="lnt">117
+</span><span class="lnt">118
+</span><span class="lnt">119
+</span><span class="lnt">120
+</span><span class="lnt">121
+</span><span class="lnt">122
+</span><span class="lnt">123
+</span><span class="lnt">124
+</span><span class="lnt">125
+</span><span class="lnt">126
+</span><span class="lnt">127
+</span><span class="lnt">128
+</span><span class="lnt">129
+</span><span class="lnt">130
+</span><span class="lnt">131
+</span><span class="lnt">132
+</span><span class="lnt">133
+</span><span class="lnt">134
+</span><span class="lnt">135
+</span><span class="lnt">136
+</span><span class="lnt">137
+</span><span class="lnt">138
+</span><span class="lnt">139
+</span><span class="lnt">140
+</span><span class="lnt">141
+</span><span class="lnt">142
+</span><span class="lnt">143
+</span><span class="lnt">144
+</span><span class="lnt">145
+</span><span class="lnt">146
+</span><span class="lnt">147
+</span><span class="lnt">148
+</span><span class="lnt">149
+</span><span class="lnt">150
+</span><span class="lnt">151
+</span><span class="lnt">152
+</span><span class="lnt">153
+</span><span class="lnt">154
+</span><span class="lnt">155
+</span><span class="lnt">156
+</span><span class="lnt">157
+</span><span class="lnt">158
+</span><span class="lnt">159
+</span><span class="lnt">160
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">auth</span>
+
+<span class="kn">import</span> <span class="p">(</span>
+	<span class="s">&#34;context&#34;</span>
+	<span class="s">&#34;encoding/json&#34;</span>
+	<span class="s">&#34;fmt&#34;</span>
+	<span class="s">&#34;github.com/containous/traefik/v2/pkg/config/dynamic&#34;</span>
+	<span class="s">&#34;github.com/containous/traefik/v2/pkg/log&#34;</span>
+	<span class="s">&#34;github.com/containous/traefik/v2/pkg/middlewares&#34;</span>
+	<span class="s">&#34;github.com/containous/traefik/v2/pkg/tracing&#34;</span>
+	<span class="s">&#34;github.com/opentracing/opentracing-go/ext&#34;</span>
+	<span class="s">&#34;io/ioutil&#34;</span>
+	<span class="s">&#34;net/http&#34;</span>
+	<span class="s">&#34;net/url&#34;</span>
+	<span class="s">&#34;strings&#34;</span>
+	<span class="s">&#34;time&#34;</span>
+<span class="p">)</span>
+
+<span class="kd">const</span> <span class="p">(</span>
+	<span class="nx">tokenTypeName</span> <span class="p">=</span> <span class="s">&#34;TokenAuthType&#34;</span>
+<span class="p">)</span>
+
+<span class="kd">type</span> <span class="nx">tokenAuth</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">address</span>             <span class="kt">string</span>
+	<span class="nx">next</span>                <span class="nx">http</span><span class="p">.</span><span class="nx">Handler</span>
+	<span class="nx">name</span>                <span class="kt">string</span>
+	<span class="nx">client</span>              <span class="nx">http</span><span class="p">.</span><span class="nx">Client</span>
+<span class="p">}</span>
+
+<span class="kd">type</span> <span class="nx">commonResponse</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">Status</span>  <span class="kt">int32</span>  <span class="s">`json:&#34;status&#34;`</span>
+	<span class="nx">Message</span> <span class="kt">string</span> <span class="s">`json:&#34;message&#34;`</span>
+<span class="p">}</span>
+
+<span class="c1">// NewToken creates a passport auth middleware.
+</span><span class="c1"></span><span class="kd">func</span> <span class="nf">NewToken</span><span class="p">(</span><span class="nx">ctx</span> <span class="nx">context</span><span class="p">.</span><span class="nx">Context</span><span class="p">,</span> <span class="nx">next</span> <span class="nx">http</span><span class="p">.</span><span class="nx">Handler</span><span class="p">,</span> <span class="nx">config</span> <span class="nx">dynamic</span><span class="p">.</span><span class="nx">TokenAuth</span><span class="p">,</span> <span class="nx">name</span> <span class="kt">string</span><span class="p">)</span> <span class="p">(</span><span class="nx">http</span><span class="p">.</span><span class="nx">Handler</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">log</span><span class="p">.</span><span class="nf">FromContext</span><span class="p">(</span><span class="nx">middlewares</span><span class="p">.</span><span class="nf">GetLoggerCtx</span><span class="p">(</span><span class="nx">ctx</span><span class="p">,</span> <span class="nx">name</span><span class="p">,</span> <span class="nx">tokenTypeName</span><span class="p">)).</span><span class="nf">Debug</span><span class="p">(</span><span class="s">&#34;Creating middleware&#34;</span><span class="p">)</span>
+
+  <span class="c1">// 插件结构体
+</span><span class="c1"></span>	<span class="nx">ta</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="nx">tokenAuth</span><span class="p">{</span>
+		<span class="nx">address</span><span class="p">:</span>             <span class="nx">config</span><span class="p">.</span><span class="nx">Address</span><span class="p">,</span>
+		<span class="nx">next</span><span class="p">:</span>                <span class="nx">next</span><span class="p">,</span>
+		<span class="nx">name</span><span class="p">:</span>                <span class="nx">name</span><span class="p">,</span>
+	<span class="p">}</span>
+
+	<span class="c1">// 创建请求其他服务的 http client
+</span><span class="c1"></span>	<span class="nx">ta</span><span class="p">.</span><span class="nx">client</span> <span class="p">=</span> <span class="nx">http</span><span class="p">.</span><span class="nx">Client</span><span class="p">{</span>
+		<span class="nx">CheckRedirect</span><span class="p">:</span> <span class="kd">func</span><span class="p">(</span><span class="nx">r</span> <span class="o">*</span><span class="nx">http</span><span class="p">.</span><span class="nx">Request</span><span class="p">,</span> <span class="nx">via</span> <span class="p">[]</span><span class="o">*</span><span class="nx">http</span><span class="p">.</span><span class="nx">Request</span><span class="p">)</span> <span class="kt">error</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="nx">http</span><span class="p">.</span><span class="nx">ErrUseLastResponse</span>
+		<span class="p">},</span>
+		<span class="nx">Timeout</span><span class="p">:</span> <span class="mi">30</span> <span class="o">*</span> <span class="nx">time</span><span class="p">.</span><span class="nx">Second</span><span class="p">,</span>
+	<span class="p">}</span>
+
+	<span class="k">return</span> <span class="nx">ta</span><span class="p">,</span> <span class="kc">nil</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">ta</span> <span class="o">*</span><span class="nx">tokenAuth</span><span class="p">)</span> <span class="nf">GetTracingInformation</span><span class="p">()</span> <span class="p">(</span><span class="kt">string</span><span class="p">,</span> <span class="nx">ext</span><span class="p">.</span><span class="nx">SpanKindEnum</span><span class="p">)</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="nx">ta</span><span class="p">.</span><span class="nx">name</span><span class="p">,</span> <span class="nx">ext</span><span class="p">.</span><span class="nx">SpanKindRPCClientEnum</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">ta</span> <span class="nx">tokenAuth</span><span class="p">)</span> <span class="nf">ServeHTTP</span><span class="p">(</span><span class="nx">rw</span> <span class="nx">http</span><span class="p">.</span><span class="nx">ResponseWriter</span><span class="p">,</span> <span class="nx">req</span> <span class="o">*</span><span class="nx">http</span><span class="p">.</span><span class="nx">Request</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">logger</span> <span class="o">:=</span> <span class="nx">log</span><span class="p">.</span><span class="nf">FromContext</span><span class="p">(</span><span class="nx">middlewares</span><span class="p">.</span><span class="nf">GetLoggerCtx</span><span class="p">(</span><span class="nx">req</span><span class="p">.</span><span class="nf">Context</span><span class="p">(),</span> <span class="nx">ta</span><span class="p">.</span><span class="nx">name</span><span class="p">,</span> <span class="nx">tokenTypeName</span><span class="p">))</span>
+
+	<span class="nx">errorMsg</span> <span class="o">:=</span> <span class="p">[]</span><span class="nb">byte</span><span class="p">(</span><span class="s">&#34;{\&#34;code\&#34;:10000,\&#34;message\&#34;:\&#34;token校验失败！\&#34;}&#34;</span><span class="p">)</span>
+
+  <span class="c1">// 从 header 中获取 token
+</span><span class="c1"></span>	<span class="nx">token</span> <span class="o">:=</span> <span class="nx">req</span><span class="p">.</span><span class="nx">Header</span><span class="p">.</span><span class="nf">Get</span><span class="p">(</span><span class="s">&#34;token&#34;</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">token</span> <span class="o">==</span> <span class="s">&#34;&#34;</span> <span class="p">{</span>
+		<span class="nx">logMessage</span> <span class="o">:=</span> <span class="nx">fmt</span><span class="p">.</span><span class="nf">Sprintf</span><span class="p">(</span><span class="s">&#34;Error calling %s. Cause token is empty&#34;</span><span class="p">,</span> <span class="nx">ta</span><span class="p">.</span><span class="nx">address</span><span class="p">)</span>
+		<span class="nf">traceAndResponseDebug</span><span class="p">(</span><span class="nx">logger</span><span class="p">,</span> <span class="nx">rw</span><span class="p">,</span> <span class="nx">req</span><span class="p">,</span> <span class="nx">logMessage</span><span class="p">,</span> <span class="p">[]</span><span class="nb">byte</span><span class="p">(</span><span class="s">&#34;{\&#34;statue\&#34;:10000,\&#34;message\&#34;:\&#34;token is empty\&#34;}&#34;</span><span class="p">),</span> <span class="nx">http</span><span class="p">.</span><span class="nx">StatusBadRequest</span><span class="p">)</span>
+		<span class="k">return</span>
+	<span class="p">}</span>
+
+  <span class="c1">// 以下都是请求其他服务验证 token
+</span><span class="c1"></span>
+	<span class="c1">// 构建请求体
+</span><span class="c1"></span>	<span class="nx">form</span> <span class="o">:=</span> <span class="nx">url</span><span class="p">.</span><span class="nx">Values</span><span class="p">{}</span>
+	<span class="nx">form</span><span class="p">.</span><span class="nf">Add</span><span class="p">(</span><span class="s">&#34;token&#34;</span><span class="p">,</span> <span class="nx">token</span><span class="p">)</span>
+	<span class="nx">passportReq</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">http</span><span class="p">.</span><span class="nf">NewRequest</span><span class="p">(</span><span class="nx">http</span><span class="p">.</span><span class="nx">MethodPost</span><span class="p">,</span> <span class="nx">ta</span><span class="p">.</span><span class="nx">address</span><span class="p">,</span> <span class="nx">strings</span><span class="p">.</span><span class="nf">NewReader</span><span class="p">(</span><span class="nx">form</span><span class="p">.</span><span class="nf">Encode</span><span class="p">()))</span>
+	<span class="nx">tracing</span><span class="p">.</span><span class="nf">LogRequest</span><span class="p">(</span><span class="nx">tracing</span><span class="p">.</span><span class="nf">GetSpan</span><span class="p">(</span><span class="nx">req</span><span class="p">),</span> <span class="nx">passportReq</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="nx">logMessage</span> <span class="o">:=</span> <span class="nx">fmt</span><span class="p">.</span><span class="nf">Sprintf</span><span class="p">(</span><span class="s">&#34;Error calling %s. Cause %s&#34;</span><span class="p">,</span> <span class="nx">ta</span><span class="p">.</span><span class="nx">address</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+		<span class="nf">traceAndResponseDebug</span><span class="p">(</span><span class="nx">logger</span><span class="p">,</span> <span class="nx">rw</span><span class="p">,</span> <span class="nx">req</span><span class="p">,</span> <span class="nx">logMessage</span><span class="p">,</span> <span class="nx">errorMsg</span><span class="p">,</span> <span class="nx">http</span><span class="p">.</span><span class="nx">StatusBadRequest</span><span class="p">)</span>
+		<span class="k">return</span>
+	<span class="p">}</span>
+
+	<span class="nx">tracing</span><span class="p">.</span><span class="nf">InjectRequestHeaders</span><span class="p">(</span><span class="nx">req</span><span class="p">)</span>
+
+	<span class="nx">passportReq</span><span class="p">.</span><span class="nx">Header</span><span class="p">.</span><span class="nf">Set</span><span class="p">(</span><span class="s">&#34;Content-Type&#34;</span><span class="p">,</span> <span class="s">&#34;application/x-www-form-urlencoded&#34;</span><span class="p">)</span>
+
+	<span class="c1">// post 请求
+</span><span class="c1"></span>	<span class="nx">passportResponse</span><span class="p">,</span> <span class="nx">forwardErr</span> <span class="o">:=</span> <span class="nx">ta</span><span class="p">.</span><span class="nx">client</span><span class="p">.</span><span class="nf">Do</span><span class="p">(</span><span class="nx">passportReq</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">forwardErr</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="nx">logMessage</span> <span class="o">:=</span> <span class="nx">fmt</span><span class="p">.</span><span class="nf">Sprintf</span><span class="p">(</span><span class="s">&#34;Error calling %s. Cause: %s&#34;</span><span class="p">,</span> <span class="nx">ta</span><span class="p">.</span><span class="nx">address</span><span class="p">,</span> <span class="nx">forwardErr</span><span class="p">)</span>
+		<span class="nf">traceAndResponseError</span><span class="p">(</span><span class="nx">logger</span><span class="p">,</span> <span class="nx">rw</span><span class="p">,</span> <span class="nx">req</span><span class="p">,</span> <span class="nx">logMessage</span><span class="p">,</span> <span class="nx">errorMsg</span><span class="p">,</span> <span class="nx">http</span><span class="p">.</span><span class="nx">StatusBadRequest</span><span class="p">)</span>
+		<span class="k">return</span>
+	<span class="p">}</span>
+
+	<span class="nx">logger</span><span class="p">.</span><span class="nf">Info</span><span class="p">(</span><span class="nx">fmt</span><span class="p">.</span><span class="nf">Sprintf</span><span class="p">(</span><span class="s">&#34;Passport auth calling %s. Response: %+v&#34;</span><span class="p">,</span> <span class="nx">ta</span><span class="p">.</span><span class="nx">address</span><span class="p">,</span> <span class="nx">passportResponse</span><span class="p">))</span>
+
+	<span class="c1">// 读 body
+</span><span class="c1"></span>	<span class="nx">body</span><span class="p">,</span> <span class="nx">readError</span> <span class="o">:=</span> <span class="nx">ioutil</span><span class="p">.</span><span class="nf">ReadAll</span><span class="p">(</span><span class="nx">passportResponse</span><span class="p">.</span><span class="nx">Body</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">readError</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="nx">logMessage</span> <span class="o">:=</span> <span class="nx">fmt</span><span class="p">.</span><span class="nf">Sprintf</span><span class="p">(</span><span class="s">&#34;Error reading body %s. Cause: %s&#34;</span><span class="p">,</span> <span class="nx">ta</span><span class="p">.</span><span class="nx">address</span><span class="p">,</span> <span class="nx">readError</span><span class="p">)</span>
+		<span class="nf">traceAndResponseError</span><span class="p">(</span><span class="nx">logger</span><span class="p">,</span> <span class="nx">rw</span><span class="p">,</span> <span class="nx">req</span><span class="p">,</span> <span class="nx">logMessage</span><span class="p">,</span> <span class="nx">errorMsg</span><span class="p">,</span> <span class="nx">http</span><span class="p">.</span><span class="nx">StatusBadRequest</span><span class="p">)</span>
+		<span class="k">return</span>
+	<span class="p">}</span>
+	<span class="k">defer</span> <span class="nx">passportResponse</span><span class="p">.</span><span class="nx">Body</span><span class="p">.</span><span class="nf">Close</span><span class="p">()</span>
+
+	<span class="k">if</span> <span class="nx">passportResponse</span><span class="p">.</span><span class="nx">StatusCode</span> <span class="o">!=</span> <span class="nx">http</span><span class="p">.</span><span class="nx">StatusOK</span> <span class="p">{</span>
+		<span class="nx">logMessage</span> <span class="o">:=</span> <span class="nx">fmt</span><span class="p">.</span><span class="nf">Sprintf</span><span class="p">(</span><span class="s">&#34;Remote error %s. StatusCode: %d&#34;</span><span class="p">,</span> <span class="nx">ta</span><span class="p">.</span><span class="nx">address</span><span class="p">,</span> <span class="nx">passportResponse</span><span class="p">.</span><span class="nx">StatusCode</span><span class="p">)</span>
+		<span class="nf">traceAndResponseDebug</span><span class="p">(</span><span class="nx">logger</span><span class="p">,</span> <span class="nx">rw</span><span class="p">,</span> <span class="nx">req</span><span class="p">,</span> <span class="nx">logMessage</span><span class="p">,</span> <span class="nx">errorMsg</span><span class="p">,</span> <span class="nx">http</span><span class="p">.</span><span class="nx">StatusBadRequest</span><span class="p">)</span>
+		<span class="k">return</span>
+	<span class="p">}</span>
+
+	<span class="c1">// 解析 body
+</span><span class="c1"></span>	<span class="kd">var</span> <span class="nx">commonRes</span> <span class="nx">commonResponse</span>
+	<span class="nx">err</span> <span class="p">=</span> <span class="nx">json</span><span class="p">.</span><span class="nf">Unmarshal</span><span class="p">(</span><span class="nx">body</span><span class="p">,</span> <span class="o">&amp;</span><span class="nx">commonRes</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="nx">logMessage</span> <span class="o">:=</span> <span class="nx">fmt</span><span class="p">.</span><span class="nf">Sprintf</span><span class="p">(</span><span class="s">&#34;Body unmarshal error. Body: %s&#34;</span><span class="p">,</span> <span class="nx">body</span><span class="p">)</span>
+		<span class="nf">traceAndResponseError</span><span class="p">(</span><span class="nx">logger</span><span class="p">,</span> <span class="nx">rw</span><span class="p">,</span> <span class="nx">req</span><span class="p">,</span> <span class="nx">logMessage</span><span class="p">,</span> <span class="nx">errorMsg</span><span class="p">,</span> <span class="nx">http</span><span class="p">.</span><span class="nx">StatusBadRequest</span><span class="p">)</span>
+		<span class="k">return</span>
+	<span class="p">}</span>
+
+	<span class="c1">// 判断返回值，非0代表验证失败
+</span><span class="c1"></span>	<span class="k">if</span> <span class="nx">commonRes</span><span class="p">.</span><span class="nx">Status</span> <span class="o">!=</span> <span class="mi">0</span> <span class="p">{</span>
+		<span class="nx">logMessage</span> <span class="o">:=</span> <span class="nx">fmt</span><span class="p">.</span><span class="nf">Sprintf</span><span class="p">(</span><span class="s">&#34;Body status is not success. Status: %d&#34;</span><span class="p">,</span> <span class="nx">commonRes</span><span class="p">.</span><span class="nx">Status</span><span class="p">)</span>
+		<span class="nf">traceAndResponseDebug</span><span class="p">(</span><span class="nx">logger</span><span class="p">,</span> <span class="nx">rw</span><span class="p">,</span> <span class="nx">req</span><span class="p">,</span> <span class="nx">logMessage</span><span class="p">,</span> <span class="nx">errorMsg</span><span class="p">,</span> <span class="nx">http</span><span class="p">.</span><span class="nx">StatusBadRequest</span><span class="p">)</span>
+		<span class="k">return</span>
+	<span class="p">}</span>
+
+	<span class="nx">ta</span><span class="p">.</span><span class="nx">next</span><span class="p">.</span><span class="nf">ServeHTTP</span><span class="p">(</span><span class="nx">rw</span><span class="p">,</span> <span class="nx">req</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nf">traceAndResponseDebug</span><span class="p">(</span><span class="nx">logger</span> <span class="nx">log</span><span class="p">.</span><span class="nx">Logger</span><span class="p">,</span> <span class="nx">rw</span> <span class="nx">http</span><span class="p">.</span><span class="nx">ResponseWriter</span><span class="p">,</span> <span class="nx">req</span> <span class="o">*</span><span class="nx">http</span><span class="p">.</span><span class="nx">Request</span><span class="p">,</span> <span class="nx">logMessage</span> <span class="kt">string</span><span class="p">,</span> <span class="nx">errorMsg</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">,</span> <span class="nx">status</span> <span class="kt">int</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">logger</span><span class="p">.</span><span class="nf">Debug</span><span class="p">(</span><span class="nx">logMessage</span><span class="p">)</span>
+	<span class="nx">tracing</span><span class="p">.</span><span class="nf">SetErrorWithEvent</span><span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">logMessage</span><span class="p">)</span>
+
+	<span class="nx">rw</span><span class="p">.</span><span class="nf">Header</span><span class="p">().</span><span class="nf">Set</span><span class="p">(</span><span class="s">&#34;Content-Type&#34;</span><span class="p">,</span> <span class="s">&#34;application/json;charset=UTF-8&#34;</span><span class="p">)</span>
+	<span class="nx">rw</span><span class="p">.</span><span class="nf">WriteHeader</span><span class="p">(</span><span class="nx">status</span><span class="p">)</span>
+	<span class="nx">_</span><span class="p">,</span> <span class="nx">_</span> <span class="p">=</span> <span class="nx">rw</span><span class="p">.</span><span class="nf">Write</span><span class="p">(</span><span class="nx">errorMsg</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nf">traceAndResponseInfo</span><span class="p">(</span><span class="nx">logger</span> <span class="nx">log</span><span class="p">.</span><span class="nx">Logger</span><span class="p">,</span> <span class="nx">rw</span> <span class="nx">http</span><span class="p">.</span><span class="nx">ResponseWriter</span><span class="p">,</span> <span class="nx">req</span> <span class="o">*</span><span class="nx">http</span><span class="p">.</span><span class="nx">Request</span><span class="p">,</span> <span class="nx">logMessage</span> <span class="kt">string</span><span class="p">,</span> <span class="nx">errorMsg</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">,</span> <span class="nx">status</span> <span class="kt">int</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">logger</span><span class="p">.</span><span class="nf">Info</span><span class="p">(</span><span class="nx">logMessage</span><span class="p">)</span>
+	<span class="nx">tracing</span><span class="p">.</span><span class="nf">SetErrorWithEvent</span><span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">logMessage</span><span class="p">)</span>
+
+	<span class="nx">rw</span><span class="p">.</span><span class="nf">Header</span><span class="p">().</span><span class="nf">Set</span><span class="p">(</span><span class="s">&#34;Content-Type&#34;</span><span class="p">,</span> <span class="s">&#34;application/json;charset=UTF-8&#34;</span><span class="p">)</span>
+	<span class="nx">rw</span><span class="p">.</span><span class="nf">WriteHeader</span><span class="p">(</span><span class="nx">status</span><span class="p">)</span>
+	<span class="nx">_</span><span class="p">,</span> <span class="nx">_</span> <span class="p">=</span> <span class="nx">rw</span><span class="p">.</span><span class="nf">Write</span><span class="p">(</span><span class="nx">errorMsg</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nf">traceAndResponseError</span><span class="p">(</span><span class="nx">logger</span> <span class="nx">log</span><span class="p">.</span><span class="nx">Logger</span><span class="p">,</span> <span class="nx">rw</span> <span class="nx">http</span><span class="p">.</span><span class="nx">ResponseWriter</span><span class="p">,</span> <span class="nx">req</span> <span class="o">*</span><span class="nx">http</span><span class="p">.</span><span class="nx">Request</span><span class="p">,</span> <span class="nx">logMessage</span> <span class="kt">string</span><span class="p">,</span> <span class="nx">errorMsg</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">,</span> <span class="nx">status</span> <span class="kt">int</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">logger</span><span class="p">.</span><span class="nf">Debug</span><span class="p">(</span><span class="nx">logMessage</span><span class="p">)</span>
+	<span class="nx">tracing</span><span class="p">.</span><span class="nf">SetErrorWithEvent</span><span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">logMessage</span><span class="p">)</span>
+
+	<span class="nx">rw</span><span class="p">.</span><span class="nf">Header</span><span class="p">().</span><span class="nf">Set</span><span class="p">(</span><span class="s">&#34;Content-Type&#34;</span><span class="p">,</span> <span class="s">&#34;application/json;charset=UTF-8&#34;</span><span class="p">)</span>
+	<span class="nx">rw</span><span class="p">.</span><span class="nf">WriteHeader</span><span class="p">(</span><span class="nx">status</span><span class="p">)</span>
+	<span class="nx">_</span><span class="p">,</span> <span class="nx">_</span> <span class="p">=</span> <span class="nx">rw</span><span class="p">.</span><span class="nf">Write</span><span class="p">(</span><span class="nx">errorMsg</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="添加动态配置映射">添加动态配置映射</h3>
+<p>这里添加配置文件和实体的映射关系</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">// pkg/config/dynamic/middlewares.go
+</span><span class="c1"></span>
+<span class="kn">package</span> <span class="nx">dynamic</span>
+
+<span class="cm">/* ... */</span>
+
+<span class="c1">// Middleware holds the Middleware configuration.
+</span><span class="c1"></span><span class="kd">type</span> <span class="nx">Middleware</span> <span class="kd">struct</span> <span class="p">{</span>
+  <span class="cm">/* ... */</span>
+
+  <span class="c1">// 
+</span><span class="c1"></span>	<span class="nx">TokenAuth</span>         <span class="o">*</span><span class="nx">TokenAuth</span>         <span class="s">`json:&#34;tokenAuth,omitempty&#34; toml:&#34;tokenAuth,omitempty&#34; yaml:&#34;tokenAuth,omitempty&#34;`</span>
+<span class="p">}</span>
+
+<span class="cm">/* ... */</span>
+
+<span class="c1">// TokenAuth
+</span><span class="c1"></span><span class="kd">type</span> <span class="nx">TokenAuth</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">Address</span>             <span class="kt">string</span>     <span class="s">`json:&#34;address,omitempty&#34; toml:&#34;address,omitempty&#34; yaml:&#34;address,omitempty&#34;`</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="构造插件示例">构造插件示例</h3>
+<p>这里写创建插件实体的代码</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">// pkg/server/middleware/middlewares.go
+</span><span class="c1"></span>
+<span class="kd">func</span> <span class="p">(</span><span class="nx">b</span> <span class="o">*</span><span class="nx">Builder</span><span class="p">)</span> <span class="nf">buildConstructor</span><span class="p">(</span><span class="nx">ctx</span> <span class="nx">context</span><span class="p">.</span><span class="nx">Context</span><span class="p">,</span> <span class="nx">middlewareName</span> <span class="kt">string</span><span class="p">)</span> <span class="p">(</span><span class="nx">alice</span><span class="p">.</span><span class="nx">Constructor</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="cm">/* ... */</span>
+
+	<span class="c1">// TokenAuth
+</span><span class="c1"></span>	<span class="k">if</span> <span class="nx">config</span><span class="p">.</span><span class="nx">TokenAuth</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">if</span> <span class="nx">middleware</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">badConf</span>
+		<span class="p">}</span>
+		<span class="nx">middleware</span> <span class="p">=</span> <span class="kd">func</span><span class="p">(</span><span class="nx">next</span> <span class="nx">http</span><span class="p">.</span><span class="nx">Handler</span><span class="p">)</span> <span class="p">(</span><span class="nx">http</span><span class="p">.</span><span class="nx">Handler</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="nx">auth</span><span class="p">.</span><span class="nf">NewToken</span><span class="p">(</span><span class="nx">ctx</span><span class="p">,</span> <span class="nx">next</span><span class="p">,</span> <span class="o">*</span><span class="nx">config</span><span class="p">.</span><span class="nx">TokenAuth</span><span class="p">,</span> <span class="nx">middlewareName</span><span class="p">)</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+
+	<span class="cm">/* ... */</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="打包配置">打包配置</h2>
+<p>直接用自带的打包命令打linux包(需要安装docker)。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">make binary
+</code></pre></td></tr></table>
+</div>
+</div><p>之后会在dist文件夹下生成可执行文件。</p>
+<p><img src="https://void.oss-cn-beijing.aliyuncs.com/img/20201014154636.png" alt="https://void.oss-cn-beijing.aliyuncs.com/img/20201014154636.png"></p>
+<p>添加插件配置</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="k">http</span><span class="p">:</span><span class="w">
+</span><span class="w">  </span><span class="k">middlewares</span><span class="p">:</span><span class="w">
+</span><span class="w">    </span><span class="c"># token验证</span><span class="w">
+</span><span class="w">    </span><span class="k">token-auth</span><span class="p">:</span><span class="w">
+</span><span class="w">      </span><span class="k">tokenAuth</span><span class="p">:</span><span class="w">
+</span><span class="w">        </span><span class="k">address</span><span class="p">:</span><span class="w"> </span>http<span class="p">:</span>//xxx.xxx.com/token_info<span class="w">
+</span></code></pre></td></tr></table>
+</div>
+</div><p>增加动态路由配置</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="k">http</span><span class="p">:</span><span class="w">
+</span><span class="w">  </span><span class="k">routers</span><span class="p">:</span><span class="w">
+</span><span class="w">    </span><span class="k">svc</span><span class="p">:</span><span class="w">
+</span><span class="w">      </span><span class="k">entryPoints</span><span class="p">:</span><span class="w">
+</span><span class="w">      </span>- web<span class="w">
+</span><span class="w">      </span><span class="k">middlewares</span><span class="p">:</span><span class="w">
+</span><span class="w">      </span>- token-auth<span class="w">
+</span><span class="w">      </span><span class="k">service</span><span class="p">:</span><span class="w"> </span>svc<span class="w">
+</span><span class="w">      </span><span class="k">rule</span><span class="p">:</span><span class="w"> </span>PathPrefix(`/list`)<span class="w">
+</span></code></pre></td></tr></table>
+</div>
+</div><p>这样新添加的插件就能用了。</p>
+]]></description>
+                
+                
+                
+                
+                
+                    
+                        
+                    
+                        
+                            
+                                
+                                
+                                
+                            
+                        
+                    
+                
+            </item>
         
             <item>
                 <title>(翻译)写技术设计文档</title>
