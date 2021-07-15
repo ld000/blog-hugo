@@ -4,7 +4,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom" xml:lang="zh-CN">
     <title type="text">Voiddd</title>
     <subtitle type="html">MemE 是一个强大且可高度定制的 GoHugo 博客主题，专为个人博客设计。</subtitle>
-    <updated>2021-02-21T17:56:41+00:00</updated>
+    <updated>2021-07-15T11:44:54+00:00</updated>
     <id>https://ld000.space/</id>
     <link rel="alternate" type="text/html" href="https://ld000.space/" />
     <link rel="self" type="application/atom+xml" href="https://ld000.space/atom.xml" />
@@ -15,12 +15,1229 @@
                 <email>voidd247@outlook.com</email>
             </author>
     <rights>[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh)</rights>
-    <generator uri="https://gohugo.io/" version="0.68.3">Hugo</generator>
+    <generator uri="https://gohugo.io/" version="0.78.1">Hugo</generator>
+        <entry>
+            <title type="text">为 Traefik 添加从 nacos 读取服务地址功能</title>
+            <link rel="alternate" type="text/html" href="https://ld000.space/post/traefik_nacos_naming/" />
+            <id>https://ld000.space/post/traefik_nacos_naming/</id>
+            <updated>2021-07-15T11:44:32+00:00</updated>
+            <published>2021-06-12T00:00:00+00:00</published>
+            <author>
+                    <name>Voiddd</name>
+                    <uri>https://ld000.space</uri>
+                    <email>voidd247@outlook.com</email>
+                    </author>
+            <rights>[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh)</rights>
+    
+    <summary type="html"><![CDATA[软件版本 Traefik 版本：2.4.0 背景 Traefik 是一个 go 实现的高性能 API 网关，本身支持多种配置加载方式……]]></summary>
+            
+                <content type="html"><![CDATA[<h2 id="软件版本">软件版本</h2>
+<p>Traefik 版本：2.4.0</p>
+<h2 id="背景">背景</h2>
+<p>Traefik 是一个 go 实现的高性能 API 网关，本身支持多种配置加载方式，包括 file, k8s, consul 等。</p>
+<p>我们之前用的file作为配置文件，路由配置文件中会配置应用的路由信息和应用的负载信息。一个服务的配置信息类似下面这样：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="nt">http</span><span class="p">:</span><span class="w">
+</span><span class="w">  </span><span class="nt">services</span><span class="p">:</span><span class="w">
+</span><span class="w">    </span><span class="nt">dev-service</span><span class="p">:</span><span class="w">
+</span><span class="w">      </span><span class="nt">loadBalancer</span><span class="p">:</span><span class="w">
+</span><span class="w">        </span><span class="nt">servers</span><span class="p">:</span><span class="w">
+</span><span class="w">        </span>- <span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l">http://aliyun-slb-service:8080</span><span class="w">
+</span><span class="w">        </span><span class="nt">passHostHeader</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span><span class="w">  </span><span class="nt">routers</span><span class="p">:</span><span class="w">
+</span><span class="w">    </span><span class="nt">dev</span><span class="p">:</span><span class="w">
+</span><span class="w">      </span><span class="nt">entryPoints</span><span class="p">:</span><span class="w">
+</span><span class="w">      </span>- <span class="l">test</span><span class="w">
+</span><span class="w">      </span><span class="nt">service</span><span class="p">:</span><span class="w"> </span><span class="l">dev-service</span><span class="w">
+</span><span class="w">      </span><span class="nt">rule</span><span class="p">:</span><span class="w"> </span><span class="l">PathPrefix(`/path`)</span><span class="w">
+</span></code></pre></td></tr></table>
+</div>
+</div><p>服务的请求 url 配置的是服务前面挂载的负载均衡(用的阿里云的SLB)，服务上下线等会从SLB上注册反注册。这样所有对外的服务前面都需要挂载一层负载，增加了复杂度和调用链长度。更好的做法是网关能自动从注册中心拉取服务的地址列表，就不需要在服务上再挂载一个负载均衡了。</p>
+<p>我们现在后端注册中心使用的是 nacos，Traefik 现版本是不支持 nacos 的，需要简单修改下源码，添加一个 nacos 的 provider。</p>
+<h2 id="consul-provider">Consul provider</h2>
+<p>Traefik 虽然没有 nacos 的实现，但是有别的注册中心的实现，比如 consul。在新添加 provider 之前可以先看下 Traefik consul 是怎么实现的。</p>
+<p>consul 逻辑是，服务信息会从注册的服务上直接读取，路由信息等配置都是tag信息，类似下图这样，需要每个配置字段都设定一个tag。</p>
+<p><img src="https://void.oss-cn-beijing.aliyuncs.com/img/20210714190352.jpg" alt="https://void.oss-cn-beijing.aliyuncs.com/img/20210714190352.jpg"></p>
+<p>(图从网上随便搜的)</p>
+<p>这样的话每个服务都需要在consul中注册很多的tag，使用起来不太方便，也不方便维护和快速查找。</p>
+<p>考虑到方便维护和兼容之前的文件配置，想要实现的效果是路由信息还是从文件中读取，服务地址信息从 nacos 中读取。之后与文件的配置文件合并，为了兼容之前的配置，文件中的服务信息也会读取，如果 nacos 中有重复的服务，就用 nacos 的覆盖文件的。</p>
+<h2 id="最终的配置文件">最终的配置文件</h2>
+<p>代码修改好后的配置文件就会像下面这样</p>
+<h3 id="静态配置里的-provider-配置">静态配置里的 provider 配置</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="nt">providers</span><span class="p">:</span><span class="w">
+</span><span class="w">  </span><span class="nt">nacos</span><span class="p">:</span><span class="w">
+</span><span class="w">    </span><span class="nt">file</span><span class="p">:</span><span class="w">
+</span><span class="w">      </span><span class="nt">watch</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span><span class="w">      </span><span class="nt">filename</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;/Users/d/depend/config/route/test.yaml&#34;</span><span class="w">
+</span><span class="w">      </span><span class="nt">debugLogGeneratedTemplate</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span><span class="w">    </span><span class="nt">endpoint</span><span class="p">:</span><span class="w">
+</span><span class="w">      </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l">devnacos.inc.com</span><span class="w">
+</span><span class="w">      </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="m">8848</span><span class="w">
+</span><span class="w">      </span><span class="nt">group</span><span class="p">:</span><span class="w"> </span><span class="l">aaa</span><span class="w">
+</span><span class="w">      </span><span class="nt">logDir</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;/tmp/nacos/log&#34;</span><span class="w">
+</span><span class="w">      </span><span class="nt">cacheDir</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;/tmp/nacos/cache&#34;</span><span class="w">
+</span></code></pre></td></tr></table>
+</div>
+</div><p>配置里有两部分：</p>
+<ul>
+<li>第一部分是 file，这个和自带的 file provider 逻辑一样</li>
+<li>第二部分是 endpoint，这个是 nacos SDK 的配置</li>
+</ul>
+<h3 id="路由配置">路由配置</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="nt">http</span><span class="p">:</span><span class="w">
+</span><span class="w">  </span><span class="nt">routers</span><span class="p">:</span><span class="w">
+</span><span class="w">    </span><span class="nt">dev</span><span class="p">:</span><span class="w">
+</span><span class="w">      </span><span class="nt">entryPoints</span><span class="p">:</span><span class="w">
+</span><span class="w">      </span>- <span class="l">test</span><span class="w">
+</span><span class="w">      </span><span class="nt">service</span><span class="p">:</span><span class="w"> </span><span class="l">nacos中的服务名</span><span class="w">
+</span><span class="w">      </span><span class="nt">rule</span><span class="p">:</span><span class="w"> </span><span class="l">PathPrefix(`/path`)</span><span class="w">
+</span><span class="w">      </span><span class="nt">middlewares</span><span class="p">:</span><span class="w">
+</span><span class="w">      </span>- <span class="l">test-retry</span><span class="w">
+</span><span class="w">  </span><span class="nt">middlewares</span><span class="p">:</span><span class="w">
+</span><span class="w">    </span><span class="nt">test-retry</span><span class="p">:</span><span class="w">
+</span><span class="w">      </span><span class="nt">retry</span><span class="p">:</span><span class="w">
+</span><span class="w">        </span><span class="nt">attempts</span><span class="p">:</span><span class="w"> </span><span class="m">3</span><span class="w">
+</span><span class="w">        </span><span class="nt">initialInterval</span><span class="p">:</span><span class="w"> </span><span class="l">10ms</span><span class="w">
+</span></code></pre></td></tr></table>
+</div>
+</div><p>去掉了 services 配置，从 nacos 中读取，路由的 service 对应 nacos 中的服务名。</p>
+<blockquote>
+<p>这里加的retry插件主要是用来failover的，服务短时不可用可以故障转移，请求下个服务实例（比如服务下线时网关还未接到下线通知，请求了已下线服务）</p>
+</blockquote>
+<h2 id="代码实现">代码实现</h2>
+<p>接下来看下代码实现，需要为 Traefik 添加一个叫 nacos 的 provider。</p>
+<h3 id="主逻辑">主逻辑</h3>
+<p>首先在 <code>pkg/provider</code> 下添加一个文件夹 nacos，在里面添加个 nacos.go 文件，主要逻辑都会在这个文件里实现。</p>
+<p>首先添加从文件读取配置的代码，这里大部分代码都可以复用 Traefik 自带的文件解析 provider</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">// 把文件解析成配置，复用 Traefik 原有代码
+</span><span class="c1"></span><span class="nx">fileProvider</span> <span class="o">:=</span> <span class="nx">file</span><span class="p">.</span><span class="nx">Provider</span><span class="p">{</span>
+	<span class="nx">Directory</span><span class="p">:</span> <span class="nx">p</span><span class="p">.</span><span class="nx">File</span><span class="p">.</span><span class="nx">Directory</span><span class="p">,</span>
+	<span class="nx">Watch</span><span class="p">:</span> <span class="nx">p</span><span class="p">.</span><span class="nx">File</span><span class="p">.</span><span class="nx">Watch</span><span class="p">,</span>
+	<span class="nx">Filename</span><span class="p">:</span> <span class="nx">p</span><span class="p">.</span><span class="nx">File</span><span class="p">.</span><span class="nx">Filename</span><span class="p">,</span>
+	<span class="nx">DebugLogGeneratedTemplate</span><span class="p">:</span> <span class="nx">p</span><span class="p">.</span><span class="nx">File</span><span class="p">.</span><span class="nx">DebugLogGeneratedTemplate</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="nx">fileConfiguration</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">fileProvider</span><span class="p">.</span><span class="nf">BuildConfiguration</span><span class="p">()</span>
+
+<span class="c1">// 注册文件变化监听，因为监听回调逻辑不一样，这里自己实现下
+</span><span class="c1"></span><span class="k">if</span> <span class="nx">p</span><span class="p">.</span><span class="nx">File</span><span class="p">.</span><span class="nx">Watch</span> <span class="p">{</span>
+	<span class="kd">var</span> <span class="nx">watchItem</span> <span class="kt">string</span>
+
+	<span class="k">switch</span> <span class="p">{</span>
+	<span class="k">case</span> <span class="nb">len</span><span class="p">(</span><span class="nx">p</span><span class="p">.</span><span class="nx">File</span><span class="p">.</span><span class="nx">Directory</span><span class="p">)</span> <span class="p">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+		<span class="nx">watchItem</span> <span class="p">=</span> <span class="nx">p</span><span class="p">.</span><span class="nx">File</span><span class="p">.</span><span class="nx">Directory</span>
+	<span class="k">case</span> <span class="nb">len</span><span class="p">(</span><span class="nx">p</span><span class="p">.</span><span class="nx">File</span><span class="p">.</span><span class="nx">Filename</span><span class="p">)</span> <span class="p">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+		<span class="nx">watchItem</span> <span class="p">=</span> <span class="nx">filepath</span><span class="p">.</span><span class="nf">Dir</span><span class="p">(</span><span class="nx">p</span><span class="p">.</span><span class="nx">File</span><span class="p">.</span><span class="nx">Filename</span><span class="p">)</span>
+	<span class="k">default</span><span class="p">:</span>
+		<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">errors</span><span class="p">.</span><span class="nf">New</span><span class="p">(</span><span class="s">&#34;error using file configuration provider, neither filename or directory defined&#34;</span><span class="p">)</span>
+	<span class="p">}</span>
+
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">p</span><span class="p">.</span><span class="nf">addWatcher</span><span class="p">(</span><span class="nx">pool</span><span class="p">,</span> <span class="nx">watchItem</span><span class="p">,</span> <span class="nx">configurationChan</span><span class="p">,</span> <span class="nx">p</span><span class="p">.</span><span class="nx">watcherCallback</span><span class="p">);</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>回调的代码省略，见下面的完整代码。</p>
+<p>然后添加 nacos 的代码。</p>
+<p>先安装 SDK</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">go get -u github.com/nacos-group/nacos-sdk-go
+</code></pre></td></tr></table>
+</div>
+</div><p>和 nacos 的交互主要是获取实例信息和注册服务变化监听。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">// 首先初始化 nacos 实例
+</span><span class="c1"></span><span class="nx">p</span><span class="p">.</span><span class="nx">client</span><span class="p">,</span> <span class="nx">err</span> <span class="p">=</span> <span class="nf">createClient</span><span class="p">(</span><span class="nx">p</span><span class="p">.</span><span class="nx">EndPoint</span><span class="p">)</span>
+
+<span class="c1">// 获取需要的服务，循环获取地址。我这里简化了，获取了所有服务
+</span><span class="c1"></span><span class="nx">services</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">p</span><span class="p">.</span><span class="nf">fetchServices</span><span class="p">()</span>
+<span class="k">for</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">service</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">services</span> <span class="p">{</span>
+		<span class="nx">instances</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">p</span><span class="p">.</span><span class="nx">client</span><span class="p">.</span><span class="nf">SelectAllInstances</span><span class="p">(</span><span class="nx">vo</span><span class="p">.</span><span class="nx">SelectAllInstancesParam</span><span class="p">{</span>
+			<span class="nx">ServiceName</span><span class="p">:</span> <span class="nx">service</span><span class="p">,</span>
+			<span class="nx">GroupName</span><span class="p">:</span>   <span class="nx">p</span><span class="p">.</span><span class="nx">EndPoint</span><span class="p">.</span><span class="nx">Group</span><span class="p">,</span>
+			<span class="c1">//HealthyOnly: true,
+</span><span class="c1"></span>		<span class="p">})</span>
+
+		<span class="c1">// ...
+</span><span class="c1"></span>
+		<span class="c1">// 注册服务变化的监听
+</span><span class="c1"></span>		<span class="nx">err</span> <span class="p">=</span> <span class="nx">p</span><span class="p">.</span><span class="nx">client</span><span class="p">.</span><span class="nf">Subscribe</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">vo</span><span class="p">.</span><span class="nx">SubscribeParam</span><span class="p">{</span>
+			<span class="nx">ServiceName</span><span class="p">:</span> <span class="nx">service</span><span class="p">,</span>
+			<span class="nx">GroupName</span><span class="p">:</span>   <span class="nx">p</span><span class="p">.</span><span class="nx">EndPoint</span><span class="p">.</span><span class="nx">Group</span><span class="p">,</span>
+			<span class="nx">SubscribeCallback</span><span class="p">:</span> <span class="kd">func</span><span class="p">(</span><span class="nx">services</span> <span class="p">[]</span><span class="nx">model</span><span class="p">.</span><span class="nx">SubscribeService</span><span class="p">,</span> <span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+				<span class="nx">p</span><span class="p">.</span><span class="nf">nacosCallback</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">services</span><span class="p">,</span> <span class="nx">configurationChan</span><span class="p">)</span>
+			<span class="p">},</span>
+		<span class="p">})</span>
+		
+		<span class="c1">// ...
+</span><span class="c1"></span><span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>之后还需要注册个定时任务，来定时拉取最新的服务状态，做个兜底。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">pool</span><span class="p">.</span><span class="nf">GoCtx</span><span class="p">(</span><span class="kd">func</span><span class="p">(</span><span class="nx">routineCtx</span> <span class="nx">context</span><span class="p">.</span><span class="nx">Context</span><span class="p">)</span> <span class="p">{</span>
+		<span class="nx">ctxLog</span> <span class="o">:=</span> <span class="nx">log</span><span class="p">.</span><span class="nf">With</span><span class="p">(</span><span class="nx">routineCtx</span><span class="p">,</span> <span class="nx">log</span><span class="p">.</span><span class="nf">Str</span><span class="p">(</span><span class="nx">log</span><span class="p">.</span><span class="nx">ProviderName</span><span class="p">,</span> <span class="s">&#34;nacos&#34;</span><span class="p">))</span>
+		<span class="nx">logger</span> <span class="o">:=</span> <span class="nx">log</span><span class="p">.</span><span class="nf">FromContext</span><span class="p">(</span><span class="nx">ctxLog</span><span class="p">)</span>
+
+		<span class="nx">operation</span> <span class="o">:=</span> <span class="kd">func</span><span class="p">()</span> <span class="kt">error</span> <span class="p">{</span>
+			<span class="nx">ticker</span> <span class="o">:=</span> <span class="nx">time</span><span class="p">.</span><span class="nf">NewTicker</span><span class="p">(</span><span class="mi">15</span> <span class="o">*</span> <span class="nx">time</span><span class="p">.</span><span class="nx">Second</span><span class="p">)</span>
+
+			<span class="k">for</span> <span class="p">{</span>
+				<span class="k">select</span> <span class="p">{</span>
+				<span class="k">case</span> <span class="o">&lt;-</span><span class="nx">ticker</span><span class="p">.</span><span class="nx">C</span><span class="p">:</span>
+					<span class="nx">_</span><span class="p">,</span> <span class="nx">err</span> <span class="p">=</span> <span class="nx">p</span><span class="p">.</span><span class="nf">nacosProvide</span><span class="p">(</span><span class="nx">configurationChan</span><span class="p">)</span>
+					<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+						<span class="nx">logger</span><span class="p">.</span><span class="nf">Errorf</span><span class="p">(</span><span class="s">&#34;error get nacos service data, %v&#34;</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+						<span class="k">return</span> <span class="nx">err</span>
+					<span class="p">}</span>
+					<span class="nx">configuration</span> <span class="o">:=</span> <span class="nx">p</span><span class="p">.</span><span class="nf">buildConfiguration</span><span class="p">()</span>
+					<span class="nf">sendConfigToChannel</span><span class="p">(</span><span class="nx">configurationChan</span><span class="p">,</span> <span class="nx">configuration</span><span class="p">)</span>
+				<span class="k">case</span> <span class="o">&lt;-</span><span class="nx">routineCtx</span><span class="p">.</span><span class="nf">Done</span><span class="p">():</span>
+					<span class="nx">ticker</span><span class="p">.</span><span class="nf">Stop</span><span class="p">()</span>
+					<span class="k">return</span> <span class="kc">nil</span>
+				<span class="p">}</span>
+			<span class="p">}</span>
+		<span class="p">}</span>
+
+		<span class="nx">notify</span> <span class="o">:=</span> <span class="kd">func</span><span class="p">(</span><span class="nx">err</span> <span class="kt">error</span><span class="p">,</span> <span class="nx">time</span> <span class="nx">time</span><span class="p">.</span><span class="nx">Duration</span><span class="p">)</span> <span class="p">{</span>
+			<span class="nx">logger</span><span class="p">.</span><span class="nf">Errorf</span><span class="p">(</span><span class="s">&#34;Provider connection error %+v, retrying in %s&#34;</span><span class="p">,</span> <span class="nx">err</span><span class="p">,</span> <span class="nx">time</span><span class="p">)</span>
+		<span class="p">}</span>
+
+		<span class="nx">err</span> <span class="o">:=</span> <span class="nx">backoff</span><span class="p">.</span><span class="nf">RetryNotify</span><span class="p">(</span><span class="nx">safe</span><span class="p">.</span><span class="nf">OperationWithRecover</span><span class="p">(</span><span class="nx">operation</span><span class="p">),</span> <span class="nx">backoff</span><span class="p">.</span><span class="nf">WithContext</span><span class="p">(</span><span class="nx">job</span><span class="p">.</span><span class="nf">NewBackOff</span><span class="p">(</span><span class="nx">backoff</span><span class="p">.</span><span class="nf">NewExponentialBackOff</span><span class="p">()),</span> <span class="nx">ctxLog</span><span class="p">),</span> <span class="nx">notify</span><span class="p">)</span>
+		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="nx">logger</span><span class="p">.</span><span class="nf">Errorf</span><span class="p">(</span><span class="s">&#34;Cannot connect to nacos server %+v&#34;</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+		<span class="p">}</span>
+<span class="p">})</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>最终的 nacos 文件</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">  1
+</span><span class="lnt">  2
+</span><span class="lnt">  3
+</span><span class="lnt">  4
+</span><span class="lnt">  5
+</span><span class="lnt">  6
+</span><span class="lnt">  7
+</span><span class="lnt">  8
+</span><span class="lnt">  9
+</span><span class="lnt"> 10
+</span><span class="lnt"> 11
+</span><span class="lnt"> 12
+</span><span class="lnt"> 13
+</span><span class="lnt"> 14
+</span><span class="lnt"> 15
+</span><span class="lnt"> 16
+</span><span class="lnt"> 17
+</span><span class="lnt"> 18
+</span><span class="lnt"> 19
+</span><span class="lnt"> 20
+</span><span class="lnt"> 21
+</span><span class="lnt"> 22
+</span><span class="lnt"> 23
+</span><span class="lnt"> 24
+</span><span class="lnt"> 25
+</span><span class="lnt"> 26
+</span><span class="lnt"> 27
+</span><span class="lnt"> 28
+</span><span class="lnt"> 29
+</span><span class="lnt"> 30
+</span><span class="lnt"> 31
+</span><span class="lnt"> 32
+</span><span class="lnt"> 33
+</span><span class="lnt"> 34
+</span><span class="lnt"> 35
+</span><span class="lnt"> 36
+</span><span class="lnt"> 37
+</span><span class="lnt"> 38
+</span><span class="lnt"> 39
+</span><span class="lnt"> 40
+</span><span class="lnt"> 41
+</span><span class="lnt"> 42
+</span><span class="lnt"> 43
+</span><span class="lnt"> 44
+</span><span class="lnt"> 45
+</span><span class="lnt"> 46
+</span><span class="lnt"> 47
+</span><span class="lnt"> 48
+</span><span class="lnt"> 49
+</span><span class="lnt"> 50
+</span><span class="lnt"> 51
+</span><span class="lnt"> 52
+</span><span class="lnt"> 53
+</span><span class="lnt"> 54
+</span><span class="lnt"> 55
+</span><span class="lnt"> 56
+</span><span class="lnt"> 57
+</span><span class="lnt"> 58
+</span><span class="lnt"> 59
+</span><span class="lnt"> 60
+</span><span class="lnt"> 61
+</span><span class="lnt"> 62
+</span><span class="lnt"> 63
+</span><span class="lnt"> 64
+</span><span class="lnt"> 65
+</span><span class="lnt"> 66
+</span><span class="lnt"> 67
+</span><span class="lnt"> 68
+</span><span class="lnt"> 69
+</span><span class="lnt"> 70
+</span><span class="lnt"> 71
+</span><span class="lnt"> 72
+</span><span class="lnt"> 73
+</span><span class="lnt"> 74
+</span><span class="lnt"> 75
+</span><span class="lnt"> 76
+</span><span class="lnt"> 77
+</span><span class="lnt"> 78
+</span><span class="lnt"> 79
+</span><span class="lnt"> 80
+</span><span class="lnt"> 81
+</span><span class="lnt"> 82
+</span><span class="lnt"> 83
+</span><span class="lnt"> 84
+</span><span class="lnt"> 85
+</span><span class="lnt"> 86
+</span><span class="lnt"> 87
+</span><span class="lnt"> 88
+</span><span class="lnt"> 89
+</span><span class="lnt"> 90
+</span><span class="lnt"> 91
+</span><span class="lnt"> 92
+</span><span class="lnt"> 93
+</span><span class="lnt"> 94
+</span><span class="lnt"> 95
+</span><span class="lnt"> 96
+</span><span class="lnt"> 97
+</span><span class="lnt"> 98
+</span><span class="lnt"> 99
+</span><span class="lnt">100
+</span><span class="lnt">101
+</span><span class="lnt">102
+</span><span class="lnt">103
+</span><span class="lnt">104
+</span><span class="lnt">105
+</span><span class="lnt">106
+</span><span class="lnt">107
+</span><span class="lnt">108
+</span><span class="lnt">109
+</span><span class="lnt">110
+</span><span class="lnt">111
+</span><span class="lnt">112
+</span><span class="lnt">113
+</span><span class="lnt">114
+</span><span class="lnt">115
+</span><span class="lnt">116
+</span><span class="lnt">117
+</span><span class="lnt">118
+</span><span class="lnt">119
+</span><span class="lnt">120
+</span><span class="lnt">121
+</span><span class="lnt">122
+</span><span class="lnt">123
+</span><span class="lnt">124
+</span><span class="lnt">125
+</span><span class="lnt">126
+</span><span class="lnt">127
+</span><span class="lnt">128
+</span><span class="lnt">129
+</span><span class="lnt">130
+</span><span class="lnt">131
+</span><span class="lnt">132
+</span><span class="lnt">133
+</span><span class="lnt">134
+</span><span class="lnt">135
+</span><span class="lnt">136
+</span><span class="lnt">137
+</span><span class="lnt">138
+</span><span class="lnt">139
+</span><span class="lnt">140
+</span><span class="lnt">141
+</span><span class="lnt">142
+</span><span class="lnt">143
+</span><span class="lnt">144
+</span><span class="lnt">145
+</span><span class="lnt">146
+</span><span class="lnt">147
+</span><span class="lnt">148
+</span><span class="lnt">149
+</span><span class="lnt">150
+</span><span class="lnt">151
+</span><span class="lnt">152
+</span><span class="lnt">153
+</span><span class="lnt">154
+</span><span class="lnt">155
+</span><span class="lnt">156
+</span><span class="lnt">157
+</span><span class="lnt">158
+</span><span class="lnt">159
+</span><span class="lnt">160
+</span><span class="lnt">161
+</span><span class="lnt">162
+</span><span class="lnt">163
+</span><span class="lnt">164
+</span><span class="lnt">165
+</span><span class="lnt">166
+</span><span class="lnt">167
+</span><span class="lnt">168
+</span><span class="lnt">169
+</span><span class="lnt">170
+</span><span class="lnt">171
+</span><span class="lnt">172
+</span><span class="lnt">173
+</span><span class="lnt">174
+</span><span class="lnt">175
+</span><span class="lnt">176
+</span><span class="lnt">177
+</span><span class="lnt">178
+</span><span class="lnt">179
+</span><span class="lnt">180
+</span><span class="lnt">181
+</span><span class="lnt">182
+</span><span class="lnt">183
+</span><span class="lnt">184
+</span><span class="lnt">185
+</span><span class="lnt">186
+</span><span class="lnt">187
+</span><span class="lnt">188
+</span><span class="lnt">189
+</span><span class="lnt">190
+</span><span class="lnt">191
+</span><span class="lnt">192
+</span><span class="lnt">193
+</span><span class="lnt">194
+</span><span class="lnt">195
+</span><span class="lnt">196
+</span><span class="lnt">197
+</span><span class="lnt">198
+</span><span class="lnt">199
+</span><span class="lnt">200
+</span><span class="lnt">201
+</span><span class="lnt">202
+</span><span class="lnt">203
+</span><span class="lnt">204
+</span><span class="lnt">205
+</span><span class="lnt">206
+</span><span class="lnt">207
+</span><span class="lnt">208
+</span><span class="lnt">209
+</span><span class="lnt">210
+</span><span class="lnt">211
+</span><span class="lnt">212
+</span><span class="lnt">213
+</span><span class="lnt">214
+</span><span class="lnt">215
+</span><span class="lnt">216
+</span><span class="lnt">217
+</span><span class="lnt">218
+</span><span class="lnt">219
+</span><span class="lnt">220
+</span><span class="lnt">221
+</span><span class="lnt">222
+</span><span class="lnt">223
+</span><span class="lnt">224
+</span><span class="lnt">225
+</span><span class="lnt">226
+</span><span class="lnt">227
+</span><span class="lnt">228
+</span><span class="lnt">229
+</span><span class="lnt">230
+</span><span class="lnt">231
+</span><span class="lnt">232
+</span><span class="lnt">233
+</span><span class="lnt">234
+</span><span class="lnt">235
+</span><span class="lnt">236
+</span><span class="lnt">237
+</span><span class="lnt">238
+</span><span class="lnt">239
+</span><span class="lnt">240
+</span><span class="lnt">241
+</span><span class="lnt">242
+</span><span class="lnt">243
+</span><span class="lnt">244
+</span><span class="lnt">245
+</span><span class="lnt">246
+</span><span class="lnt">247
+</span><span class="lnt">248
+</span><span class="lnt">249
+</span><span class="lnt">250
+</span><span class="lnt">251
+</span><span class="lnt">252
+</span><span class="lnt">253
+</span><span class="lnt">254
+</span><span class="lnt">255
+</span><span class="lnt">256
+</span><span class="lnt">257
+</span><span class="lnt">258
+</span><span class="lnt">259
+</span><span class="lnt">260
+</span><span class="lnt">261
+</span><span class="lnt">262
+</span><span class="lnt">263
+</span><span class="lnt">264
+</span><span class="lnt">265
+</span><span class="lnt">266
+</span><span class="lnt">267
+</span><span class="lnt">268
+</span><span class="lnt">269
+</span><span class="lnt">270
+</span><span class="lnt">271
+</span><span class="lnt">272
+</span><span class="lnt">273
+</span><span class="lnt">274
+</span><span class="lnt">275
+</span><span class="lnt">276
+</span><span class="lnt">277
+</span><span class="lnt">278
+</span><span class="lnt">279
+</span><span class="lnt">280
+</span><span class="lnt">281
+</span><span class="lnt">282
+</span><span class="lnt">283
+</span><span class="lnt">284
+</span><span class="lnt">285
+</span><span class="lnt">286
+</span><span class="lnt">287
+</span><span class="lnt">288
+</span><span class="lnt">289
+</span><span class="lnt">290
+</span><span class="lnt">291
+</span><span class="lnt">292
+</span><span class="lnt">293
+</span><span class="lnt">294
+</span><span class="lnt">295
+</span><span class="lnt">296
+</span><span class="lnt">297
+</span><span class="lnt">298
+</span><span class="lnt">299
+</span><span class="lnt">300
+</span><span class="lnt">301
+</span><span class="lnt">302
+</span><span class="lnt">303
+</span><span class="lnt">304
+</span><span class="lnt">305
+</span><span class="lnt">306
+</span><span class="lnt">307
+</span><span class="lnt">308
+</span><span class="lnt">309
+</span><span class="lnt">310
+</span><span class="lnt">311
+</span><span class="lnt">312
+</span><span class="lnt">313
+</span><span class="lnt">314
+</span><span class="lnt">315
+</span><span class="lnt">316
+</span><span class="lnt">317
+</span><span class="lnt">318
+</span><span class="lnt">319
+</span><span class="lnt">320
+</span><span class="lnt">321
+</span><span class="lnt">322
+</span><span class="lnt">323
+</span><span class="lnt">324
+</span><span class="lnt">325
+</span><span class="lnt">326
+</span><span class="lnt">327
+</span><span class="lnt">328
+</span><span class="lnt">329
+</span><span class="lnt">330
+</span><span class="lnt">331
+</span><span class="lnt">332
+</span><span class="lnt">333
+</span><span class="lnt">334
+</span><span class="lnt">335
+</span><span class="lnt">336
+</span><span class="lnt">337
+</span><span class="lnt">338
+</span><span class="lnt">339
+</span><span class="lnt">340
+</span><span class="lnt">341
+</span><span class="lnt">342
+</span><span class="lnt">343
+</span><span class="lnt">344
+</span><span class="lnt">345
+</span><span class="lnt">346
+</span><span class="lnt">347
+</span><span class="lnt">348
+</span><span class="lnt">349
+</span><span class="lnt">350
+</span><span class="lnt">351
+</span><span class="lnt">352
+</span><span class="lnt">353
+</span><span class="lnt">354
+</span><span class="lnt">355
+</span><span class="lnt">356
+</span><span class="lnt">357
+</span><span class="lnt">358
+</span><span class="lnt">359
+</span><span class="lnt">360
+</span><span class="lnt">361
+</span><span class="lnt">362
+</span><span class="lnt">363
+</span><span class="lnt">364
+</span><span class="lnt">365
+</span><span class="lnt">366
+</span><span class="lnt">367
+</span><span class="lnt">368
+</span><span class="lnt">369
+</span><span class="lnt">370
+</span><span class="lnt">371
+</span><span class="lnt">372
+</span><span class="lnt">373
+</span><span class="lnt">374
+</span><span class="lnt">375
+</span><span class="lnt">376
+</span><span class="lnt">377
+</span><span class="lnt">378
+</span><span class="lnt">379
+</span><span class="lnt">380
+</span><span class="lnt">381
+</span><span class="lnt">382
+</span><span class="lnt">383
+</span><span class="lnt">384
+</span><span class="lnt">385
+</span><span class="lnt">386
+</span><span class="lnt">387
+</span><span class="lnt">388
+</span><span class="lnt">389
+</span><span class="lnt">390
+</span><span class="lnt">391
+</span><span class="lnt">392
+</span><span class="lnt">393
+</span><span class="lnt">394
+</span><span class="lnt">395
+</span><span class="lnt">396
+</span><span class="lnt">397
+</span><span class="lnt">398
+</span><span class="lnt">399
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">nacos</span>
+
+<span class="kn">import</span> <span class="p">(</span>
+	<span class="s">&#34;context&#34;</span>
+	<span class="s">&#34;errors&#34;</span>
+	<span class="s">&#34;fmt&#34;</span>
+	<span class="s">&#34;github.com/cenkalti/backoff/v4&#34;</span>
+	<span class="s">&#34;github.com/nacos-group/nacos-sdk-go/clients&#34;</span>
+	<span class="s">&#34;github.com/nacos-group/nacos-sdk-go/clients/naming_client&#34;</span>
+	<span class="s">&#34;github.com/nacos-group/nacos-sdk-go/common/constant&#34;</span>
+	<span class="s">&#34;github.com/nacos-group/nacos-sdk-go/common/logger&#34;</span>
+	<span class="s">&#34;github.com/nacos-group/nacos-sdk-go/model&#34;</span>
+	<span class="s">&#34;github.com/nacos-group/nacos-sdk-go/vo&#34;</span>
+	<span class="s">&#34;github.com/traefik/traefik/v2/pkg/config/dynamic&#34;</span>
+	<span class="s">&#34;github.com/traefik/traefik/v2/pkg/job&#34;</span>
+	<span class="s">&#34;github.com/traefik/traefik/v2/pkg/log&#34;</span>
+	<span class="s">&#34;github.com/traefik/traefik/v2/pkg/provider/file&#34;</span>
+	<span class="s">&#34;github.com/traefik/traefik/v2/pkg/safe&#34;</span>
+	<span class="s">&#34;gopkg.in/fsnotify.v1&#34;</span>
+	<span class="s">&#34;os&#34;</span>
+	<span class="s">&#34;path/filepath&#34;</span>
+	<span class="s">&#34;strconv&#34;</span>
+	<span class="s">&#34;strings&#34;</span>
+	<span class="s">&#34;time&#34;</span>
+<span class="p">)</span>
+
+<span class="kd">type</span> <span class="nx">Provider</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">File</span> <span class="o">*</span><span class="nx">FileConfig</span> <span class="s">`description:&#34;Nacos file settings&#34; json:&#34;file,omitempty&#34; toml:&#34;file,omitempty&#34; yaml:&#34;file,omitempty&#34; export:&#34;true&#34;`</span>
+	<span class="nx">EndPoint</span> <span class="o">*</span><span class="nx">EndpointConfig</span> <span class="s">`description:&#34;Nacos endpoint settings&#34; json:&#34;endpoint,omitempty&#34; toml:&#34;endpoint,omitempty&#34; yaml:&#34;endpoint,omitempty&#34; export:&#34;true&#34;`</span>
+
+	<span class="nx">client</span> <span class="nx">naming_client</span><span class="p">.</span><span class="nx">INamingClient</span>
+	<span class="nx">fileConfig</span> <span class="o">*</span><span class="nx">dynamic</span><span class="p">.</span><span class="nx">Configuration</span>
+	<span class="nx">nacosServices</span> <span class="o">*</span><span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="o">*</span><span class="nx">dynamic</span><span class="p">.</span><span class="nx">Service</span>
+<span class="p">}</span>
+
+<span class="kd">type</span> <span class="nx">FileConfig</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">Directory</span>                 <span class="kt">string</span> <span class="s">`description:&#34;Load dynamic configuration from one or more .toml or .yml files in a directory.&#34; json:&#34;directory,omitempty&#34; toml:&#34;directory,omitempty&#34; yaml:&#34;directory,omitempty&#34; export:&#34;true&#34;`</span>
+	<span class="nx">Watch</span>                     <span class="kt">bool</span>   <span class="s">`description:&#34;Watch provider.&#34; json:&#34;watch,omitempty&#34; toml:&#34;watch,omitempty&#34; yaml:&#34;watch,omitempty&#34; export:&#34;true&#34;`</span>
+	<span class="nx">Filename</span>                  <span class="kt">string</span> <span class="s">`description:&#34;Load dynamic configuration from a file.&#34; json:&#34;filename,omitempty&#34; toml:&#34;filename,omitempty&#34; yaml:&#34;filename,omitempty&#34; export:&#34;true&#34;`</span>
+	<span class="nx">DebugLogGeneratedTemplate</span> <span class="kt">bool</span>   <span class="s">`description:&#34;Enable debug logging of generated configuration template.&#34; json:&#34;debugLogGeneratedTemplate,omitempty&#34; toml:&#34;debugLogGeneratedTemplate,omitempty&#34; yaml:&#34;debugLogGeneratedTemplate,omitempty&#34; export:&#34;true&#34;`</span>
+<span class="p">}</span>
+
+<span class="kd">type</span> <span class="nx">EndpointConfig</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">Host</span>          <span class="kt">string</span>                  <span class="s">`description:&#34;The host of the Nacos server&#34; json:&#34;host,omitempty&#34; toml:&#34;host,omitempty&#34; yaml:&#34;host,omitempty&#34; export:&#34;true&#34;`</span>
+	<span class="nx">Port</span>          <span class="kt">uint64</span>                  <span class="s">`description:&#34;The port of the Nacos server&#34; json:&#34;port,omitempty&#34; toml:&#34;port,omitempty&#34; yaml:&#34;port,omitempty&#34; export:&#34;true&#34;`</span>
+	<span class="nx">Group</span>         <span class="kt">string</span>                  <span class="s">`description:&#34;The group of the Nacos server&#34; json:&#34;group,omitempty&#34; toml:&#34;group,omitempty&#34; yaml:&#34;group,omitempty&#34; export:&#34;true&#34;`</span>
+	<span class="nx">LogDir</span>         <span class="kt">string</span>                  <span class="s">`description:&#34;The logDir of the Nacos server&#34; json:&#34;logDir,omitempty&#34; toml:&#34;logDir,omitempty&#34; yaml:&#34;logDir,omitempty&#34; export:&#34;true&#34;`</span>
+	<span class="nx">CacheDir</span>         <span class="kt">string</span>                <span class="s">`description:&#34;The cacheDir of the Nacos server&#34; json:&#34;cacheDir,omitempty&#34; toml:&#34;cacheDir,omitempty&#34; yaml:&#34;cacheDir,omitempty&#34; export:&#34;true&#34;`</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">p</span> <span class="o">*</span><span class="nx">Provider</span><span class="p">)</span> <span class="nf">Init</span><span class="p">()</span> <span class="kt">error</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="kc">nil</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">p</span> <span class="o">*</span><span class="nx">Provider</span><span class="p">)</span> <span class="nf">Provide</span><span class="p">(</span><span class="nx">configurationChan</span> <span class="kd">chan</span><span class="o">&lt;-</span> <span class="nx">dynamic</span><span class="p">.</span><span class="nx">Message</span><span class="p">,</span> <span class="nx">pool</span> <span class="o">*</span><span class="nx">safe</span><span class="p">.</span><span class="nx">Pool</span><span class="p">)</span> <span class="kt">error</span> <span class="p">{</span>
+	<span class="c1">//logger := log.WithoutContext().WithField(log.ProviderName, &#34;nacos&#34;)
+</span><span class="c1"></span>
+	<span class="nx">_</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">p</span><span class="p">.</span><span class="nf">fileProvide</span><span class="p">(</span><span class="nx">configurationChan</span><span class="p">,</span> <span class="nx">pool</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+
+	<span class="nx">p</span><span class="p">.</span><span class="nx">client</span><span class="p">,</span> <span class="nx">err</span> <span class="p">=</span> <span class="nf">createClient</span><span class="p">(</span><span class="nx">p</span><span class="p">.</span><span class="nx">EndPoint</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">fmt</span><span class="p">.</span><span class="nf">Errorf</span><span class="p">(</span><span class="s">&#34;error create nacos client, %w&#34;</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+	<span class="p">}</span>
+
+	<span class="nx">_</span><span class="p">,</span> <span class="nx">err</span> <span class="p">=</span> <span class="nx">p</span><span class="p">.</span><span class="nf">nacosProvide</span><span class="p">(</span><span class="nx">configurationChan</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">configuration</span> <span class="o">:=</span> <span class="nx">p</span><span class="p">.</span><span class="nf">buildConfiguration</span><span class="p">()</span>
+	<span class="nf">sendConfigToChannel</span><span class="p">(</span><span class="nx">configurationChan</span><span class="p">,</span> <span class="nx">configuration</span><span class="p">)</span>
+
+	<span class="nx">pool</span><span class="p">.</span><span class="nf">GoCtx</span><span class="p">(</span><span class="kd">func</span><span class="p">(</span><span class="nx">routineCtx</span> <span class="nx">context</span><span class="p">.</span><span class="nx">Context</span><span class="p">)</span> <span class="p">{</span>
+		<span class="nx">ctxLog</span> <span class="o">:=</span> <span class="nx">log</span><span class="p">.</span><span class="nf">With</span><span class="p">(</span><span class="nx">routineCtx</span><span class="p">,</span> <span class="nx">log</span><span class="p">.</span><span class="nf">Str</span><span class="p">(</span><span class="nx">log</span><span class="p">.</span><span class="nx">ProviderName</span><span class="p">,</span> <span class="s">&#34;nacos&#34;</span><span class="p">))</span>
+		<span class="nx">logger</span> <span class="o">:=</span> <span class="nx">log</span><span class="p">.</span><span class="nf">FromContext</span><span class="p">(</span><span class="nx">ctxLog</span><span class="p">)</span>
+
+		<span class="nx">operation</span> <span class="o">:=</span> <span class="kd">func</span><span class="p">()</span> <span class="kt">error</span> <span class="p">{</span>
+			<span class="nx">ticker</span> <span class="o">:=</span> <span class="nx">time</span><span class="p">.</span><span class="nf">NewTicker</span><span class="p">(</span><span class="mi">15</span> <span class="o">*</span> <span class="nx">time</span><span class="p">.</span><span class="nx">Second</span><span class="p">)</span>
+
+			<span class="k">for</span> <span class="p">{</span>
+				<span class="k">select</span> <span class="p">{</span>
+				<span class="k">case</span> <span class="o">&lt;-</span><span class="nx">ticker</span><span class="p">.</span><span class="nx">C</span><span class="p">:</span>
+					<span class="nx">_</span><span class="p">,</span> <span class="nx">err</span> <span class="p">=</span> <span class="nx">p</span><span class="p">.</span><span class="nf">nacosProvide</span><span class="p">(</span><span class="nx">configurationChan</span><span class="p">)</span>
+					<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+						<span class="nx">logger</span><span class="p">.</span><span class="nf">Errorf</span><span class="p">(</span><span class="s">&#34;error get nacos service data, %v&#34;</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+						<span class="k">return</span> <span class="nx">err</span>
+					<span class="p">}</span>
+					<span class="nx">configuration</span> <span class="o">:=</span> <span class="nx">p</span><span class="p">.</span><span class="nf">buildConfiguration</span><span class="p">()</span>
+					<span class="nf">sendConfigToChannel</span><span class="p">(</span><span class="nx">configurationChan</span><span class="p">,</span> <span class="nx">configuration</span><span class="p">)</span>
+				<span class="k">case</span> <span class="o">&lt;-</span><span class="nx">routineCtx</span><span class="p">.</span><span class="nf">Done</span><span class="p">():</span>
+					<span class="nx">ticker</span><span class="p">.</span><span class="nf">Stop</span><span class="p">()</span>
+					<span class="k">return</span> <span class="kc">nil</span>
+				<span class="p">}</span>
+			<span class="p">}</span>
+		<span class="p">}</span>
+
+		<span class="nx">notify</span> <span class="o">:=</span> <span class="kd">func</span><span class="p">(</span><span class="nx">err</span> <span class="kt">error</span><span class="p">,</span> <span class="nx">time</span> <span class="nx">time</span><span class="p">.</span><span class="nx">Duration</span><span class="p">)</span> <span class="p">{</span>
+			<span class="nx">logger</span><span class="p">.</span><span class="nf">Errorf</span><span class="p">(</span><span class="s">&#34;Provider connection error %+v, retrying in %s&#34;</span><span class="p">,</span> <span class="nx">err</span><span class="p">,</span> <span class="nx">time</span><span class="p">)</span>
+		<span class="p">}</span>
+
+		<span class="nx">err</span> <span class="o">:=</span> <span class="nx">backoff</span><span class="p">.</span><span class="nf">RetryNotify</span><span class="p">(</span><span class="nx">safe</span><span class="p">.</span><span class="nf">OperationWithRecover</span><span class="p">(</span><span class="nx">operation</span><span class="p">),</span> <span class="nx">backoff</span><span class="p">.</span><span class="nf">WithContext</span><span class="p">(</span><span class="nx">job</span><span class="p">.</span><span class="nf">NewBackOff</span><span class="p">(</span><span class="nx">backoff</span><span class="p">.</span><span class="nf">NewExponentialBackOff</span><span class="p">()),</span> <span class="nx">ctxLog</span><span class="p">),</span> <span class="nx">notify</span><span class="p">)</span>
+		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="nx">logger</span><span class="p">.</span><span class="nf">Errorf</span><span class="p">(</span><span class="s">&#34;Cannot connect to nacos server %+v&#34;</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+		<span class="p">}</span>
+	<span class="p">})</span>
+
+	<span class="k">return</span> <span class="kc">nil</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">p</span> <span class="o">*</span><span class="nx">Provider</span><span class="p">)</span> <span class="nf">buildConfiguration</span><span class="p">()</span> <span class="o">*</span><span class="nx">dynamic</span><span class="p">.</span><span class="nx">Configuration</span> <span class="p">{</span>
+	<span class="nx">config</span> <span class="o">:=</span> <span class="nx">p</span><span class="p">.</span><span class="nx">fileConfig</span>
+	<span class="k">for</span> <span class="nx">k</span><span class="p">,</span> <span class="nx">v</span> <span class="o">:=</span> <span class="k">range</span> <span class="o">*</span><span class="nx">p</span><span class="p">.</span><span class="nx">nacosServices</span> <span class="p">{</span>
+		<span class="nx">config</span><span class="p">.</span><span class="nx">HTTP</span><span class="p">.</span><span class="nx">Services</span><span class="p">[</span><span class="nx">k</span><span class="p">]</span> <span class="p">=</span> <span class="nx">v</span>
+	<span class="p">}</span>
+
+	<span class="k">return</span> <span class="nx">config</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">p</span> <span class="o">*</span><span class="nx">Provider</span><span class="p">)</span> <span class="nf">nacosProvide</span><span class="p">(</span><span class="nx">configurationChan</span> <span class="kd">chan</span><span class="o">&lt;-</span> <span class="nx">dynamic</span><span class="p">.</span><span class="nx">Message</span><span class="p">)</span> <span class="p">(</span><span class="o">*</span><span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="o">*</span><span class="nx">dynamic</span><span class="p">.</span><span class="nx">Service</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">services</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">p</span><span class="p">.</span><span class="nf">fetchServices</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
+	<span class="p">}</span>
+
+	<span class="nx">serviceMap</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="o">*</span><span class="nx">dynamic</span><span class="p">.</span><span class="nx">Service</span><span class="p">)</span>
+	<span class="k">for</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">service</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">services</span> <span class="p">{</span>
+		<span class="nx">instances</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">p</span><span class="p">.</span><span class="nx">client</span><span class="p">.</span><span class="nf">SelectAllInstances</span><span class="p">(</span><span class="nx">vo</span><span class="p">.</span><span class="nx">SelectAllInstancesParam</span><span class="p">{</span>
+			<span class="nx">ServiceName</span><span class="p">:</span> <span class="nx">service</span><span class="p">,</span>
+			<span class="nx">GroupName</span><span class="p">:</span>   <span class="nx">p</span><span class="p">.</span><span class="nx">EndPoint</span><span class="p">.</span><span class="nx">Group</span><span class="p">,</span>
+			<span class="c1">//HealthyOnly: true,
+</span><span class="c1"></span>		<span class="p">})</span>
+
+		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="nx">logger</span><span class="p">.</span><span class="nf">Errorf</span><span class="p">(</span><span class="s">&#34;Skip item %s: %v&#34;</span><span class="p">,</span> <span class="nx">service</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+			<span class="k">continue</span>
+		<span class="p">}</span>
+		
+		<span class="nx">err</span> <span class="p">=</span> <span class="nx">p</span><span class="p">.</span><span class="nx">client</span><span class="p">.</span><span class="nf">Subscribe</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">vo</span><span class="p">.</span><span class="nx">SubscribeParam</span><span class="p">{</span>
+			<span class="nx">ServiceName</span><span class="p">:</span> <span class="nx">service</span><span class="p">,</span>
+			<span class="nx">GroupName</span><span class="p">:</span>   <span class="nx">p</span><span class="p">.</span><span class="nx">EndPoint</span><span class="p">.</span><span class="nx">Group</span><span class="p">,</span>
+			<span class="nx">SubscribeCallback</span><span class="p">:</span> <span class="kd">func</span><span class="p">(</span><span class="nx">services</span> <span class="p">[]</span><span class="nx">model</span><span class="p">.</span><span class="nx">SubscribeService</span><span class="p">,</span> <span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+				<span class="nx">p</span><span class="p">.</span><span class="nf">nacosCallback</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">services</span><span class="p">,</span> <span class="nx">configurationChan</span><span class="p">)</span>
+			<span class="p">},</span>
+		<span class="p">})</span>
+
+		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="nx">logger</span><span class="p">.</span><span class="nf">Errorf</span><span class="p">(</span><span class="s">&#34;Skip item %s: %v&#34;</span><span class="p">,</span> <span class="nx">service</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+			<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
+		<span class="p">}</span>
+
+		<span class="kd">var</span> <span class="nx">servers</span> <span class="p">[]</span><span class="nx">dynamic</span><span class="p">.</span><span class="nx">Server</span>
+		<span class="k">for</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">instance</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">instances</span> <span class="p">{</span>
+			<span class="nx">server</span> <span class="o">:=</span> <span class="nx">dynamic</span><span class="p">.</span><span class="nx">Server</span><span class="p">{</span>
+				<span class="nx">URL</span><span class="p">:</span> <span class="s">&#34;http://&#34;</span> <span class="o">+</span> <span class="nx">instance</span><span class="p">.</span><span class="nx">Ip</span> <span class="o">+</span> <span class="s">&#34;:&#34;</span> <span class="o">+</span> <span class="nx">strconv</span><span class="p">.</span><span class="nf">FormatUint</span><span class="p">(</span><span class="nx">instance</span><span class="p">.</span><span class="nx">Port</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
+			<span class="p">}</span>
+			<span class="nx">servers</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">servers</span><span class="p">,</span> <span class="nx">server</span><span class="p">)</span>
+		<span class="p">}</span>
+
+		<span class="nx">b</span> <span class="o">:=</span> <span class="kc">true</span>
+		<span class="nx">serviceMap</span><span class="p">[</span><span class="nx">service</span><span class="p">]</span> <span class="p">=</span> <span class="o">&amp;</span><span class="nx">dynamic</span><span class="p">.</span><span class="nx">Service</span><span class="p">{</span>
+			<span class="nx">LoadBalancer</span><span class="p">:</span> <span class="o">&amp;</span><span class="nx">dynamic</span><span class="p">.</span><span class="nx">ServersLoadBalancer</span><span class="p">{</span>
+				<span class="nx">Sticky</span><span class="p">:</span>             <span class="kc">nil</span><span class="p">,</span>
+				<span class="nx">Servers</span><span class="p">:</span>            <span class="nx">servers</span><span class="p">,</span>
+				<span class="nx">HealthCheck</span><span class="p">:</span>        <span class="kc">nil</span><span class="p">,</span>
+				<span class="nx">PassHostHeader</span><span class="p">:</span>     <span class="o">&amp;</span><span class="nx">b</span><span class="p">,</span>
+				<span class="nx">ResponseForwarding</span><span class="p">:</span> <span class="kc">nil</span><span class="p">,</span>
+			<span class="p">},</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+
+	<span class="nx">p</span><span class="p">.</span><span class="nx">nacosServices</span> <span class="p">=</span> <span class="o">&amp;</span><span class="nx">serviceMap</span>
+
+	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">serviceMap</span><span class="p">,</span> <span class="kc">nil</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">p</span> <span class="o">*</span><span class="nx">Provider</span><span class="p">)</span> <span class="nf">nacosCallback</span><span class="p">(</span><span class="nx">services</span> <span class="o">*</span><span class="p">[]</span><span class="nx">model</span><span class="p">.</span><span class="nx">SubscribeService</span><span class="p">,</span> <span class="nx">configurationChan</span> <span class="kd">chan</span><span class="o">&lt;-</span> <span class="nx">dynamic</span><span class="p">.</span><span class="nx">Message</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">serviceSet</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kt">bool</span><span class="p">)</span>
+	<span class="k">for</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">service</span> <span class="o">:=</span> <span class="k">range</span> <span class="o">*</span><span class="nx">services</span> <span class="p">{</span>
+		<span class="nx">nameSplit</span> <span class="o">:=</span> <span class="nx">strings</span><span class="p">.</span><span class="nf">Split</span><span class="p">(</span><span class="nx">service</span><span class="p">.</span><span class="nx">ServiceName</span><span class="p">,</span> <span class="s">&#34;@&#34;</span><span class="p">)</span>
+		<span class="nx">serviceName</span> <span class="o">:=</span> <span class="nx">nameSplit</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+
+		<span class="nx">serviceSet</span><span class="p">[</span><span class="nx">serviceName</span><span class="p">]</span> <span class="p">=</span> <span class="kc">true</span>
+	<span class="p">}</span>
+
+	<span class="k">for</span> <span class="nx">s</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">serviceSet</span> <span class="p">{</span>
+		<span class="nx">nacosServices</span> <span class="o">:=</span> <span class="o">*</span><span class="nx">p</span><span class="p">.</span><span class="nx">nacosServices</span>
+		<span class="nx">serviceName</span> <span class="o">:=</span> <span class="nx">s</span>
+
+		<span class="nx">instances</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">p</span><span class="p">.</span><span class="nx">client</span><span class="p">.</span><span class="nf">SelectInstances</span><span class="p">(</span><span class="nx">vo</span><span class="p">.</span><span class="nx">SelectInstancesParam</span><span class="p">{</span>
+			<span class="nx">ServiceName</span><span class="p">:</span> <span class="nx">serviceName</span><span class="p">,</span>
+			<span class="nx">GroupName</span><span class="p">:</span>   <span class="nx">p</span><span class="p">.</span><span class="nx">EndPoint</span><span class="p">.</span><span class="nx">Group</span><span class="p">,</span>
+			<span class="nx">HealthyOnly</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+		<span class="p">})</span>
+
+		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="nx">logger</span><span class="p">.</span><span class="nf">Errorf</span><span class="p">(</span><span class="s">&#34;Skip item %s: %v&#34;</span><span class="p">,</span> <span class="nx">s</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+			<span class="k">continue</span>
+		<span class="p">}</span>
+
+		<span class="kd">var</span> <span class="nx">servers</span> <span class="p">[]</span><span class="nx">dynamic</span><span class="p">.</span><span class="nx">Server</span>
+		<span class="k">for</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">instance</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">instances</span> <span class="p">{</span>
+			<span class="nx">server</span> <span class="o">:=</span> <span class="nx">dynamic</span><span class="p">.</span><span class="nx">Server</span><span class="p">{</span>
+				<span class="nx">URL</span><span class="p">:</span> <span class="s">&#34;http://&#34;</span> <span class="o">+</span> <span class="nx">instance</span><span class="p">.</span><span class="nx">Ip</span> <span class="o">+</span> <span class="s">&#34;:&#34;</span> <span class="o">+</span> <span class="nx">strconv</span><span class="p">.</span><span class="nf">FormatUint</span><span class="p">(</span><span class="nx">instance</span><span class="p">.</span><span class="nx">Port</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
+			<span class="p">}</span>
+			<span class="nx">servers</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">servers</span><span class="p">,</span> <span class="nx">server</span><span class="p">)</span>
+		<span class="p">}</span>
+
+		<span class="nx">serviceLB</span> <span class="o">:=</span> <span class="nx">nacosServices</span><span class="p">[</span><span class="nx">serviceName</span><span class="p">]</span>
+		<span class="k">if</span> <span class="nx">serviceLB</span> <span class="o">==</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="nx">b</span> <span class="o">:=</span> <span class="kc">true</span>
+			<span class="nx">nacosServices</span><span class="p">[</span><span class="nx">serviceName</span><span class="p">]</span> <span class="p">=</span> <span class="o">&amp;</span><span class="nx">dynamic</span><span class="p">.</span><span class="nx">Service</span><span class="p">{</span>
+				<span class="nx">LoadBalancer</span><span class="p">:</span> <span class="o">&amp;</span><span class="nx">dynamic</span><span class="p">.</span><span class="nx">ServersLoadBalancer</span><span class="p">{</span>
+					<span class="nx">Sticky</span><span class="p">:</span>             <span class="kc">nil</span><span class="p">,</span>
+					<span class="nx">Servers</span><span class="p">:</span>            <span class="nx">servers</span><span class="p">,</span>
+					<span class="nx">HealthCheck</span><span class="p">:</span>        <span class="kc">nil</span><span class="p">,</span>
+					<span class="nx">PassHostHeader</span><span class="p">:</span>     <span class="o">&amp;</span><span class="nx">b</span><span class="p">,</span>
+					<span class="nx">ResponseForwarding</span><span class="p">:</span> <span class="kc">nil</span><span class="p">,</span>
+				<span class="p">},</span>
+			<span class="p">}</span>
+		<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+			<span class="nx">nacosServices</span><span class="p">[</span><span class="nx">serviceName</span><span class="p">].</span><span class="nx">LoadBalancer</span><span class="p">.</span><span class="nx">Servers</span> <span class="p">=</span> <span class="nx">servers</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+
+	<span class="nx">configuration</span> <span class="o">:=</span> <span class="nx">p</span><span class="p">.</span><span class="nf">buildConfiguration</span><span class="p">()</span>
+	<span class="nf">sendConfigToChannel</span><span class="p">(</span><span class="nx">configurationChan</span><span class="p">,</span> <span class="nx">configuration</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">p</span> <span class="o">*</span><span class="nx">Provider</span><span class="p">)</span> <span class="nf">fileProvide</span><span class="p">(</span><span class="nx">configurationChan</span> <span class="kd">chan</span><span class="o">&lt;-</span> <span class="nx">dynamic</span><span class="p">.</span><span class="nx">Message</span><span class="p">,</span> <span class="nx">pool</span> <span class="o">*</span><span class="nx">safe</span><span class="p">.</span><span class="nx">Pool</span><span class="p">)</span> <span class="p">(</span><span class="o">*</span><span class="nx">dynamic</span><span class="p">.</span><span class="nx">Configuration</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">fileProvider</span> <span class="o">:=</span> <span class="nx">file</span><span class="p">.</span><span class="nx">Provider</span><span class="p">{</span>
+		<span class="nx">Directory</span><span class="p">:</span> <span class="nx">p</span><span class="p">.</span><span class="nx">File</span><span class="p">.</span><span class="nx">Directory</span><span class="p">,</span>
+		<span class="nx">Watch</span><span class="p">:</span> <span class="nx">p</span><span class="p">.</span><span class="nx">File</span><span class="p">.</span><span class="nx">Watch</span><span class="p">,</span>
+		<span class="nx">Filename</span><span class="p">:</span> <span class="nx">p</span><span class="p">.</span><span class="nx">File</span><span class="p">.</span><span class="nx">Filename</span><span class="p">,</span>
+		<span class="nx">DebugLogGeneratedTemplate</span><span class="p">:</span> <span class="nx">p</span><span class="p">.</span><span class="nx">File</span><span class="p">.</span><span class="nx">DebugLogGeneratedTemplate</span><span class="p">,</span>
+	<span class="p">}</span>
+
+	<span class="nx">fileConfiguration</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">fileProvider</span><span class="p">.</span><span class="nf">BuildConfiguration</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="c1">//fileConfiguration.HTTP.Services = make(map[string]*dynamic.Service)
+</span><span class="c1"></span>	<span class="c1">//fileConfiguration.TCP.Services = make(map[string]*dynamic.TCPService)
+</span><span class="c1"></span>	<span class="c1">//fileConfiguration.UDP.Services = make(map[string]*dynamic.UDPService)
+</span><span class="c1"></span>	<span class="nx">p</span><span class="p">.</span><span class="nx">fileConfig</span> <span class="p">=</span> <span class="nx">fileConfiguration</span>
+
+	<span class="k">if</span> <span class="nx">p</span><span class="p">.</span><span class="nx">File</span><span class="p">.</span><span class="nx">Watch</span> <span class="p">{</span>
+		<span class="kd">var</span> <span class="nx">watchItem</span> <span class="kt">string</span>
+
+		<span class="k">switch</span> <span class="p">{</span>
+		<span class="k">case</span> <span class="nb">len</span><span class="p">(</span><span class="nx">p</span><span class="p">.</span><span class="nx">File</span><span class="p">.</span><span class="nx">Directory</span><span class="p">)</span> <span class="p">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+			<span class="nx">watchItem</span> <span class="p">=</span> <span class="nx">p</span><span class="p">.</span><span class="nx">File</span><span class="p">.</span><span class="nx">Directory</span>
+		<span class="k">case</span> <span class="nb">len</span><span class="p">(</span><span class="nx">p</span><span class="p">.</span><span class="nx">File</span><span class="p">.</span><span class="nx">Filename</span><span class="p">)</span> <span class="p">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+			<span class="nx">watchItem</span> <span class="p">=</span> <span class="nx">filepath</span><span class="p">.</span><span class="nf">Dir</span><span class="p">(</span><span class="nx">p</span><span class="p">.</span><span class="nx">File</span><span class="p">.</span><span class="nx">Filename</span><span class="p">)</span>
+		<span class="k">default</span><span class="p">:</span>
+			<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">errors</span><span class="p">.</span><span class="nf">New</span><span class="p">(</span><span class="s">&#34;error using file configuration provider, neither filename or directory defined&#34;</span><span class="p">)</span>
+		<span class="p">}</span>
+
+		<span class="k">if</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">p</span><span class="p">.</span><span class="nf">addWatcher</span><span class="p">(</span><span class="nx">pool</span><span class="p">,</span> <span class="nx">watchItem</span><span class="p">,</span> <span class="nx">configurationChan</span><span class="p">,</span> <span class="nx">p</span><span class="p">.</span><span class="nx">watcherCallback</span><span class="p">);</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+
+	<span class="k">return</span> <span class="nx">fileConfiguration</span><span class="p">,</span> <span class="kc">nil</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">p</span> <span class="o">*</span><span class="nx">Provider</span><span class="p">)</span> <span class="nf">addWatcher</span><span class="p">(</span><span class="nx">pool</span> <span class="o">*</span><span class="nx">safe</span><span class="p">.</span><span class="nx">Pool</span><span class="p">,</span> <span class="nx">directory</span> <span class="kt">string</span><span class="p">,</span> <span class="nx">configurationChan</span> <span class="kd">chan</span><span class="o">&lt;-</span> <span class="nx">dynamic</span><span class="p">.</span><span class="nx">Message</span><span class="p">,</span> <span class="nx">callback</span> <span class="kd">func</span><span class="p">(</span><span class="kd">chan</span><span class="o">&lt;-</span> <span class="nx">dynamic</span><span class="p">.</span><span class="nx">Message</span><span class="p">,</span> <span class="nx">fsnotify</span><span class="p">.</span><span class="nx">Event</span><span class="p">))</span> <span class="kt">error</span> <span class="p">{</span>
+	<span class="nx">watcher</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">fsnotify</span><span class="p">.</span><span class="nf">NewWatcher</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">fmt</span><span class="p">.</span><span class="nf">Errorf</span><span class="p">(</span><span class="s">&#34;error creating file watcher: %w&#34;</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+	<span class="p">}</span>
+
+	<span class="nx">err</span> <span class="p">=</span> <span class="nx">watcher</span><span class="p">.</span><span class="nf">Add</span><span class="p">(</span><span class="nx">directory</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">fmt</span><span class="p">.</span><span class="nf">Errorf</span><span class="p">(</span><span class="s">&#34;error adding file watcher: %w&#34;</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+	<span class="p">}</span>
+
+	<span class="c1">// Process events
+</span><span class="c1"></span>	<span class="nx">pool</span><span class="p">.</span><span class="nf">GoCtx</span><span class="p">(</span><span class="kd">func</span><span class="p">(</span><span class="nx">ctx</span> <span class="nx">context</span><span class="p">.</span><span class="nx">Context</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">defer</span> <span class="nx">watcher</span><span class="p">.</span><span class="nf">Close</span><span class="p">()</span>
+		<span class="k">for</span> <span class="p">{</span>
+			<span class="k">select</span> <span class="p">{</span>
+			<span class="k">case</span> <span class="o">&lt;-</span><span class="nx">ctx</span><span class="p">.</span><span class="nf">Done</span><span class="p">():</span>
+				<span class="k">return</span>
+			<span class="k">case</span> <span class="nx">evt</span> <span class="o">:=</span> <span class="o">&lt;-</span><span class="nx">watcher</span><span class="p">.</span><span class="nx">Events</span><span class="p">:</span>
+				<span class="k">if</span> <span class="nx">p</span><span class="p">.</span><span class="nx">File</span><span class="p">.</span><span class="nx">Directory</span> <span class="o">==</span> <span class="s">&#34;&#34;</span> <span class="p">{</span>
+					<span class="nx">_</span><span class="p">,</span> <span class="nx">evtFileName</span> <span class="o">:=</span> <span class="nx">filepath</span><span class="p">.</span><span class="nf">Split</span><span class="p">(</span><span class="nx">evt</span><span class="p">.</span><span class="nx">Name</span><span class="p">)</span>
+					<span class="nx">_</span><span class="p">,</span> <span class="nx">confFileName</span> <span class="o">:=</span> <span class="nx">filepath</span><span class="p">.</span><span class="nf">Split</span><span class="p">(</span><span class="nx">p</span><span class="p">.</span><span class="nx">File</span><span class="p">.</span><span class="nx">Filename</span><span class="p">)</span>
+					<span class="k">if</span> <span class="nx">evtFileName</span> <span class="o">==</span> <span class="nx">confFileName</span> <span class="p">{</span>
+						<span class="nf">callback</span><span class="p">(</span><span class="nx">configurationChan</span><span class="p">,</span> <span class="nx">evt</span><span class="p">)</span>
+					<span class="p">}</span>
+				<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+					<span class="nf">callback</span><span class="p">(</span><span class="nx">configurationChan</span><span class="p">,</span> <span class="nx">evt</span><span class="p">)</span>
+				<span class="p">}</span>
+			<span class="k">case</span> <span class="nx">err</span> <span class="o">:=</span> <span class="o">&lt;-</span><span class="nx">watcher</span><span class="p">.</span><span class="nx">Errors</span><span class="p">:</span>
+				<span class="nx">log</span><span class="p">.</span><span class="nf">WithoutContext</span><span class="p">().</span><span class="nf">WithField</span><span class="p">(</span><span class="nx">log</span><span class="p">.</span><span class="nx">ProviderName</span><span class="p">,</span> <span class="s">&#34;nacos&#34;</span><span class="p">).</span><span class="nf">Errorf</span><span class="p">(</span><span class="s">&#34;Watcher event error: %s&#34;</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+			<span class="p">}</span>
+		<span class="p">}</span>
+	<span class="p">})</span>
+	<span class="k">return</span> <span class="kc">nil</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">p</span> <span class="o">*</span><span class="nx">Provider</span><span class="p">)</span> <span class="nf">watcherCallback</span><span class="p">(</span><span class="nx">configurationChan</span> <span class="kd">chan</span><span class="o">&lt;-</span> <span class="nx">dynamic</span><span class="p">.</span><span class="nx">Message</span><span class="p">,</span> <span class="nx">event</span> <span class="nx">fsnotify</span><span class="p">.</span><span class="nx">Event</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">watchItem</span> <span class="o">:=</span> <span class="nx">p</span><span class="p">.</span><span class="nx">File</span><span class="p">.</span><span class="nx">Filename</span>
+	<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="nx">p</span><span class="p">.</span><span class="nx">File</span><span class="p">.</span><span class="nx">Directory</span><span class="p">)</span> <span class="p">&gt;</span> <span class="mi">0</span> <span class="p">{</span>
+		<span class="nx">watchItem</span> <span class="p">=</span> <span class="nx">p</span><span class="p">.</span><span class="nx">File</span><span class="p">.</span><span class="nx">Directory</span>
+	<span class="p">}</span>
+
+	<span class="nx">logger</span> <span class="o">:=</span> <span class="nx">log</span><span class="p">.</span><span class="nf">WithoutContext</span><span class="p">().</span><span class="nf">WithField</span><span class="p">(</span><span class="nx">log</span><span class="p">.</span><span class="nx">ProviderName</span><span class="p">,</span> <span class="s">&#34;nacos&#34;</span><span class="p">)</span>
+
+	<span class="k">if</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">os</span><span class="p">.</span><span class="nf">Stat</span><span class="p">(</span><span class="nx">watchItem</span><span class="p">);</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="nx">logger</span><span class="p">.</span><span class="nf">Errorf</span><span class="p">(</span><span class="s">&#34;Unable to watch %s : %v&#34;</span><span class="p">,</span> <span class="nx">watchItem</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+		<span class="k">return</span>
+	<span class="p">}</span>
+
+	<span class="nx">fileProvider</span> <span class="o">:=</span> <span class="nx">file</span><span class="p">.</span><span class="nx">Provider</span><span class="p">{</span>
+		<span class="nx">Directory</span><span class="p">:</span> <span class="nx">p</span><span class="p">.</span><span class="nx">File</span><span class="p">.</span><span class="nx">Directory</span><span class="p">,</span>
+		<span class="nx">Watch</span><span class="p">:</span> <span class="nx">p</span><span class="p">.</span><span class="nx">File</span><span class="p">.</span><span class="nx">Watch</span><span class="p">,</span>
+		<span class="nx">Filename</span><span class="p">:</span> <span class="nx">p</span><span class="p">.</span><span class="nx">File</span><span class="p">.</span><span class="nx">Filename</span><span class="p">,</span>
+		<span class="nx">DebugLogGeneratedTemplate</span><span class="p">:</span> <span class="nx">p</span><span class="p">.</span><span class="nx">File</span><span class="p">.</span><span class="nx">DebugLogGeneratedTemplate</span><span class="p">,</span>
+	<span class="p">}</span>
+	<span class="nx">configuration</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">fileProvider</span><span class="p">.</span><span class="nf">BuildConfiguration</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="nx">logger</span><span class="p">.</span><span class="nf">Errorf</span><span class="p">(</span><span class="s">&#34;Error occurred during watcher callback: %s&#34;</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+		<span class="k">return</span>
+	<span class="p">}</span>
+
+	<span class="nx">p</span><span class="p">.</span><span class="nx">fileConfig</span> <span class="p">=</span> <span class="nx">configuration</span>
+
+	<span class="nf">sendConfigToChannel</span><span class="p">(</span><span class="nx">configurationChan</span><span class="p">,</span> <span class="nx">p</span><span class="p">.</span><span class="nf">buildConfiguration</span><span class="p">())</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nf">createClient</span><span class="p">(</span><span class="nx">cfg</span> <span class="o">*</span><span class="nx">EndpointConfig</span><span class="p">)</span> <span class="p">(</span><span class="nx">naming_client</span><span class="p">.</span><span class="nx">INamingClient</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="c1">// server
+</span><span class="c1"></span>	<span class="nx">sc</span> <span class="o">:=</span> <span class="p">[]</span><span class="nx">constant</span><span class="p">.</span><span class="nx">ServerConfig</span><span class="p">{</span>
+		<span class="o">*</span><span class="nx">constant</span><span class="p">.</span><span class="nf">NewServerConfig</span><span class="p">(</span><span class="nx">cfg</span><span class="p">.</span><span class="nx">Host</span><span class="p">,</span> <span class="nx">cfg</span><span class="p">.</span><span class="nx">Port</span><span class="p">),</span>
+	<span class="p">}</span>
+
+	<span class="c1">// client
+</span><span class="c1"></span>	<span class="nx">cc</span> <span class="o">:=</span> <span class="o">*</span><span class="nx">constant</span><span class="p">.</span><span class="nf">NewClientConfig</span><span class="p">(</span>
+		<span class="c1">//constant.WithNamespaceId(&#34;e525eafa-f7d7-4029-83d9-008937f9d468&#34;),
+</span><span class="c1"></span>		<span class="nx">constant</span><span class="p">.</span><span class="nf">WithTimeoutMs</span><span class="p">(</span><span class="mi">5000</span><span class="p">),</span>
+		<span class="nx">constant</span><span class="p">.</span><span class="nf">WithNotLoadCacheAtStart</span><span class="p">(</span><span class="kc">true</span><span class="p">),</span>
+		<span class="nx">constant</span><span class="p">.</span><span class="nf">WithLogDir</span><span class="p">(</span><span class="nx">cfg</span><span class="p">.</span><span class="nx">LogDir</span><span class="p">),</span>
+		<span class="nx">constant</span><span class="p">.</span><span class="nf">WithCacheDir</span><span class="p">(</span><span class="nx">cfg</span><span class="p">.</span><span class="nx">CacheDir</span><span class="p">),</span>
+		<span class="nx">constant</span><span class="p">.</span><span class="nf">WithRotateTime</span><span class="p">(</span><span class="s">&#34;1h&#34;</span><span class="p">),</span>
+		<span class="nx">constant</span><span class="p">.</span><span class="nf">WithMaxAge</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span>
+		<span class="nx">constant</span><span class="p">.</span><span class="nf">WithLogLevel</span><span class="p">(</span><span class="s">&#34;info&#34;</span><span class="p">),</span>
+	<span class="p">)</span>
+
+	<span class="nx">namingClient</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">clients</span><span class="p">.</span><span class="nf">NewNamingClient</span><span class="p">(</span>
+		<span class="nx">vo</span><span class="p">.</span><span class="nx">NacosClientParam</span><span class="p">{</span>
+			<span class="nx">ClientConfig</span><span class="p">:</span>  <span class="o">&amp;</span><span class="nx">cc</span><span class="p">,</span>
+			<span class="nx">ServerConfigs</span><span class="p">:</span> <span class="nx">sc</span><span class="p">,</span>
+		<span class="p">},</span>
+	<span class="p">)</span>
+
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="nb">panic</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span>
+	<span class="p">}</span>
+
+	<span class="k">return</span> <span class="nx">namingClient</span><span class="p">,</span> <span class="kc">nil</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">p</span> <span class="o">*</span><span class="nx">Provider</span><span class="p">)</span> <span class="nf">fetchServices</span><span class="p">()</span> <span class="p">([]</span><span class="kt">string</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">i</span> <span class="o">:=</span> <span class="mi">1</span>
+	<span class="kd">var</span> <span class="nx">filtered</span> <span class="p">[]</span><span class="kt">string</span>
+	<span class="k">for</span> <span class="p">{</span>
+		<span class="nx">serviceInfos</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">p</span><span class="p">.</span><span class="nx">client</span><span class="p">.</span><span class="nf">GetAllServicesInfo</span><span class="p">(</span><span class="nx">vo</span><span class="p">.</span><span class="nx">GetAllServiceInfoParam</span><span class="p">{</span>
+			<span class="nx">GroupName</span><span class="p">:</span> <span class="nx">p</span><span class="p">.</span><span class="nx">EndPoint</span><span class="p">.</span><span class="nx">Group</span><span class="p">,</span>
+			<span class="nx">PageNo</span><span class="p">:</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">i</span><span class="p">),</span>
+			<span class="nx">PageSize</span><span class="p">:</span>  <span class="mi">100</span><span class="p">,</span>
+		<span class="p">})</span>
+
+		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
+		<span class="p">}</span>
+
+		<span class="k">if</span> <span class="nx">serviceInfos</span><span class="p">.</span><span class="nx">Count</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">{</span>
+			<span class="k">break</span>
+		<span class="p">}</span>
+
+		<span class="k">for</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">serviceInfo</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">serviceInfos</span><span class="p">.</span><span class="nx">Doms</span> <span class="p">{</span>
+			<span class="nx">filtered</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">filtered</span><span class="p">,</span> <span class="nx">serviceInfo</span><span class="p">)</span>
+		<span class="p">}</span>
+
+		<span class="nx">i</span> <span class="p">=</span> <span class="nx">i</span> <span class="o">+</span> <span class="mi">1</span>
+	<span class="p">}</span>
+
+	<span class="k">return</span> <span class="nx">filtered</span><span class="p">,</span> <span class="kc">nil</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nf">sendConfigToChannel</span><span class="p">(</span><span class="nx">configurationChan</span> <span class="kd">chan</span><span class="o">&lt;-</span> <span class="nx">dynamic</span><span class="p">.</span><span class="nx">Message</span><span class="p">,</span> <span class="nx">configuration</span> <span class="o">*</span><span class="nx">dynamic</span><span class="p">.</span><span class="nx">Configuration</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">configurationChan</span> <span class="o">&lt;-</span> <span class="nx">dynamic</span><span class="p">.</span><span class="nx">Message</span><span class="p">{</span>
+		<span class="nx">ProviderName</span><span class="p">:</span>  <span class="s">&#34;nacos&#34;</span><span class="p">,</span>
+		<span class="nx">Configuration</span><span class="p">:</span> <span class="nx">configuration</span><span class="p">,</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="配置解析">配置解析</h3>
+<p>然后添加静态配置解析的代码</p>
+<p>在<code>pkg/config/static/static_config.go</code> 里添加 nacos 配置结构体：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">type</span> <span class="nx">Providers</span> <span class="kd">struct</span> <span class="p">{</span>
+<span class="c1">// 省略原有代码
+</span><span class="c1"></span>
+	<span class="nx">Nacos</span>     <span class="o">*</span><span class="nx">nacos</span><span class="p">.</span><span class="nx">Provider</span> <span class="s">`description:&#34;Enable Nacos backend with default settings.&#34; json:&#34;nacos,omitempty&#34; toml:&#34;nacos,omitempty&#34; yaml:&#34;nacos,omitempty&#34;`</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>在<code>pkg/provider/aggregator/aggregator.go</code> 里添加 nacos 初始化：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="nf">NewProviderAggregator</span><span class="p">(</span><span class="nx">conf</span> <span class="nx">static</span><span class="p">.</span><span class="nx">Providers</span><span class="p">)</span> <span class="nx">ProviderAggregator</span> <span class="p">{</span>
+<span class="c1">// 省略原有代码
+</span><span class="c1"></span>
+	<span class="k">if</span> <span class="nx">conf</span><span class="p">.</span><span class="nx">Nacos</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="nx">p</span><span class="p">.</span><span class="nf">quietAddProvider</span><span class="p">(</span><span class="nx">conf</span><span class="p">.</span><span class="nx">Nacos</span><span class="p">)</span>
+	<span class="p">}</span>
+
+	<span class="k">return</span> <span class="nx">p</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="结尾">结尾</h2>
+<p>修改后 Traefik 就可以从注册中心自动拉取实例信息来负载了，方便了很多。上边的实例做了一些简化，比如从 nacos 获取了全量服务，在服务很多的情况下不太高效，可以只获取需要用的服务、路由信息修改可以放到配置中心或者修改下UI，就可以可视化操作了、等等。实际使用时可以根据自己的情况做下修改。</p>
+]]></content>
+            
+            
+            
+            
+            
+                
+                    
+                
+                    
+                        
+                            
+                            
+                            
+                                <category scheme="https://ld000.space/tags/" term="Tags" label="Tags" />
+                            
+                        
+                    
+                
+            
+        </entry>
+    
         <entry>
             <title type="text">给 traefik 添加插件</title>
             <link rel="alternate" type="text/html" href="https://ld000.space/post/traefik_add_middleware/" />
             <id>https://ld000.space/post/traefik_add_middleware/</id>
-            <updated>2021-02-21T17:56:19+00:00</updated>
+            <updated>2021-07-15T11:44:32+00:00</updated>
             <published>2020-10-12T00:00:00+00:00</published>
             <author>
                     <name>Voiddd</name>
@@ -479,12 +1696,12 @@
 </span><span class="lnt">6
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="k">http</span><span class="p">:</span><span class="w">
-</span><span class="w">  </span><span class="k">middlewares</span><span class="p">:</span><span class="w">
+<pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="nt">http</span><span class="p">:</span><span class="w">
+</span><span class="w">  </span><span class="nt">middlewares</span><span class="p">:</span><span class="w">
 </span><span class="w">    </span><span class="c"># token验证</span><span class="w">
-</span><span class="w">    </span><span class="k">token-auth</span><span class="p">:</span><span class="w">
-</span><span class="w">      </span><span class="k">tokenAuth</span><span class="p">:</span><span class="w">
-</span><span class="w">        </span><span class="k">address</span><span class="p">:</span><span class="w"> </span>http<span class="p">:</span>//xxx.xxx.com/token_info<span class="w">
+</span><span class="w">    </span><span class="nt">token-auth</span><span class="p">:</span><span class="w">
+</span><span class="w">      </span><span class="nt">tokenAuth</span><span class="p">:</span><span class="w">
+</span><span class="w">        </span><span class="nt">address</span><span class="p">:</span><span class="w"> </span><span class="l">http://xxx.xxx.com/token_info</span><span class="w">
 </span></code></pre></td></tr></table>
 </div>
 </div><p>增加动态路由配置</p>
@@ -501,15 +1718,15 @@
 </span><span class="lnt">9
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="k">http</span><span class="p">:</span><span class="w">
-</span><span class="w">  </span><span class="k">routers</span><span class="p">:</span><span class="w">
-</span><span class="w">    </span><span class="k">svc</span><span class="p">:</span><span class="w">
-</span><span class="w">      </span><span class="k">entryPoints</span><span class="p">:</span><span class="w">
-</span><span class="w">      </span>- web<span class="w">
-</span><span class="w">      </span><span class="k">middlewares</span><span class="p">:</span><span class="w">
-</span><span class="w">      </span>- token-auth<span class="w">
-</span><span class="w">      </span><span class="k">service</span><span class="p">:</span><span class="w"> </span>svc<span class="w">
-</span><span class="w">      </span><span class="k">rule</span><span class="p">:</span><span class="w"> </span>PathPrefix(`/list`)<span class="w">
+<pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="nt">http</span><span class="p">:</span><span class="w">
+</span><span class="w">  </span><span class="nt">routers</span><span class="p">:</span><span class="w">
+</span><span class="w">    </span><span class="nt">svc</span><span class="p">:</span><span class="w">
+</span><span class="w">      </span><span class="nt">entryPoints</span><span class="p">:</span><span class="w">
+</span><span class="w">      </span>- <span class="l">web</span><span class="w">
+</span><span class="w">      </span><span class="nt">middlewares</span><span class="p">:</span><span class="w">
+</span><span class="w">      </span>- <span class="l">token-auth</span><span class="w">
+</span><span class="w">      </span><span class="nt">service</span><span class="p">:</span><span class="w"> </span><span class="l">svc</span><span class="w">
+</span><span class="w">      </span><span class="nt">rule</span><span class="p">:</span><span class="w"> </span><span class="l">PathPrefix(`/list`)</span><span class="w">
 </span></code></pre></td></tr></table>
 </div>
 </div><p>这样新添加的插件就能用了。</p>
@@ -527,6 +1744,8 @@
                             
                             
                             
+                                <category scheme="https://ld000.space/tags/" term="Tags" label="Tags" />
+                            
                         
                     
                 
@@ -537,7 +1756,7 @@
             <title type="text">(翻译)写技术设计文档</title>
             <link rel="alternate" type="text/html" href="https://ld000.space/post/writing_technical_design_docs/" />
             <id>https://ld000.space/post/writing_technical_design_docs/</id>
-            <updated>2021-02-21T17:56:19+00:00</updated>
+            <updated>2021-07-15T11:44:32+00:00</updated>
             <published>2020-09-01T00:00:00+00:00</published>
             <author>
                     <name>Voiddd</name>
@@ -639,6 +1858,8 @@
                             
                             
                             
+                                <category scheme="https://ld000.space/tags/" term="Tags" label="Tags" />
+                            
                         
                     
                 
@@ -649,7 +1870,7 @@
             <title type="text">sharding-proxy 连接缓存导致 fullGC 内存不释放</title>
             <link rel="alternate" type="text/html" href="https://ld000.space/post/sharding_proxy_cache/" />
             <id>https://ld000.space/post/sharding_proxy_cache/</id>
-            <updated>2021-02-21T17:56:19+00:00</updated>
+            <updated>2021-07-15T11:44:32+00:00</updated>
             <published>2020-05-25T00:00:00+00:00</published>
             <author>
                     <name>Voiddd</name>
@@ -863,7 +2084,7 @@
             <title type="text">MemoryPoolMXBean 各内存池名字</title>
             <link rel="alternate" type="text/html" href="https://ld000.space/post/java_memorypoolmxbean/" />
             <id>https://ld000.space/post/java_memorypoolmxbean/</id>
-            <updated>2021-02-21T17:56:19+00:00</updated>
+            <updated>2021-07-15T11:44:32+00:00</updated>
             <published>2020-04-13T00:00:00+00:00</published>
             <author>
                     <name>Voiddd</name>
@@ -937,7 +2158,7 @@
             <title type="text">gorm调用sharding-proxy, 参数带单引号sql报错</title>
             <link rel="alternate" type="text/html" href="https://ld000.space/post/gorm_sharding_proxy_sql_error/" />
             <id>https://ld000.space/post/gorm_sharding_proxy_sql_error/</id>
-            <updated>2021-02-21T17:56:19+00:00</updated>
+            <updated>2021-07-15T11:44:32+00:00</updated>
             <published>2020-03-27T00:00:00+00:00</published>
             <author>
                     <name>Voiddd</name>
@@ -1482,7 +2703,7 @@ where
             <title type="text">Mac下用CLion debug MySQL5.7源码</title>
             <link rel="alternate" type="text/html" href="https://ld000.space/post/mac_clion_debug_mysql_source/" />
             <id>https://ld000.space/post/mac_clion_debug_mysql_source/</id>
-            <updated>2021-02-21T17:56:19+00:00</updated>
+            <updated>2021-07-15T11:44:32+00:00</updated>
             <published>2020-03-26T00:00:00+00:00</published>
             <author>
                     <name>Voiddd</name>
@@ -1627,7 +2848,7 @@ where
             <title type="text">MyBatis 一级缓存在分布式下的坑</title>
             <link rel="alternate" type="text/html" href="https://ld000.space/post/mybatis_scale_localcache/" />
             <id>https://ld000.space/post/mybatis_scale_localcache/</id>
-            <updated>2021-02-21T17:56:19+00:00</updated>
+            <updated>2021-07-15T11:44:32+00:00</updated>
             <published>2019-11-24T00:00:00+00:00</published>
             <author>
                     <name>Voiddd</name>
@@ -1888,7 +3109,7 @@ session1: <span class="m">500</span>
             <title type="text">用外置 Tomcat 部署 Spring Boot 应用</title>
             <link rel="alternate" type="text/html" href="https://ld000.space/post/spring_boot_tomcat/" />
             <id>https://ld000.space/post/spring_boot_tomcat/</id>
-            <updated>2021-02-21T17:56:19+00:00</updated>
+            <updated>2021-07-15T11:44:32+00:00</updated>
             <published>2019-10-25T00:00:00+00:00</published>
             <author>
                     <name>Voiddd</name>
@@ -2146,7 +3367,7 @@ session1: <span class="m">500</span>
             <title type="text">让 Redis zset 支持多条件排序</title>
             <link rel="alternate" type="text/html" href="https://ld000.space/post/make_redis_zset_support_multiple_sort/" />
             <id>https://ld000.space/post/make_redis_zset_support_multiple_sort/</id>
-            <updated>2021-02-21T17:56:19+00:00</updated>
+            <updated>2021-07-15T11:44:32+00:00</updated>
             <published>2019-10-23T00:00:00+00:00</published>
             <author>
                     <name>Voiddd</name>
@@ -2756,7 +3977,7 @@ session1: <span class="m">500</span>
             <title type="text">MacOS 用 automater 自动备份安装的软件列表</title>
             <link rel="alternate" type="text/html" href="https://ld000.space/post/automator_brewfile/" />
             <id>https://ld000.space/post/automator_brewfile/</id>
-            <updated>2021-02-21T17:56:19+00:00</updated>
+            <updated>2021-07-15T11:44:32+00:00</updated>
             <published>2019-09-15T00:00:00+00:00</published>
             <author>
                     <name>Voiddd</name>
@@ -2916,7 +4137,7 @@ session1: <span class="m">500</span>
             <title type="text">discuz 接入 cas</title>
             <link rel="alternate" type="text/html" href="https://ld000.space/post/discuz_cas/" />
             <id>https://ld000.space/post/discuz_cas/</id>
-            <updated>2021-02-21T17:56:19+00:00</updated>
+            <updated>2021-07-15T11:44:32+00:00</updated>
             <published>2018-07-23T00:00:00+00:00</published>
             <author>
                     <name>Voiddd</name>
@@ -2995,12 +4216,12 @@ session1: <span class="m">500</span>
 </span><span class="lnt">5
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span>
+<pre class="chroma"><code class="language-php" data-lang="php"><span class="o">&lt;?</span><span class="nx">php</span>
 <span class="nx">define</span> <span class="p">(</span> <span class="s1">&#39;CAS_SERVER_HOSTNAME&#39;</span><span class="p">,</span> <span class="s1">&#39;cas.com&#39;</span> <span class="p">);</span>
 <span class="nx">define</span> <span class="p">(</span> <span class="s1">&#39;CAS_SERVER_PORT&#39;</span><span class="p">,</span> <span class="mi">8080</span> <span class="p">);</span> 
 <span class="nx">define</span> <span class="p">(</span> <span class="s1">&#39;CAS_SERVER_APP_NAME&#39;</span><span class="p">,</span> <span class="s2">&#34;cas&#34;</span> <span class="p">);</span> 
-<span class="cp">?&gt;</span>
-</code></pre></td></tr></table>
+<span class="cp">?&gt;</span><span class="err">
+</span></code></pre></td></tr></table>
 </div>
 </div><h2 id="在cas文件夹中创建-casclientphp">在<code>CAS</code>文件夹中创建 <code>CasClient.php</code></h2>
 <div class="highlight"><div class="chroma">
@@ -3024,7 +4245,7 @@ session1: <span class="m">500</span>
 </span><span class="lnt">17
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span>
+<pre class="chroma"><code class="language-php" data-lang="php"><span class="o">&lt;?</span><span class="nx">php</span>
 <span class="k">require_once</span> <span class="nx">DISCUZ_ROOT</span><span class="o">.</span><span class="s1">&#39;./CAS/CasClientConfig.php&#39;</span><span class="p">;</span> <span class="c1">// 注意
 </span><span class="c1"></span><span class="k">require_once</span> <span class="nx">DISCUZ_ROOT</span><span class="o">.</span><span class="s1">&#39;./CAS/CAS.php&#39;</span><span class="p">;</span> <span class="c1">// 注意
 </span><span class="c1"></span>                                                  
@@ -3040,8 +4261,8 @@ session1: <span class="m">500</span>
 <span class="nx">phpCAS</span><span class="o">::</span><span class="na">setNoClearTicketsFromUrl</span> <span class="p">();</span>
 <span class="nx">phpCAS</span><span class="o">::</span><span class="na">handleLogoutRequests</span><span class="p">();</span>
 
-<span class="cp">?&gt;</span>
-</code></pre></td></tr></table>
+<span class="cp">?&gt;</span><span class="err">
+</span></code></pre></td></tr></table>
 </div>
 </div><h2 id="sourceclassclass_corephp第16行加入">source/class/class_core.php第16行加入</h2>
 <div class="highlight"><div class="chroma">
@@ -3049,7 +4270,7 @@ session1: <span class="m">500</span>
 <pre class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-php" data-lang="php">require_once DISCUZ_ROOT.&#34;CAS/CasClient.php&#34;;
+<pre class="chroma"><code class="language-php" data-lang="php"><span class="k">require_once</span> <span class="nx">DISCUZ_ROOT</span><span class="o">.</span><span class="s2">&#34;CAS/CasClient.php&#34;</span><span class="p">;</span>
 </code></pre></td></tr></table>
 </div>
 </div><h2 id="uc_clientcontroluserphp">uc_client/control/user.php</h2>
@@ -3063,12 +4284,12 @@ session1: <span class="m">500</span>
 </span><span class="lnt">5
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-php" data-lang="php">// elseif($user[&#39;password&#39;] != md5($passwordmd5.$user[&#39;salt&#39;])) {
-// $status = -2;
-// } elseif($checkques <span class="err">&amp;&amp;</span> $user[&#39;secques&#39;] != $_ENV[&#39;user&#39;]-&gt;quescrypt($questionid, $answer)) {
-// $status = -3;
-// }
-</code></pre></td></tr></table>
+<pre class="chroma"><code class="language-php" data-lang="php"><span class="c1">// elseif($user[&#39;password&#39;] != md5($passwordmd5.$user[&#39;salt&#39;])) {
+</span><span class="c1">// $status = -2;
+</span><span class="c1">// } elseif($checkques &amp;&amp; $user[&#39;secques&#39;] != $_ENV[&#39;user&#39;]-&gt;quescrypt($questionid, $answer)) {
+</span><span class="c1">// $status = -3;
+</span><span class="c1">// }
+</span></code></pre></td></tr></table>
 </div>
 </div><p>注释 <code>onsynlogin</code>, <code>onsynlogout</code>, <code>onregister</code>方法</p>
 <h2 id="sourcefunctionfunction_memberphp-加入">source/function/function_member.php 加入</h2>
@@ -3113,43 +4334,43 @@ session1: <span class="m">500</span>
 </span><span class="lnt">37
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-php" data-lang="php">// 新加的方法，用以支持CAS 登录
-function userloginCas($username, $ip = &#39;&#39;) {
-    $return = array ();
+<pre class="chroma"><code class="language-php" data-lang="php"><span class="c1">// 新加的方法，用以支持CAS 登录
+</span><span class="c1"></span><span class="k">function</span> <span class="nf">userloginCas</span><span class="p">(</span><span class="nv">$username</span><span class="p">,</span> <span class="nv">$ip</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nv">$return</span> <span class="o">=</span> <span class="k">array</span> <span class="p">();</span>
     
-    if(!function_exists(&#39;uc_user_login&#39;)) {
-        loaducenter();
-    }
+    <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="nx">function_exists</span><span class="p">(</span><span class="s1">&#39;uc_user_login&#39;</span><span class="p">))</span> <span class="p">{</span>
+        <span class="nx">loaducenter</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    $return[&#39;ucresult&#39;] = uc_user_login(addslashes($username), &#39;&#39;, 0, 0,&#39;&#39;, &#39;&#39;, $ip);
+    <span class="nv">$return</span><span class="p">[</span><span class="s1">&#39;ucresult&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nx">uc_user_login</span><span class="p">(</span><span class="nx">addslashes</span><span class="p">(</span><span class="nv">$username</span><span class="p">),</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="nv">$ip</span><span class="p">);</span>
 
-    $tmp = array ();
-    $duplicate = &#39;&#39;;
-    list ( $tmp [&#39;uid&#39;], $tmp [&#39;username&#39;], $tmp [&#39;password&#39;], $tmp [&#39;email&#39;], $duplicate ) = $return [&#39;ucresult&#39;];
-    $return [&#39;ucresult&#39;] = $tmp;
-    if ($duplicate <span class="err">&amp;&amp;</span> $return [&#39;ucresult&#39;] [&#39;uid&#39;] &gt; 0 || $return [&#39;ucresult&#39;] [&#39;uid&#39;] <span class="err">&lt;</span>= 0) {
-        $return [&#39;status&#39;] = 0;
-        return $return;
-    }
+    <span class="nv">$tmp</span> <span class="o">=</span> <span class="k">array</span> <span class="p">();</span>
+    <span class="nv">$duplicate</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">;</span>
+    <span class="k">list</span> <span class="p">(</span> <span class="nv">$tmp</span> <span class="p">[</span><span class="s1">&#39;uid&#39;</span><span class="p">],</span> <span class="nv">$tmp</span> <span class="p">[</span><span class="s1">&#39;username&#39;</span><span class="p">],</span> <span class="nv">$tmp</span> <span class="p">[</span><span class="s1">&#39;password&#39;</span><span class="p">],</span> <span class="nv">$tmp</span> <span class="p">[</span><span class="s1">&#39;email&#39;</span><span class="p">],</span> <span class="nv">$duplicate</span> <span class="p">)</span> <span class="o">=</span> <span class="nv">$return</span> <span class="p">[</span><span class="s1">&#39;ucresult&#39;</span><span class="p">];</span>
+    <span class="nv">$return</span> <span class="p">[</span><span class="s1">&#39;ucresult&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nv">$tmp</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nv">$duplicate</span> <span class="o">&amp;&amp;</span> <span class="nv">$return</span> <span class="p">[</span><span class="s1">&#39;ucresult&#39;</span><span class="p">]</span> <span class="p">[</span><span class="s1">&#39;uid&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="o">||</span> <span class="nv">$return</span> <span class="p">[</span><span class="s1">&#39;ucresult&#39;</span><span class="p">]</span> <span class="p">[</span><span class="s1">&#39;uid&#39;</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$return</span> <span class="p">[</span><span class="s1">&#39;status&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="k">return</span> <span class="nv">$return</span><span class="p">;</span>
+    <span class="p">}</span>
     
-    $member = getuserbyuid ( $return [&#39;ucresult&#39;] [&#39;uid&#39;], 1 );
-    if (! $member || empty ( $member [&#39;uid&#39;] )) {
-        $return [&#39;status&#39;] = - 1;
-        return $return;
-    }
-    $return [&#39;member&#39;] = $member;
-    $return [&#39;status&#39;] = 1;
-    if ($member [&#39;_inarchive&#39;]) {
-        C::t ( &#39;common_member_archive&#39; )-&gt;move_to_master ( $member [&#39;uid&#39;] );
-    }
-    if ($member [&#39;email&#39;] != $return [&#39;ucresult&#39;] [&#39;email&#39;]) {
-        C::t ( &#39;common_member&#39; )-&gt;update ( $return [&#39;ucresult&#39;] [&#39;uid&#39;], array (
-                &#39;email&#39; =&gt; $return [&#39;ucresult&#39;] [&#39;email&#39;] 
-        ) );
-    }
+    <span class="nv">$member</span> <span class="o">=</span> <span class="nx">getuserbyuid</span> <span class="p">(</span> <span class="nv">$return</span> <span class="p">[</span><span class="s1">&#39;ucresult&#39;</span><span class="p">]</span> <span class="p">[</span><span class="s1">&#39;uid&#39;</span><span class="p">],</span> <span class="mi">1</span> <span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span> <span class="nv">$member</span> <span class="o">||</span> <span class="k">empty</span> <span class="p">(</span> <span class="nv">$member</span> <span class="p">[</span><span class="s1">&#39;uid&#39;</span><span class="p">]</span> <span class="p">))</span> <span class="p">{</span>
+        <span class="nv">$return</span> <span class="p">[</span><span class="s1">&#39;status&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span>
+        <span class="k">return</span> <span class="nv">$return</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="nv">$return</span> <span class="p">[</span><span class="s1">&#39;member&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nv">$member</span><span class="p">;</span>
+    <span class="nv">$return</span> <span class="p">[</span><span class="s1">&#39;status&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nv">$member</span> <span class="p">[</span><span class="s1">&#39;_inarchive&#39;</span><span class="p">])</span> <span class="p">{</span>
+        <span class="nx">C</span><span class="o">::</span><span class="na">t</span> <span class="p">(</span> <span class="s1">&#39;common_member_archive&#39;</span> <span class="p">)</span><span class="o">-&gt;</span><span class="na">move_to_master</span> <span class="p">(</span> <span class="nv">$member</span> <span class="p">[</span><span class="s1">&#39;uid&#39;</span><span class="p">]</span> <span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nv">$member</span> <span class="p">[</span><span class="s1">&#39;email&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="nv">$return</span> <span class="p">[</span><span class="s1">&#39;ucresult&#39;</span><span class="p">]</span> <span class="p">[</span><span class="s1">&#39;email&#39;</span><span class="p">])</span> <span class="p">{</span>
+        <span class="nx">C</span><span class="o">::</span><span class="na">t</span> <span class="p">(</span> <span class="s1">&#39;common_member&#39;</span> <span class="p">)</span><span class="o">-&gt;</span><span class="na">update</span> <span class="p">(</span> <span class="nv">$return</span> <span class="p">[</span><span class="s1">&#39;ucresult&#39;</span><span class="p">]</span> <span class="p">[</span><span class="s1">&#39;uid&#39;</span><span class="p">],</span> <span class="k">array</span> <span class="p">(</span>
+                <span class="s1">&#39;email&#39;</span> <span class="o">=&gt;</span> <span class="nv">$return</span> <span class="p">[</span><span class="s1">&#39;ucresult&#39;</span><span class="p">]</span> <span class="p">[</span><span class="s1">&#39;email&#39;</span><span class="p">]</span> 
+        <span class="p">)</span> <span class="p">);</span>
+    <span class="p">}</span>
     
-    return $return;
-}
+    <span class="k">return</span> <span class="nv">$return</span><span class="p">;</span>
+<span class="p">}</span>
 </code></pre></td></tr></table>
 </div>
 </div><h2 id="sourceclassclass_memberphp">source/class/class_member.php</h2>
@@ -3160,8 +4381,8 @@ function userloginCas($username, $ip = &#39;&#39;) {
 </span><span class="lnt">2
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-php" data-lang="php">// if(!submitcheck(&#39;loginsubmit&#39;, 1, $seccodestatus)) {
-if (1 == 2) {
+<pre class="chroma"><code class="language-php" data-lang="php"><span class="c1">// if(!submitcheck(&#39;loginsubmit&#39;, 1, $seccodestatus)) {
+</span><span class="c1"></span><span class="k">if</span> <span class="p">(</span><span class="mi">1</span> <span class="o">==</span> <span class="mi">2</span><span class="p">)</span> <span class="p">{</span>
 </code></pre></td></tr></table>
 </div>
 </div><p>92行 <code>$_G['username'] = $_G['member']['username'] = $_G['member']['password'] = ''</code> 后加入</p>
@@ -3186,23 +4407,23 @@ if (1 == 2) {
 </span><span class="lnt">17
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-php" data-lang="php">phpCAS::setNoClearTicketsFromUrl ();
-// 这里会检测服务器端的退出的通知，就能实现php和其他语言平台间同步登出了  
-phpCAS::handleLogoutRequests();  
-$username=&#39;&#39;;
-if(phpCAS::isAuthenticated()){  
-    $username = phpCAS::getUser ();
-} else {
-    $service =  $_SERVER[&#39;HTTP_REFERER&#39;];
-    phpCAS::setServerLoginUrl(phpCAS::getServerLoginURL().urlencode(&#34;?service=&#34;.$service));
+<pre class="chroma"><code class="language-php" data-lang="php"><span class="nx">phpCAS</span><span class="o">::</span><span class="na">setNoClearTicketsFromUrl</span> <span class="p">();</span>
+<span class="c1">// 这里会检测服务器端的退出的通知，就能实现php和其他语言平台间同步登出了  
+</span><span class="c1"></span><span class="nx">phpCAS</span><span class="o">::</span><span class="na">handleLogoutRequests</span><span class="p">();</span>  
+<span class="nv">$username</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">;</span>
+<span class="k">if</span><span class="p">(</span><span class="nx">phpCAS</span><span class="o">::</span><span class="na">isAuthenticated</span><span class="p">()){</span>  
+    <span class="nv">$username</span> <span class="o">=</span> <span class="nx">phpCAS</span><span class="o">::</span><span class="na">getUser</span> <span class="p">();</span>
+<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="nv">$service</span> <span class="o">=</span>  <span class="nv">$_SERVER</span><span class="p">[</span><span class="s1">&#39;HTTP_REFERER&#39;</span><span class="p">];</span>
+    <span class="nx">phpCAS</span><span class="o">::</span><span class="na">setServerLoginUrl</span><span class="p">(</span><span class="nx">phpCAS</span><span class="o">::</span><span class="na">getServerLoginURL</span><span class="p">()</span><span class="o">.</span><span class="nx">urlencode</span><span class="p">(</span><span class="s2">&#34;?service=&#34;</span><span class="o">.</span><span class="nv">$service</span><span class="p">));</span>
 
-    phpCAS::forceAuthentication ();
-}
-// if(!$_GET[&#39;password&#39;] || $_GET[&#39;password&#39;] != addslashes($_GET[&#39;password&#39;])) {
-// showmessage(&#39;profile_passwd_illegal&#39;);
-// }
-// $result = userlogin($_GET[&#39;username&#39;], $_GET[&#39;password&#39;], $_GET[&#39;questionid&#39;], $_GET[&#39;answer&#39;], $this-&gt;setting[&#39;autoidselect&#39;] ? &#39;auto&#39; : $_GET[&#39;loginfield&#39;], $_G[&#39;clientip&#39;]);
-$result = userloginCas($username, $_G[&#39;clientip&#39;]);
+    <span class="nx">phpCAS</span><span class="o">::</span><span class="na">forceAuthentication</span> <span class="p">();</span>
+<span class="p">}</span>
+<span class="c1">// if(!$_GET[&#39;password&#39;] || $_GET[&#39;password&#39;] != addslashes($_GET[&#39;password&#39;])) {
+</span><span class="c1">// showmessage(&#39;profile_passwd_illegal&#39;);
+</span><span class="c1">// }
+</span><span class="c1">// $result = userlogin($_GET[&#39;username&#39;], $_GET[&#39;password&#39;], $_GET[&#39;questionid&#39;], $_GET[&#39;answer&#39;], $this-&gt;setting[&#39;autoidselect&#39;] ? &#39;auto&#39; : $_GET[&#39;loginfield&#39;], $_G[&#39;clientip&#39;]);
+</span><span class="c1"></span><span class="nv">$result</span> <span class="o">=</span> <span class="nx">userloginCas</span><span class="p">(</span><span class="nv">$username</span><span class="p">,</span> <span class="nv">$_G</span><span class="p">[</span><span class="s1">&#39;clientip&#39;</span><span class="p">]);</span>
 </code></pre></td></tr></table>
 </div>
 </div><p>347行 <code>on_logout</code> 方法</p>
@@ -3217,13 +4438,13 @@ $result = userloginCas($username, $_G[&#39;clientip&#39;]);
 </span><span class="lnt">7
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-php" data-lang="php">if(defined(&#39;IN_MOBILE&#39;)) {
-    showmessage(&#39;location_logout_succeed_mobile&#39;, dreferer(), array(&#39;formhash&#39; =&gt; FORMHASH, &#39;referer&#39; =&gt; rawurlencode(dreferer())));
-} else {
-    $service =  $_SERVER[&#39;HTTP_REFERER&#39;];
-    phpCAS::logoutWithRedirectService ( $service );
-// showmessage(&#39;logout_succeed&#39;, dreferer(), array(&#39;formhash&#39; =&gt; FORMHASH, &#39;ucsynlogout&#39; =&gt; $ucsynlogout, &#39;referer&#39; =&gt; rawurlencode(dreferer())));
-}
+<pre class="chroma"><code class="language-php" data-lang="php"><span class="k">if</span><span class="p">(</span><span class="nx">defined</span><span class="p">(</span><span class="s1">&#39;IN_MOBILE&#39;</span><span class="p">))</span> <span class="p">{</span>
+    <span class="nx">showmessage</span><span class="p">(</span><span class="s1">&#39;location_logout_succeed_mobile&#39;</span><span class="p">,</span> <span class="nx">dreferer</span><span class="p">(),</span> <span class="k">array</span><span class="p">(</span><span class="s1">&#39;formhash&#39;</span> <span class="o">=&gt;</span> <span class="nx">FORMHASH</span><span class="p">,</span> <span class="s1">&#39;referer&#39;</span> <span class="o">=&gt;</span> <span class="nx">rawurlencode</span><span class="p">(</span><span class="nx">dreferer</span><span class="p">())));</span>
+<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="nv">$service</span> <span class="o">=</span>  <span class="nv">$_SERVER</span><span class="p">[</span><span class="s1">&#39;HTTP_REFERER&#39;</span><span class="p">];</span>
+    <span class="nx">phpCAS</span><span class="o">::</span><span class="na">logoutWithRedirectService</span> <span class="p">(</span> <span class="nv">$service</span> <span class="p">);</span>
+<span class="c1">// showmessage(&#39;logout_succeed&#39;, dreferer(), array(&#39;formhash&#39; =&gt; FORMHASH, &#39;ucsynlogout&#39; =&gt; $ucsynlogout, &#39;referer&#39; =&gt; rawurlencode(dreferer())));
+</span><span class="c1"></span><span class="p">}</span>
 </code></pre></td></tr></table>
 </div>
 </div><p>386行 <code>on_register</code>方法中</p>
@@ -3236,11 +4457,11 @@ $result = userloginCas($username, $_G[&#39;clientip&#39;]);
 </span><span class="lnt">5
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-php" data-lang="php">if(strpos($url_forward, $this-&gt;setting[&#39;regname&#39;]) !== false) {
-    $url_forward = &#39;forum.php&#39;;
-}
-// 修改掉防止当登录成功时无限跳转
-$url_forward = &#39;forum.php&#39;;
+<pre class="chroma"><code class="language-php" data-lang="php"><span class="k">if</span><span class="p">(</span><span class="nx">strpos</span><span class="p">(</span><span class="nv">$url_forward</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">setting</span><span class="p">[</span><span class="s1">&#39;regname&#39;</span><span class="p">])</span> <span class="o">!==</span> <span class="k">false</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nv">$url_forward</span> <span class="o">=</span> <span class="s1">&#39;forum.php&#39;</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="c1">// 修改掉防止当登录成功时无限跳转
+</span><span class="c1"></span><span class="nv">$url_forward</span> <span class="o">=</span> <span class="s1">&#39;forum.php&#39;</span><span class="p">;</span>
 </code></pre></td></tr></table>
 </div>
 </div><p><code>logging_ctl</code>类中 添加异步登录验证方法</p>
@@ -3289,47 +4510,47 @@ $url_forward = &#39;forum.php&#39;;
 </span><span class="lnt">41
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-php" data-lang="php">function on_loginCheck(){
-    global $_G;
-    $username=&#39;&#39;;
-    if(phpCAS::isAuthenticated()){
-        $username = phpCAS::getUser ();
-    } else {
-        phpCAS::setServerLoginUrl(phpCAS::getServerLoginURL());
-        phpCAS::forceAuthentication ();
-    }
-    $result = userloginCas($username, $_G[&#39;clientip&#39;]);
+<pre class="chroma"><code class="language-php" data-lang="php"><span class="k">function</span> <span class="nf">on_loginCheck</span><span class="p">(){</span>
+    <span class="k">global</span> <span class="nv">$_G</span><span class="p">;</span>
+    <span class="nv">$username</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">;</span>
+    <span class="k">if</span><span class="p">(</span><span class="nx">phpCAS</span><span class="o">::</span><span class="na">isAuthenticated</span><span class="p">()){</span>
+        <span class="nv">$username</span> <span class="o">=</span> <span class="nx">phpCAS</span><span class="o">::</span><span class="na">getUser</span> <span class="p">();</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="nx">phpCAS</span><span class="o">::</span><span class="na">setServerLoginUrl</span><span class="p">(</span><span class="nx">phpCAS</span><span class="o">::</span><span class="na">getServerLoginURL</span><span class="p">());</span>
+        <span class="nx">phpCAS</span><span class="o">::</span><span class="na">forceAuthentication</span> <span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nv">$result</span> <span class="o">=</span> <span class="nx">userloginCas</span><span class="p">(</span><span class="nv">$username</span><span class="p">,</span> <span class="nv">$_G</span><span class="p">[</span><span class="s1">&#39;clientip&#39;</span><span class="p">]);</span>
 
-    if($data = uc_get_user($username)) {
-        list($uid, $username, $email) = $data;      //根据用户名获取uid进行登录
-    } else {
-        dexit();
-    }
+    <span class="k">if</span><span class="p">(</span><span class="nv">$data</span> <span class="o">=</span> <span class="nx">uc_get_user</span><span class="p">(</span><span class="nv">$username</span><span class="p">))</span> <span class="p">{</span>
+        <span class="k">list</span><span class="p">(</span><span class="nv">$uid</span><span class="p">,</span> <span class="nv">$username</span><span class="p">,</span> <span class="nv">$email</span><span class="p">)</span> <span class="o">=</span> <span class="nv">$data</span><span class="p">;</span>      <span class="c1">//根据用户名获取uid进行登录
+</span><span class="c1"></span>    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="nx">dexit</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    if($uid &gt; 0) {
-        $member = getuserbyuid($uid, 1);            //根据uid获取用户表pre_common_member中的所有字段
+    <span class="k">if</span><span class="p">(</span><span class="nv">$uid</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$member</span> <span class="o">=</span> <span class="nx">getuserbyuid</span><span class="p">(</span><span class="nv">$uid</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>            <span class="c1">//根据uid获取用户表pre_common_member中的所有字段
+</span><span class="c1"></span>
+        <span class="nv">$_G</span><span class="p">[</span><span class="s1">&#39;uid&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nx">intval</span><span class="p">(</span><span class="nv">$uid</span><span class="p">);</span>
+        <span class="nv">$_G</span><span class="p">[</span><span class="s1">&#39;username&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nv">$username</span><span class="p">;</span>
+        <span class="nv">$_G</span><span class="p">[</span><span class="s1">&#39;adminid&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nv">$member</span><span class="p">[</span><span class="s1">&#39;adminid&#39;</span><span class="p">];</span>
+        <span class="nv">$_G</span><span class="p">[</span><span class="s1">&#39;groupid&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nv">$member</span><span class="p">[</span><span class="s1">&#39;groupid&#39;</span><span class="p">];</span>
+        <span class="nv">$_G</span><span class="p">[</span><span class="s1">&#39;formhash&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nx">formhash</span><span class="p">();</span>
+        <span class="nv">$_G</span><span class="p">[</span><span class="s1">&#39;session&#39;</span><span class="p">][</span><span class="s1">&#39;invisible&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nx">getuserprofile</span><span class="p">(</span><span class="s1">&#39;invisible&#39;</span><span class="p">);</span>
+        <span class="nv">$_G</span><span class="p">[</span><span class="s1">&#39;member&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nv">$member</span><span class="p">;</span>
+        <span class="nx">loadcache</span><span class="p">(</span><span class="s1">&#39;usergroup_&#39;</span><span class="o">.</span><span class="nv">$_G</span><span class="p">[</span><span class="s1">&#39;groupid&#39;</span><span class="p">]);</span>
+        <span class="nx">C</span><span class="o">::</span><span class="na">app</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">session</span><span class="o">-&gt;</span><span class="na">isnew</span> <span class="o">=</span> <span class="k">true</span><span class="p">;</span>
+        <span class="nx">C</span><span class="o">::</span><span class="na">app</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">session</span><span class="o">-&gt;</span><span class="na">updatesession</span><span class="p">();</span>
 
-        $_G[&#39;uid&#39;] = intval($uid);
-        $_G[&#39;username&#39;] = $username;
-        $_G[&#39;adminid&#39;] = $member[&#39;adminid&#39;];
-        $_G[&#39;groupid&#39;] = $member[&#39;groupid&#39;];
-        $_G[&#39;formhash&#39;] = formhash();
-        $_G[&#39;session&#39;][&#39;invisible&#39;] = getuserprofile(&#39;invisible&#39;);
-        $_G[&#39;member&#39;] = $member;
-        loadcache(&#39;usergroup_&#39;.$_G[&#39;groupid&#39;]);
-        C::app()-&gt;session-&gt;isnew = true;
-        C::app()-&gt;session-&gt;updatesession();
+        <span class="nx">dsetcookie</span><span class="p">(</span><span class="s1">&#39;auth&#39;</span><span class="p">,</span> <span class="nx">authcode</span><span class="p">(</span><span class="s2">&#34;</span><span class="si">{</span><span class="nv">$member</span><span class="p">[</span><span class="s1">&#39;password&#39;</span><span class="p">]</span><span class="si">}</span><span class="se">\t</span><span class="si">{</span><span class="nv">$member</span><span class="p">[</span><span class="s1">&#39;uid&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">,</span> <span class="s1">&#39;ENCODE&#39;</span><span class="p">),</span> <span class="nv">$cookietime</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="k">true</span><span class="p">);</span>        <span class="c1">//这里的passwod是pre_common_member表中经过加密后的密码
+</span><span class="c1"></span>        <span class="nx">dsetcookie</span><span class="p">(</span><span class="s1">&#39;loginuser&#39;</span><span class="p">,</span><span class="nv">$username</span><span class="p">);</span>
+        <span class="nx">dsetcookie</span><span class="p">(</span><span class="s1">&#39;activationauth&#39;</span><span class="p">);</span>
+        <span class="nx">dsetcookie</span><span class="p">(</span><span class="s1">&#39;pmnum&#39;</span><span class="p">);</span>
 
-        dsetcookie(&#39;auth&#39;, authcode(&#34;{$member[&#39;password&#39;]}\t{$member[&#39;uid&#39;]}&#34;, &#39;ENCODE&#39;), $cookietime, 1, true);        //这里的passwod是pre_common_member表中经过加密后的密码
-        dsetcookie(&#39;loginuser&#39;,$username);
-        dsetcookie(&#39;activationauth&#39;);
-        dsetcookie(&#39;pmnum&#39;);
-
-        dexit(&#39;<span class="p">&lt;</span><span class="nt">script</span> <span class="na">type</span><span class="o">=</span><span class="s">&#34;text/javascript&#34;</span><span class="p">&gt;</span><span class="nb">window</span><span class="p">.</span><span class="nx">top</span><span class="p">.</span><span class="nx">location</span><span class="p">.</span><span class="nx">reload</span><span class="p">();&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>&#39;);
-    } else {
-        dexit();
-    }
-}
+        <span class="nx">dexit</span><span class="p">(</span><span class="s1">&#39;&lt;script type=&#34;text/javascript&#34;&gt;window.top.location.reload();&lt;/script&gt;&#39;</span><span class="p">);</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="nx">dexit</span><span class="p">();</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 </code></pre></td></tr></table>
 </div>
 </div><h2 id="sourcemodulemembermember_loggingphp-添加允许-logincheck-方法通过">source/module/member/member_logging.php 添加允许 <code>loginCheck</code> 方法通过</h2>
@@ -3378,7 +4599,7 @@ $url_forward = &#39;forum.php&#39;;
             <title type="text">java 调用 c# 的方法</title>
             <link rel="alternate" type="text/html" href="https://ld000.space/post/java_call_cnet/" />
             <id>https://ld000.space/post/java_call_cnet/</id>
-            <updated>2021-02-21T17:56:19+00:00</updated>
+            <updated>2021-07-15T11:44:32+00:00</updated>
             <published>2017-06-28T00:00:00+00:00</published>
             <author>
                     <name>Voiddd</name>
@@ -3520,7 +4741,7 @@ $url_forward = &#39;forum.php&#39;;
             <title type="text">翻译: Spring AOP 讨论最多的问题 #1 - aspects 没有生效</title>
             <link rel="alternate" type="text/html" href="https://ld000.space/post/aspects_are_not_applied/" />
             <id>https://ld000.space/post/aspects_are_not_applied/</id>
-            <updated>2021-02-21T17:56:19+00:00</updated>
+            <updated>2021-07-15T11:44:32+00:00</updated>
             <published>2017-06-12T00:00:00+00:00</published>
             <author>
                     <name>Voiddd</name>
@@ -3833,7 +5054,7 @@ AopService.service()
             <title type="text">响应模式</title>
             <link rel="alternate" type="text/html" href="https://ld000.space/post/xyms/" />
             <id>https://ld000.space/post/xyms/</id>
-            <updated>2021-02-21T17:56:19+00:00</updated>
+            <updated>2021-07-15T11:44:32+00:00</updated>
             <published>2016-12-20T00:00:00+00:00</published>
             <author>
                     <name>Voiddd</name>
@@ -4485,7 +5706,7 @@ AopService.service()
             <title type="text">搭建一个基于 github-pages 和 jekyll 的免费博客</title>
             <link rel="alternate" type="text/html" href="https://ld000.space/post/github-pages-jekyll/" />
             <id>https://ld000.space/post/github-pages-jekyll/</id>
-            <updated>2021-02-21T17:56:19+00:00</updated>
+            <updated>2021-07-15T11:44:32+00:00</updated>
             <published>2016-12-16T00:00:00+00:00</published>
             <author>
                     <name>Voiddd</name>
@@ -4848,7 +6069,7 @@ bundle update
             <title type="text">RandomAccess 接口使用</title>
             <link rel="alternate" type="text/html" href="https://ld000.space/post/random-access/" />
             <id>https://ld000.space/post/random-access/</id>
-            <updated>2021-02-21T17:56:19+00:00</updated>
+            <updated>2021-07-15T11:44:32+00:00</updated>
             <published>2016-03-19T00:00:00+00:00</published>
             <author>
                     <name>Voiddd</name>
