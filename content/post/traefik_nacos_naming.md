@@ -1,5 +1,5 @@
 ---
-title: 为 Traefik 添加从 nacos 读取服务地址功能
+title: 为 Traefik 添加从 nacos 读取服务地址功
 date: 2021-06-12
 tags: [""]
 ---
