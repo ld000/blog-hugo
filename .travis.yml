@@ -7,7 +7,7 @@ git:
     depth: 1
 
 env:
-  HUGO=0.68.3
+  HUGO=0.78.1
   URL=https://github.com/gohugoio/hugo/releases/download
 
 before_install:
