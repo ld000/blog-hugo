@@ -1,37 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-
-
-<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="zh-CN">
-    <title type="text">Voiddd</title>
-    <subtitle type="html">MemE 是一个强大且可高度定制的 GoHugo 博客主题，专为个人博客设计。</subtitle>
-    <updated>2021-07-15T11:44:54+00:00</updated>
-    <id>https://ld000.space/</id>
-    <link rel="alternate" type="text/html" href="https://ld000.space/" />
-    <link rel="self" type="application/atom+xml" href="https://ld000.space/atom.xml" />
-    <author>
-            <name>Voiddd</name>
-            <uri>https://ld000.space/</uri>
-            
-                <email>voidd247@outlook.com</email>
-            </author>
-    <rights>[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh)</rights>
-    <generator uri="https://gohugo.io/" version="0.78.1">Hugo</generator>
-        <entry>
-            <title type="text">为 Traefik 添加从 nacos 读取服务地址功能</title>
-            <link rel="alternate" type="text/html" href="https://ld000.space/post/traefik_nacos_naming/" />
-            <id>https://ld000.space/post/traefik_nacos_naming/</id>
-            <updated>2021-07-15T11:44:32+00:00</updated>
-            <published>2021-06-12T00:00:00+00:00</published>
-            <author>
-                    <name>Voiddd</name>
-                    <uri>https://ld000.space</uri>
-                    <email>voidd247@outlook.com</email>
-                    </author>
-            <rights>[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh)</rights>
-    
-    <summary type="html"><![CDATA[软件版本 Traefik 版本：2.4.0 背景 Traefik 是一个 go 实现的高性能 API 网关，本身支持多种配置加载方式……]]></summary>
-            
-                <content type="html"><![CDATA[<h2 id="软件版本">软件版本</h2>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="zh-CN"><title type="text">Voiddd</title><subtitle type="html">MemE 是一个强大且可高度定制的 GoHugo 博客主题，专为个人博客设计。</subtitle><updated>2021-07-15T11:55:57+00:00</updated><id>https://ld000.space/</id><link rel="alternate" type="text/html" href="https://ld000.space/"/><link rel="self" type="application/atom+xml" href="https://ld000.space/atom.xml"/><author><name>Voiddd</name><uri>https://ld000.space/</uri><email>voidd247@outlook.com</email></author><rights>[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh)</rights><generator uri="https://gohugo.io/" version="0.85.0">Hugo</generator><entry><title type="text">为 Traefik 添加从 nacos 读取服务地址功能</title><link rel="alternate" type="text/html" href="https://ld000.space/post/traefik_nacos_naming/"/><id>https://ld000.space/post/traefik_nacos_naming/</id><updated>2021-07-15T11:55:55+00:00</updated><published>2021-06-12T00:00:00+00:00</published><author><name>Voiddd</name><uri>https://ld000.space</uri><email>voidd247@outlook.com</email></author><rights>[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh)</rights><summary type="html">软件版本 Traefik 版本：2.4.0 背景 Traefik 是一个 go 实现的高性能 API 网关，本身支持多种配置加载方式……</summary><content type="html"><![CDATA[<h2 id="软件版本">软件版本</h2>
 <p>Traefik 版本：2.4.0</p>
 <h2 id="背景">背景</h2>
 <p>Traefik 是一个 go 实现的高性能 API 网关，本身支持多种配置加载方式，包括 file, k8s, consul 等。</p>
@@ -1211,44 +1178,7 @@
 </div>
 </div><h2 id="结尾">结尾</h2>
 <p>修改后 Traefik 就可以从注册中心自动拉取实例信息来负载了，方便了很多。上边的实例做了一些简化，比如从 nacos 获取了全量服务，在服务很多的情况下不太高效，可以只获取需要用的服务、路由信息修改可以放到配置中心或者修改下UI，就可以可视化操作了、等等。实际使用时可以根据自己的情况做下修改。</p>
-]]></content>
-            
-            
-            
-            
-            
-                
-                    
-                
-                    
-                        
-                            
-                            
-                            
-                                <category scheme="https://ld000.space/tags/" term="Tags" label="Tags" />
-                            
-                        
-                    
-                
-            
-        </entry>
-    
-        <entry>
-            <title type="text">给 traefik 添加插件</title>
-            <link rel="alternate" type="text/html" href="https://ld000.space/post/traefik_add_middleware/" />
-            <id>https://ld000.space/post/traefik_add_middleware/</id>
-            <updated>2021-07-15T11:44:32+00:00</updated>
-            <published>2020-10-12T00:00:00+00:00</published>
-            <author>
-                    <name>Voiddd</name>
-                    <uri>https://ld000.space</uri>
-                    <email>voidd247@outlook.com</email>
-                    </author>
-            <rights>[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh)</rights>
-    
-    <summary type="html"><![CDATA[版本：2.2.8 Traefik 默认带很多插件，但是可能一些我们的个性化需求原生插件并不支持，这时……]]></summary>
-            
-                <content type="html"><![CDATA[<p>版本：2.2.8</p>
+]]></content><category scheme="https://ld000.space/tags/" term="Tags" label="Tags"/></entry><entry><title type="text">给 traefik 添加插件</title><link rel="alternate" type="text/html" href="https://ld000.space/post/traefik_add_middleware/"/><id>https://ld000.space/post/traefik_add_middleware/</id><updated>2021-07-15T11:55:55+00:00</updated><published>2020-10-12T00:00:00+00:00</published><author><name>Voiddd</name><uri>https://ld000.space</uri><email>voidd247@outlook.com</email></author><rights>[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh)</rights><summary type="html">版本：2.2.8 Traefik 默认带很多插件，但是可能一些我们的个性化需求原生插件并不支持，这时……</summary><content type="html"><![CDATA[<p>版本：2.2.8</p>
 <p>Traefik 默认带很多插件，但是可能一些我们的个性化需求原生插件并不支持，这时候就需要自己开发插件了。在 2.3 版本之前 Traefik 不支持外挂插件，所以如果要添加插件的话我们需要修改源码。</p>
 <p>下面就以添加个验证token的插件作为演示。</p>
 <p>这个插件获取请求在header中添加的token，之后请求后端服务校验token是否正确，正确就继续请求后端，错误就直接返回错误信息。</p>
@@ -1730,44 +1660,7 @@
 </span></code></pre></td></tr></table>
 </div>
 </div><p>这样新添加的插件就能用了。</p>
-]]></content>
-            
-            
-            
-            
-            
-                
-                    
-                
-                    
-                        
-                            
-                            
-                            
-                                <category scheme="https://ld000.space/tags/" term="Tags" label="Tags" />
-                            
-                        
-                    
-                
-            
-        </entry>
-    
-        <entry>
-            <title type="text">(翻译)写技术设计文档</title>
-            <link rel="alternate" type="text/html" href="https://ld000.space/post/writing_technical_design_docs/" />
-            <id>https://ld000.space/post/writing_technical_design_docs/</id>
-            <updated>2021-07-15T11:44:32+00:00</updated>
-            <published>2020-09-01T00:00:00+00:00</published>
-            <author>
-                    <name>Voiddd</name>
-                    <uri>https://ld000.space</uri>
-                    <email>voidd247@outlook.com</email>
-                    </author>
-            <rights>[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh)</rights>
-    
-    <summary type="html"><![CDATA[原文：https://medium.com/machine-words/writin……]]></summary>
-            
-                <content type="html"><![CDATA[<blockquote>
+]]></content><category scheme="https://ld000.space/tags/" term="Tags" label="Tags"/></entry><entry><title type="text">(翻译)写技术设计文档</title><link rel="alternate" type="text/html" href="https://ld000.space/post/writing_technical_design_docs/"/><id>https://ld000.space/post/writing_technical_design_docs/</id><updated>2021-07-15T11:55:55+00:00</updated><published>2020-09-01T00:00:00+00:00</published><author><name>Voiddd</name><uri>https://ld000.space</uri><email>voidd247@outlook.com</email></author><rights>[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh)</rights><summary type="html">原文：https://medium.com/machine-words/writin……</summary><content type="html"><![CDATA[<blockquote>
 <p>原文：<a href="https://medium.com/machine-words/writing-technical-design-docs-71f446e42f2e">https://medium.com/machine-words/writing-technical-design-docs-71f446e42f2e</a></p>
 </blockquote>
 <p>软件工程师一个重要的技能就是写技术设计文档(TDDs)，也被称为工程设计文档(EDDs)。这篇文章我会谈些如何写好技术文档的建议和需要避免哪些错误。</p>
@@ -1844,44 +1737,7 @@
 <p>因此，不应将TDD视为实际用户或API参考文档的适当替代品。</p>
 <h2 id="最后">最后</h2>
 <p>网络上还有许多其他文章，解释了如何编写出色的设计文档。不要只读这篇文章！阅读其他内容，然后选择适合您的各种想法。</p>
-]]></content>
-            
-            
-            
-            
-            
-                
-                    
-                
-                    
-                        
-                            
-                            
-                            
-                                <category scheme="https://ld000.space/tags/" term="Tags" label="Tags" />
-                            
-                        
-                    
-                
-            
-        </entry>
-    
-        <entry>
-            <title type="text">sharding-proxy 连接缓存导致 fullGC 内存不释放</title>
-            <link rel="alternate" type="text/html" href="https://ld000.space/post/sharding_proxy_cache/" />
-            <id>https://ld000.space/post/sharding_proxy_cache/</id>
-            <updated>2021-07-15T11:44:32+00:00</updated>
-            <published>2020-05-25T00:00:00+00:00</published>
-            <author>
-                    <name>Voiddd</name>
-                    <uri>https://ld000.space</uri>
-                    <email>voidd247@outlook.com</email>
-                    </author>
-            <rights>[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh)</rights>
-    
-    <summary type="html"><![CDATA[sharding-proxy版本：3.1.0 之前公司使用了 sharding-proxy 作为数据库分库分表代理。……]]></summary>
-            
-                <content type="html"><![CDATA[<p>sharding-proxy版本：3.1.0</p>
+]]></content><category scheme="https://ld000.space/tags/" term="Tags" label="Tags"/></entry><entry><title type="text">sharding-proxy 连接缓存导致 fullGC 内存不释放</title><link rel="alternate" type="text/html" href="https://ld000.space/post/sharding_proxy_cache/"/><id>https://ld000.space/post/sharding_proxy_cache/</id><updated>2021-07-15T11:55:55+00:00</updated><published>2020-05-25T00:00:00+00:00</published><author><name>Voiddd</name><uri>https://ld000.space</uri><email>voidd247@outlook.com</email></author><rights>[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh)</rights><summary type="html">sharding-proxy版本：3.1.0 之前公司使用了 sharding-proxy 作为数据库分库分表代理。……</summary><content type="html"><![CDATA[<p>sharding-proxy版本：3.1.0</p>
 <p>之前公司使用了 sharding-proxy 作为数据库分库分表代理。</p>
 <p>在运行一段时间后，出现大量连接超时，触发了线上报警。观察内存发现内存几乎占满了，频繁触发 fullGC。内存无法释放。</p>
 <p><img src="https://void.oss-cn-beijing.aliyuncs.com/img/20200710103616.png" alt="https://void.oss-cn-beijing.aliyuncs.com/img/20200710103616.png"></p>
@@ -2052,50 +1908,7 @@
 </code></pre></td></tr></table>
 </div>
 </div><p>这样，连接断开后就会自动释放缓存了。</p>
-]]></content>
-            
-            
-            
-            
-            
-                
-                    
-                
-                    
-                        
-                            
-                            
-                            
-                                <category scheme="https://ld000.space/tags/java/" term="java" label="java" />
-                            
-                        
-                            
-                            
-                            
-                                <category scheme="https://ld000.space/tags/sharding-proxy/" term="sharding-proxy" label="sharding-proxy" />
-                            
-                        
-                    
-                
-            
-        </entry>
-    
-        <entry>
-            <title type="text">MemoryPoolMXBean 各内存池名字</title>
-            <link rel="alternate" type="text/html" href="https://ld000.space/post/java_memorypoolmxbean/" />
-            <id>https://ld000.space/post/java_memorypoolmxbean/</id>
-            <updated>2021-07-15T11:44:32+00:00</updated>
-            <published>2020-04-13T00:00:00+00:00</published>
-            <author>
-                    <name>Voiddd</name>
-                    <uri>https://ld000.space</uri>
-                    <email>voidd247@outlook.com</email>
-                    </author>
-            <rights>[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh)</rights>
-    
-    <summary type="html"><![CDATA[MemoryPoolMXBean 是 Java 内存池的管理接口，如果要做内存监控，就会用到这个类。 下面整理下各版本内存池的名……]]></summary>
-            
-                <content type="html"><![CDATA[<p>MemoryPoolMXBean 是 Java 内存池的管理接口，如果要做内存监控，就会用到这个类。</p>
+]]></content><category scheme="https://ld000.space/tags/java/" term="java" label="java"/><category scheme="https://ld000.space/tags/sharding-proxy/" term="sharding-proxy" label="sharding-proxy"/></entry><entry><title type="text">MemoryPoolMXBean 各内存池名字</title><link rel="alternate" type="text/html" href="https://ld000.space/post/java_memorypoolmxbean/"/><id>https://ld000.space/post/java_memorypoolmxbean/</id><updated>2021-07-15T11:55:55+00:00</updated><published>2020-04-13T00:00:00+00:00</published><author><name>Voiddd</name><uri>https://ld000.space</uri><email>voidd247@outlook.com</email></author><rights>[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh)</rights><summary type="html">MemoryPoolMXBean 是 Java 内存池的管理接口，如果要做内存监控，就会用到这个类。 下面整理下各版本内存池的名……</summary><content type="html"><![CDATA[<p>MemoryPoolMXBean 是 Java 内存池的管理接口，如果要做内存监控，就会用到这个类。</p>
 <p>下面整理下各版本内存池的名字。</p>
 <h2 id="code-cache">Code Cache</h2>
 <h3 id="jdk7-jdk8">JDK7, JDK8</h3>
@@ -2132,44 +1945,7 @@
     G1 Old Gen
 </code></pre><h2 id="zgc">ZGC</h2>
 <pre><code>    ZHeap
-</code></pre>]]></content>
-            
-            
-            
-            
-            
-                
-                    
-                
-                    
-                        
-                            
-                            
-                            
-                                <category scheme="https://ld000.space/tags/java/" term="java" label="java" />
-                            
-                        
-                    
-                
-            
-        </entry>
-    
-        <entry>
-            <title type="text">gorm调用sharding-proxy, 参数带单引号sql报错</title>
-            <link rel="alternate" type="text/html" href="https://ld000.space/post/gorm_sharding_proxy_sql_error/" />
-            <id>https://ld000.space/post/gorm_sharding_proxy_sql_error/</id>
-            <updated>2021-07-15T11:44:32+00:00</updated>
-            <published>2020-03-27T00:00:00+00:00</published>
-            <author>
-                    <name>Voiddd</name>
-                    <uri>https://ld000.space</uri>
-                    <email>voidd247@outlook.com</email>
-                    </author>
-            <rights>[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh)</rights>
-    
-    <summary type="html"><![CDATA[软件版本 sharding-proxy-3.1.0 MySQL-5.7 正文 最近公司某系统用 go 重构，ORM框架使用 gorm，用上了分库分表，使用……]]></summary>
-            
-                <content type="html"><![CDATA[<h2 id="软件版本">软件版本</h2>
+</code></pre>]]></content><category scheme="https://ld000.space/tags/java/" term="java" label="java"/></entry><entry><title type="text">gorm调用sharding-proxy, 参数带单引号sql报错</title><link rel="alternate" type="text/html" href="https://ld000.space/post/gorm_sharding_proxy_sql_error/"/><id>https://ld000.space/post/gorm_sharding_proxy_sql_error/</id><updated>2021-07-15T11:55:55+00:00</updated><published>2020-03-27T00:00:00+00:00</published><author><name>Voiddd</name><uri>https://ld000.space</uri><email>voidd247@outlook.com</email></author><rights>[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh)</rights><summary type="html">软件版本 sharding-proxy-3.1.0 MySQL-5.7 正文 最近公司某系统用 go 重构，ORM框架使用 gorm，用上了分库分表，使用……</summary><content type="html"><![CDATA[<h2 id="软件版本">软件版本</h2>
 <p>sharding-proxy-3.1.0</p>
 <p>MySQL-5.7</p>
 <h2 id="正文">正文</h2>
@@ -2659,62 +2435,7 @@ where
 <pre class="chroma"><code class="language-shell" data-lang="shell">Exception in thread <span class="s2">&#34;main&#34;</span> java.sql.SQLException: Unknown exception: Illegal input, unterminated <span class="s1">&#39;&#39;</span><span class="err">&#39;</span>.
 </code></pre></td></tr></table>
 </div>
-</div>]]></content>
-            
-            
-            
-            
-            
-                
-                    
-                
-                    
-                        
-                            
-                            
-                            
-                                <category scheme="https://ld000.space/tags/go/" term="go" label="go" />
-                            
-                        
-                            
-                            
-                            
-                                <category scheme="https://ld000.space/tags/gorm/" term="gorm" label="gorm" />
-                            
-                        
-                            
-                            
-                            
-                                <category scheme="https://ld000.space/tags/sharding-proxy/" term="sharding-proxy" label="sharding-proxy" />
-                            
-                        
-                            
-                            
-                            
-                                <category scheme="https://ld000.space/tags/mysql/" term="MySQL" label="MySQL" />
-                            
-                        
-                    
-                
-            
-        </entry>
-    
-        <entry>
-            <title type="text">Mac下用CLion debug MySQL5.7源码</title>
-            <link rel="alternate" type="text/html" href="https://ld000.space/post/mac_clion_debug_mysql_source/" />
-            <id>https://ld000.space/post/mac_clion_debug_mysql_source/</id>
-            <updated>2021-07-15T11:44:32+00:00</updated>
-            <published>2020-03-26T00:00:00+00:00</published>
-            <author>
-                    <name>Voiddd</name>
-                    <uri>https://ld000.space</uri>
-                    <email>voidd247@outlook.com</email>
-                    </author>
-            <rights>[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh)</rights>
-    
-    <summary type="html"><![CDATA[编译安装 MySQL 首先从 github 下载 mysql 源码 1 https://github.com/mysql/mysql-server 接下来编译安装 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19……]]></summary>
-            
-                <content type="html"><![CDATA[<h2 id="编译安装-mysql">编译安装 MySQL</h2>
+</div>]]></content><category scheme="https://ld000.space/tags/go/" term="go" label="go"/><category scheme="https://ld000.space/tags/gorm/" term="gorm" label="gorm"/><category scheme="https://ld000.space/tags/sharding-proxy/" term="sharding-proxy" label="sharding-proxy"/><category scheme="https://ld000.space/tags/mysql/" term="MySQL" label="MySQL"/></entry><entry><title type="text">Mac下用CLion debug MySQL5.7源码</title><link rel="alternate" type="text/html" href="https://ld000.space/post/mac_clion_debug_mysql_source/"/><id>https://ld000.space/post/mac_clion_debug_mysql_source/</id><updated>2021-07-15T11:55:55+00:00</updated><published>2020-03-26T00:00:00+00:00</published><author><name>Voiddd</name><uri>https://ld000.space</uri><email>voidd247@outlook.com</email></author><rights>[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh)</rights><summary type="html">编译安装 MySQL 首先从 github 下载 mysql 源码 1 https://github.com/mysql/mysql-server 接下来编译安装 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19……</summary><content type="html"><![CDATA[<h2 id="编译安装-mysql">编译安装 MySQL</h2>
 <p>首先从 github 下载 mysql 源码</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -2810,56 +2531,7 @@ where
 </div>
 </div><p>之后选择 mysqld，然后点击 debug 按钮就可以开始调试了。</p>
 <p><img src="https://void.oss-cn-beijing.aliyuncs.com/img/20200326122342.jpg" alt="https://void.oss-cn-beijing.aliyuncs.com/img/20200326122342.jpg"></p>
-]]></content>
-            
-            
-            
-            
-            
-                
-                    
-                
-                    
-                        
-                            
-                            
-                            
-                                <category scheme="https://ld000.space/tags/java/" term="java" label="java" />
-                            
-                        
-                            
-                            
-                            
-                                <category scheme="https://ld000.space/tags/clion/" term="CLion" label="CLion" />
-                            
-                        
-                            
-                            
-                            
-                                <category scheme="https://ld000.space/tags/mysql/" term="MySQL" label="MySQL" />
-                            
-                        
-                    
-                
-            
-        </entry>
-    
-        <entry>
-            <title type="text">MyBatis 一级缓存在分布式下的坑</title>
-            <link rel="alternate" type="text/html" href="https://ld000.space/post/mybatis_scale_localcache/" />
-            <id>https://ld000.space/post/mybatis_scale_localcache/</id>
-            <updated>2021-07-15T11:44:32+00:00</updated>
-            <published>2019-11-24T00:00:00+00:00</published>
-            <author>
-                    <name>Voiddd</name>
-                    <uri>https://ld000.space</uri>
-                    <email>voidd247@outlook.com</email>
-                    </author>
-            <rights>[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh)</rights>
-    
-    <summary type="html"><![CDATA[最近生产环境的余额系统在扣减余额时经常出现余额够但是提示余额不足无法扣减的情况。查看……]]></summary>
-            
-                <content type="html"><![CDATA[<p>最近生产环境的余额系统在扣减余额时经常出现余额够但是提示余额不足无法扣减的情况。查看代码逻辑，发现会先查询一次判断余额是否够，再实际扣减，之后查看日志发现并没有执行查询语句就返回错误了，推测可能是 MyBatis 一级缓存没有关闭引起的脏数据问题。关闭一级缓存后果然恢复正常了。</p>
+]]></content><category scheme="https://ld000.space/tags/java/" term="java" label="java"/><category scheme="https://ld000.space/tags/clion/" term="CLion" label="CLion"/><category scheme="https://ld000.space/tags/mysql/" term="MySQL" label="MySQL"/></entry><entry><title type="text">MyBatis 一级缓存在分布式下的坑</title><link rel="alternate" type="text/html" href="https://ld000.space/post/mybatis_scale_localcache/"/><id>https://ld000.space/post/mybatis_scale_localcache/</id><updated>2021-07-15T11:55:55+00:00</updated><published>2019-11-24T00:00:00+00:00</published><author><name>Voiddd</name><uri>https://ld000.space</uri><email>voidd247@outlook.com</email></author><rights>[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh)</rights><summary type="html">最近生产环境的余额系统在扣减余额时经常出现余额够但是提示余额不足无法扣减的情况。查看……</summary><content type="html"><![CDATA[<p>最近生产环境的余额系统在扣减余额时经常出现余额够但是提示余额不足无法扣减的情况。查看代码逻辑，发现会先查询一次判断余额是否够，再实际扣减，之后查看日志发现并没有执行查询语句就返回错误了，推测可能是 MyBatis 一级缓存没有关闭引起的脏数据问题。关闭一级缓存后果然恢复正常了。</p>
 <p>所以有了这篇文章，验证下 MyBatis 一级缓存的生效条件。</p>
 <h2 id="一级缓存">一级缓存</h2>
 <p>MyBatis 默认会开启一级缓存，在同一次会话中，如果执行多次查询条件相同的 SQL，会进行优化，优先命中一级缓存，避免多次查询数据库。</p>
@@ -3083,44 +2755,7 @@ session1: <span class="m">500</span>
 </div><p>可以看到关闭一级缓存后所有语句都会实际执行。</p>
 <h2 id="总结">总结</h2>
 <p>MyBatis 的一级缓存在单机环境下可以减少与 MySql 的交互，提高性能，但是在分布式环境下容易产生脏数据。建议在生产环境下关闭，使用 Redis，Memcache 等代替。</p>
-]]></content>
-            
-            
-            
-            
-            
-                
-                    
-                
-                    
-                        
-                            
-                            
-                            
-                                <category scheme="https://ld000.space/tags/java/" term="java" label="java" />
-                            
-                        
-                    
-                
-            
-        </entry>
-    
-        <entry>
-            <title type="text">用外置 Tomcat 部署 Spring Boot 应用</title>
-            <link rel="alternate" type="text/html" href="https://ld000.space/post/spring_boot_tomcat/" />
-            <id>https://ld000.space/post/spring_boot_tomcat/</id>
-            <updated>2021-07-15T11:44:32+00:00</updated>
-            <published>2019-10-25T00:00:00+00:00</published>
-            <author>
-                    <name>Voiddd</name>
-                    <uri>https://ld000.space</uri>
-                    <email>voidd247@outlook.com</email>
-                    </author>
-            <rights>[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh)</rights>
-    
-    <summary type="html"><![CDATA[现在越来越多的人使用 Spring Boot 来开发自己的应用了，Spring Boot 用起来是各种方便，还内置 web……]]></summary>
-            
-                <content type="html"><![CDATA[<p>现在越来越多的人使用 Spring Boot 来开发自己的应用了，Spring Boot 用起来是各种方便，还内置 web 容器，只需要<code>java -jar</code>就能启动应用。但有时候有些公司的 Tomcat 是单独部署，有专人维护的，这时我们就需要将 Spring Boot 应用打包成 war 部署。</p>
+]]></content><category scheme="https://ld000.space/tags/java/" term="java" label="java"/></entry><entry><title type="text">用外置 Tomcat 部署 Spring Boot 应用</title><link rel="alternate" type="text/html" href="https://ld000.space/post/spring_boot_tomcat/"/><id>https://ld000.space/post/spring_boot_tomcat/</id><updated>2021-07-15T11:55:55+00:00</updated><published>2019-10-25T00:00:00+00:00</published><author><name>Voiddd</name><uri>https://ld000.space</uri><email>voidd247@outlook.com</email></author><rights>[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh)</rights><summary type="html">现在越来越多的人使用 Spring Boot 来开发自己的应用了，Spring Boot 用起来是各种方便，还内置 web……</summary><content type="html"><![CDATA[<p>现在越来越多的人使用 Spring Boot 来开发自己的应用了，Spring Boot 用起来是各种方便，还内置 web 容器，只需要<code>java -jar</code>就能启动应用。但有时候有些公司的 Tomcat 是单独部署，有专人维护的，这时我们就需要将 Spring Boot 应用打包成 war 部署。</p>
 <h2 id="打包方式设置为-war">打包方式设置为 war</h2>
 <p>修改 pom.xml 文件，将打包方式设置为 war</p>
 <div class="highlight"><div class="chroma">
@@ -3341,44 +2976,7 @@ session1: <span class="m">500</span>
     <span class="o">}</span>
 </code></pre></td></tr></table>
 </div>
-</div>]]></content>
-            
-            
-            
-            
-            
-                
-                    
-                
-                    
-                        
-                            
-                            
-                            
-                                <category scheme="https://ld000.space/tags/java/" term="java" label="java" />
-                            
-                        
-                    
-                
-            
-        </entry>
-    
-        <entry>
-            <title type="text">让 Redis zset 支持多条件排序</title>
-            <link rel="alternate" type="text/html" href="https://ld000.space/post/make_redis_zset_support_multiple_sort/" />
-            <id>https://ld000.space/post/make_redis_zset_support_multiple_sort/</id>
-            <updated>2021-07-15T11:44:32+00:00</updated>
-            <published>2019-10-23T00:00:00+00:00</published>
-            <author>
-                    <name>Voiddd</name>
-                    <uri>https://ld000.space</uri>
-                    <email>voidd247@outlook.com</email>
-                    </author>
-            <rights>[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh)</rights>
-    
-    <summary type="html"><![CDATA[一些需求中经常要我们实现一个排行榜，数据量少的话可以使用 RDB 数据库排序，数据量大可以自……]]></summary>
-            
-                <content type="html"><![CDATA[<p>一些需求中经常要我们实现一个排行榜，数据量少的话可以使用 RDB 数据库排序，数据量大可以自己实现算法或者使用 NoSQL 数据库排序，NoSQL 数据库中最方便的可能就是利用 Redis 的 zset 来实现了。 例如要实现一个玩家成就点数的排行榜：</p>
+</div>]]></content><category scheme="https://ld000.space/tags/java/" term="java" label="java"/></entry><entry><title type="text">让 Redis zset 支持多条件排序</title><link rel="alternate" type="text/html" href="https://ld000.space/post/make_redis_zset_support_multiple_sort/"/><id>https://ld000.space/post/make_redis_zset_support_multiple_sort/</id><updated>2021-07-15T11:55:55+00:00</updated><published>2019-10-23T00:00:00+00:00</published><author><name>Voiddd</name><uri>https://ld000.space</uri><email>voidd247@outlook.com</email></author><rights>[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh)</rights><summary type="html">一些需求中经常要我们实现一个排行榜，数据量少的话可以使用 RDB 数据库排序，数据量大可以自……</summary><content type="html"><![CDATA[<p>一些需求中经常要我们实现一个排行榜，数据量少的话可以使用 RDB 数据库排序，数据量大可以自己实现算法或者使用 NoSQL 数据库排序，NoSQL 数据库中最方便的可能就是利用 Redis 的 zset 来实现了。 例如要实现一个玩家成就点数的排行榜：</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre class="chroma"><code><span class="lnt"> 1
@@ -3951,44 +3549,7 @@ session1: <span class="m">500</span>
 <p>原理和二进制拆分一样，就不赘述了。</p>
 <h2 id="总结">总结</h2>
 <p>数据量不大的情况下直接使用 RDB 就可以了，比较方便。用 Redis 的时候，一级以外的维度不变的情况下可以直接用 key 排序，比较简单，如果维度会更新，可以使用拆分二进制或十进制的方法存储，二进制的优点是存储的数比较大，而且可以用位运算，十进制的优点是计算简单，可读性比较好。各个维度的长度还可以做成配置项，这样就可以满足不同的业务需求了。</p>
-]]></content>
-            
-            
-            
-            
-            
-                
-                    
-                
-                    
-                        
-                            
-                            
-                            
-                                <category scheme="https://ld000.space/tags/java/" term="java" label="java" />
-                            
-                        
-                    
-                
-            
-        </entry>
-    
-        <entry>
-            <title type="text">MacOS 用 automater 自动备份安装的软件列表</title>
-            <link rel="alternate" type="text/html" href="https://ld000.space/post/automator_brewfile/" />
-            <id>https://ld000.space/post/automator_brewfile/</id>
-            <updated>2021-07-15T11:44:32+00:00</updated>
-            <published>2019-09-15T00:00:00+00:00</published>
-            <author>
-                    <name>Voiddd</name>
-                    <uri>https://ld000.space</uri>
-                    <email>voidd247@outlook.com</email>
-                    </author>
-            <rights>[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh)</rights>
-    
-    <summary type="html"><![CDATA[不知道有没有人经历过重装系统后需要把所有软件都重装一遍的痛苦，而且很有可能落下几个软……]]></summary>
-            
-                <content type="html"><![CDATA[<p>不知道有没有人经历过重装系统后需要把所有软件都重装一遍的痛苦，而且很有可能落下几个软件没装，等到用的时候才发现，重新下载再重新配置，时间不知不觉就没了。</p>
+]]></content><category scheme="https://ld000.space/tags/java/" term="java" label="java"/></entry><entry><title type="text">MacOS 用 automater 自动备份安装的软件列表</title><link rel="alternate" type="text/html" href="https://ld000.space/post/automator_brewfile/"/><id>https://ld000.space/post/automator_brewfile/</id><updated>2021-07-15T11:55:55+00:00</updated><published>2019-09-15T00:00:00+00:00</published><author><name>Voiddd</name><uri>https://ld000.space</uri><email>voidd247@outlook.com</email></author><rights>[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh)</rights><summary type="html">不知道有没有人经历过重装系统后需要把所有软件都重装一遍的痛苦，而且很有可能落下几个软……</summary><content type="html"><![CDATA[<p>不知道有没有人经历过重装系统后需要把所有软件都重装一遍的痛苦，而且很有可能落下几个软件没装，等到用的时候才发现，重新下载再重新配置，时间不知不觉就没了。</p>
 <p>所以要是能把安装过的软件列表都备份下来就好了。mac 上正好就有这样一个软件 <code>brew</code>。</p>
 <h2 id="准备">准备</h2>
 <p><code>brew</code> 是 Mac 下的一个包管理工具，类似 Ubuntu 的 apt，可以方便的安装各种软件。</p>
@@ -4111,44 +3672,7 @@ session1: <span class="m">500</span>
 <p><img src="/img/automator_brewfile/automator5.png" alt=""></p>
 <p>下次在新电脑上就可以执行<code>brew bundle --file=&quot;./Brewfile&quot;</code>来恢复安装过的软件了，是不是很方便呢。</p>
 <p>如果怕忘了命令还可以写个脚本来自动执行，比如我的 <a href="https://github.com/ld000/mac-init"><code>https://github.com/ld000/mac-init</code></a>。</p>
-]]></content>
-            
-            
-            
-            
-            
-                
-                    
-                
-                    
-                        
-                            
-                            
-                            
-                                <category scheme="https://ld000.space/tags/automater/" term="automater" label="automater" />
-                            
-                        
-                    
-                
-            
-        </entry>
-    
-        <entry>
-            <title type="text">discuz 接入 cas</title>
-            <link rel="alternate" type="text/html" href="https://ld000.space/post/discuz_cas/" />
-            <id>https://ld000.space/post/discuz_cas/</id>
-            <updated>2021-07-15T11:44:32+00:00</updated>
-            <published>2018-07-23T00:00:00+00:00</published>
-            <author>
-                    <name>Voiddd</name>
-                    <uri>https://ld000.space</uri>
-                    <email>voidd247@outlook.com</email>
-                    </author>
-            <rights>[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh)</rights>
-    
-    <summary type="html"><![CDATA[<p>discuz 接入 cas 实现 SSO 的方法。</p>……]]></summary>
-            
-                <content type="html"><![CDATA[<p>discuz 接入 cas 实现 SSO 的方法。</p>
+]]></content><category scheme="https://ld000.space/tags/automater/" term="automater" label="automater"/></entry><entry><title type="text">discuz 接入 cas</title><link rel="alternate" type="text/html" href="https://ld000.space/post/discuz_cas/"/><id>https://ld000.space/post/discuz_cas/</id><updated>2021-07-15T11:55:55+00:00</updated><published>2018-07-23T00:00:00+00:00</published><author><name>Voiddd</name><uri>https://ld000.space</uri><email>voidd247@outlook.com</email></author><rights>[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh)</rights><summary type="html">&lt;p>discuz 接入 cas 实现 SSO 的方法。&lt;/p>……</summary><content type="html"><![CDATA[<p>discuz 接入 cas 实现 SSO 的方法。</p>
 <h2 id="版本">版本</h2>
 <ul>
 <li>Discuz 3.3</li>
@@ -4567,50 +4091,7 @@ session1: <span class="m">500</span>
 <p>1164行
 <code>$this-&gt;redirectToCas(true/* gateway */);</code>
 改为
-<code>$this-&gt;redirectToCas(false/* gateway */);</code></p>]]></content>
-            
-            
-            
-            
-            
-                
-                    
-                
-                    
-                        
-                            
-                            
-                            
-                                <category scheme="https://ld000.space/tags/discuz/" term="discuz" label="discuz" />
-                            
-                        
-                            
-                            
-                            
-                                <category scheme="https://ld000.space/tags/cas/" term="cas" label="cas" />
-                            
-                        
-                    
-                
-            
-        </entry>
-    
-        <entry>
-            <title type="text">java 调用 c# 的方法</title>
-            <link rel="alternate" type="text/html" href="https://ld000.space/post/java_call_cnet/" />
-            <id>https://ld000.space/post/java_call_cnet/</id>
-            <updated>2021-07-15T11:44:32+00:00</updated>
-            <published>2017-06-28T00:00:00+00:00</published>
-            <author>
-                    <name>Voiddd</name>
-                    <uri>https://ld000.space</uri>
-                    <email>voidd247@outlook.com</email>
-                    </author>
-            <rights>[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh)</rights>
-    
-    <summary type="html"><![CDATA[<p>java 调用 c# 程序的几种方式。</p>……]]></summary>
-            
-                <content type="html"><![CDATA[<p>java 调用 c# 程序的几种方式。</p>
+<code>$this-&gt;redirectToCas(false/* gateway */);</code></p>]]></content><category scheme="https://ld000.space/tags/discuz/" term="discuz" label="discuz"/><category scheme="https://ld000.space/tags/cas/" term="cas" label="cas"/></entry><entry><title type="text">java 调用 c# 的方法</title><link rel="alternate" type="text/html" href="https://ld000.space/post/java_call_cnet/"/><id>https://ld000.space/post/java_call_cnet/</id><updated>2021-07-15T11:55:55+00:00</updated><published>2017-06-28T00:00:00+00:00</published><author><name>Voiddd</name><uri>https://ld000.space</uri><email>voidd247@outlook.com</email></author><rights>[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh)</rights><summary type="html">&lt;p>java 调用 c# 程序的几种方式。&lt;/p>……</summary><content type="html"><![CDATA[<p>java 调用 c# 程序的几种方式。</p>
 <h1 id="native-java">Native Java</h1>
 <p>Java不能直接调用C#的dll，这是因为C#和Java一样，也是运行在虚拟机上的语言，所生成的dll并不是和C++一样的native dll，因此没有办法使用JNI进行直接调用。</p>
 <p>Java调用C#的基本思路是：</p>
@@ -4715,47 +4196,10 @@ session1: <span class="m">500</span>
 <p>参考</p>
 <blockquote>
 <p><a href="http://ju.outofmemory.cn/entry/153844">http://ju.outofmemory.cn/entry/153844</a></p>
-</blockquote>]]></content>
-            
-            
-            
-            
-            
-                
-                    
-                
-                    
-                        
-                            
-                            
-                            
-                                <category scheme="https://ld000.space/tags/java/" term="java" label="java" />
-                            
-                        
-                    
-                
-            
-        </entry>
-    
-        <entry>
-            <title type="text">翻译: Spring AOP 讨论最多的问题 #1 - aspects 没有生效</title>
-            <link rel="alternate" type="text/html" href="https://ld000.space/post/aspects_are_not_applied/" />
-            <id>https://ld000.space/post/aspects_are_not_applied/</id>
-            <updated>2021-07-15T11:44:32+00:00</updated>
-            <published>2017-06-12T00:00:00+00:00</published>
-            <author>
-                    <name>Voiddd</name>
-                    <uri>https://ld000.space</uri>
-                    <email>voidd247@outlook.com</email>
-                    </author>
-            <rights>[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh)</rights>
-    
-    <summary type="html"><![CDATA[<blockquote>
+</blockquote>]]></content><category scheme="https://ld000.space/tags/java/" term="java" label="java"/></entry><entry><title type="text">翻译: Spring AOP 讨论最多的问题 #1 - aspects 没有生效</title><link rel="alternate" type="text/html" href="https://ld000.space/post/aspects_are_not_applied/"/><id>https://ld000.space/post/aspects_are_not_applied/</id><updated>2021-07-15T11:55:55+00:00</updated><published>2017-06-12T00:00:00+00:00</published><author><name>Voiddd</name><uri>https://ld000.space</uri><email>voidd247@outlook.com</email></author><rights>[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh)</rights><summary type="html"><![CDATA[<blockquote>
 <p>原文：http://denis-zhdanov.blogspot.com/2009/07/spring-aop-top-problem-1-aspects-are.html</p>
 </blockquote>
-<p>这篇文章继续讨论从 <a href="http://denis-zhdanov.blogspot.com/2009/05/spring-aop-top-problem-2.html">Spring AOP top problem #2 - java.lang.ClassCastException: $Proxy7</a> 开始的话题。在这个话题里，我想要说明一些现在接触 spring AOP 的 spring 用户(特别是新用户)讨论最多(从我的观点看来)的问题。</p>……]]></summary>
-            
-                <content type="html"><![CDATA[<blockquote>
+<p>这篇文章继续讨论从 <a href="http://denis-zhdanov.blogspot.com/2009/05/spring-aop-top-problem-2.html">Spring AOP top problem #2 - java.lang.ClassCastException: $Proxy7</a> 开始的话题。在这个话题里，我想要说明一些现在接触 spring AOP 的 spring 用户(特别是新用户)讨论最多(从我的观点看来)的问题。</p>……]]></summary><content type="html"><![CDATA[<blockquote>
 <p>原文：http://denis-zhdanov.blogspot.com/2009/07/spring-aop-top-problem-1-aspects-are.html</p>
 </blockquote>
 <p>这篇文章继续讨论从 <a href="http://denis-zhdanov.blogspot.com/2009/05/spring-aop-top-problem-2.html">Spring AOP top problem #2 - java.lang.ClassCastException: $Proxy7</a> 开始的话题。在这个话题里，我想要说明一些现在接触 spring AOP 的 spring 用户(特别是新用户)讨论最多(从我的观点看来)的问题。</p>
@@ -5016,62 +4460,13 @@ AopService.service()
 <p><strong>用 aspectj weaving</strong> - 这是我喜欢的方案。他会直接注入 aspect 到对应的 class 里， i.e. 不需要所有的方法都必须被代理;</p>
 </li>
 </ul>
-<p>我会写一篇文章来说明在 spring 中怎么使用各种类型的 aspectj weaving，这样会更加清楚的说明这个问题。</p>]]></content>
-            
-            
-            
-            
-            
-                
-                    
-                
-                    
-                        
-                            
-                            
-                            
-                                <category scheme="https://ld000.space/tags/aspect/" term="aspect" label="aspect" />
-                            
-                        
-                            
-                            
-                            
-                                <category scheme="https://ld000.space/tags/spring/" term="spring" label="spring" />
-                            
-                        
-                            
-                            
-                            
-                                <category scheme="https://ld000.space/tags/java/" term="java" label="java" />
-                            
-                        
-                    
-                
-            
-        </entry>
-    
-        <entry>
-            <title type="text">响应模式</title>
-            <link rel="alternate" type="text/html" href="https://ld000.space/post/xyms/" />
-            <id>https://ld000.space/post/xyms/</id>
-            <updated>2021-07-15T11:44:32+00:00</updated>
-            <published>2016-12-20T00:00:00+00:00</published>
-            <author>
-                    <name>Voiddd</name>
-                    <uri>https://ld000.space</uri>
-                    <email>voidd247@outlook.com</email>
-                    </author>
-            <rights>[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh)</rights>
-    
-    <summary type="html"><![CDATA[<h1 id="常见响应模式">常见响应模式</h1>
+<p>我会写一篇文章来说明在 spring 中怎么使用各种类型的 aspectj weaving，这样会更加清楚的说明这个问题。</p>]]></content><category scheme="https://ld000.space/tags/aspect/" term="aspect" label="aspect"/><category scheme="https://ld000.space/tags/spring/" term="spring" label="spring"/><category scheme="https://ld000.space/tags/java/" term="java" label="java"/></entry><entry><title type="text">响应模式</title><link rel="alternate" type="text/html" href="https://ld000.space/post/xyms/"/><id>https://ld000.space/post/xyms/</id><updated>2021-07-15T11:55:55+00:00</updated><published>2016-12-20T00:00:00+00:00</published><author><name>Voiddd</name><uri>https://ld000.space</uri><email>voidd247@outlook.com</email></author><rights>[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh)</rights><summary type="html"><![CDATA[<h1 id="常见响应模式">常见响应模式</h1>
 <ul>
 <li>大体流动模型(mostly fluid)</li>
 <li>掉落列模型(column drop)</li>
 <li>活动布局模型(layout shifter)</li>
 <li>画布溢出模型(off canvas)</li>
-</ul>……]]></summary>
-            
-                <content type="html"><![CDATA[<h1 id="常见响应模式">常见响应模式</h1>
+</ul>……]]></summary><content type="html"><![CDATA[<h1 id="常见响应模式">常见响应模式</h1>
 <ul>
 <li>大体流动模型(mostly fluid)</li>
 <li>掉落列模型(column drop)</li>
@@ -5680,44 +5075,7 @@ AopService.service()
 <span class="p">}</span>
 </code></pre></td></tr></table>
 </div>
-</div>]]></content>
-            
-            
-            
-            
-            
-                
-                    
-                
-                    
-                        
-                            
-                            
-                            
-                                <category scheme="https://ld000.space/tags/html/" term="html" label="html" />
-                            
-                        
-                    
-                
-            
-        </entry>
-    
-        <entry>
-            <title type="text">搭建一个基于 github-pages 和 jekyll 的免费博客</title>
-            <link rel="alternate" type="text/html" href="https://ld000.space/post/github-pages-jekyll/" />
-            <id>https://ld000.space/post/github-pages-jekyll/</id>
-            <updated>2021-07-15T11:44:32+00:00</updated>
-            <published>2016-12-16T00:00:00+00:00</published>
-            <author>
-                    <name>Voiddd</name>
-                    <uri>https://ld000.space</uri>
-                    <email>voidd247@outlook.com</email>
-                    </author>
-            <rights>[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh)</rights>
-    
-    <summary type="html"><![CDATA[搭建一个基于 github-pages 和 jekyll 的免费博客 环境 macOS 10.12.2 申请 github-pages 源地址 https://pages.github.com 创建一个仓库 在 github 建立一个新仓库，命……]]></summary>
-            
-                <content type="html"><![CDATA[<p>搭建一个基于 github-pages 和 jekyll 的免费博客</p>
+</div>]]></content><category scheme="https://ld000.space/tags/html/" term="html" label="html"/></entry><entry><title type="text">搭建一个基于 github-pages 和 jekyll 的免费博客</title><link rel="alternate" type="text/html" href="https://ld000.space/post/github-pages-jekyll/"/><id>https://ld000.space/post/github-pages-jekyll/</id><updated>2021-07-15T11:55:55+00:00</updated><published>2016-12-16T00:00:00+00:00</published><author><name>Voiddd</name><uri>https://ld000.space</uri><email>voidd247@outlook.com</email></author><rights>[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh)</rights><summary type="html">搭建一个基于 github-pages 和 jekyll 的免费博客 环境 macOS 10.12.2 申请 github-pages 源地址 https://pages.github.com 创建一个仓库 在 github 建立一个新仓库，命……</summary><content type="html"><![CDATA[<p>搭建一个基于 github-pages 和 jekyll 的免费博客</p>
 <!-- more -->
 <blockquote>
 <p>环境 macOS 10.12.2</p>
@@ -6043,44 +5401,7 @@ Provided configuration options:
 bundle update
 </code></pre></td></tr></table>
 </div>
-</div>]]></content>
-            
-            
-            
-            
-            
-                
-                    
-                
-                    
-                        
-                            
-                            
-                            
-                                <category scheme="https://ld000.space/tags/github-pages/" term="github-pages" label="github-pages" />
-                            
-                        
-                    
-                
-            
-        </entry>
-    
-        <entry>
-            <title type="text">RandomAccess 接口使用</title>
-            <link rel="alternate" type="text/html" href="https://ld000.space/post/random-access/" />
-            <id>https://ld000.space/post/random-access/</id>
-            <updated>2021-07-15T11:44:32+00:00</updated>
-            <published>2016-03-19T00:00:00+00:00</published>
-            <author>
-                    <name>Voiddd</name>
-                    <uri>https://ld000.space</uri>
-                    <email>voidd247@outlook.com</email>
-                    </author>
-            <rights>[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh)</rights>
-    
-    <summary type="html"><![CDATA[<p>List 实现所使用的标记接口，用来表明其支持快速（通常是固定时间）随机访问。此接口的主要目的是允许一般的算法更改其行为，从而在将其应用到随机或连续访问列表时能提供良好的性能。</p>……]]></summary>
-            
-                <content type="html"><![CDATA[<p>List 实现所使用的标记接口，用来表明其支持快速（通常是固定时间）随机访问。此接口的主要目的是允许一般的算法更改其行为，从而在将其应用到随机或连续访问列表时能提供良好的性能。</p>
+</div>]]></content><category scheme="https://ld000.space/tags/github-pages/" term="github-pages" label="github-pages"/></entry><entry><title type="text">RandomAccess 接口使用</title><link rel="alternate" type="text/html" href="https://ld000.space/post/random-access/"/><id>https://ld000.space/post/random-access/</id><updated>2021-07-15T11:55:55+00:00</updated><published>2016-03-19T00:00:00+00:00</published><author><name>Voiddd</name><uri>https://ld000.space</uri><email>voidd247@outlook.com</email></author><rights>[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh)</rights><summary type="html">&lt;p>List 实现所使用的标记接口，用来表明其支持快速（通常是固定时间）随机访问。此接口的主要目的是允许一般的算法更改其行为，从而在将其应用到随机或连续访问列表时能提供良好的性能。&lt;/p>……</summary><content type="html"><![CDATA[<p>List 实现所使用的标记接口，用来表明其支持快速（通常是固定时间）随机访问。此接口的主要目的是允许一般的算法更改其行为，从而在将其应用到随机或连续访问列表时能提供良好的性能。</p>
 <p>##用法</p>
 <p>Random Access List(随机访问列表)如 <code>ArrayList</code> 要实现此接口，Sequence Access List(顺序访问列表)如 <code>LinkedList</code> 不要实现。
 因为两者的高效遍历算法不同</p>
@@ -6355,26 +5676,4 @@ bundle update
 <span class="o">}</span>
 </code></pre></td></tr></table>
 </div>
-</div>]]></content>
-            
-            
-            
-            
-            
-                
-                    
-                
-                    
-                        
-                            
-                            
-                            
-                                <category scheme="https://ld000.space/tags/java/" term="java" label="java" />
-                            
-                        
-                    
-                
-            
-        </entry>
-    
-</feed>
+</div>]]></content><category scheme="https://ld000.space/tags/java/" term="java" label="java"/></entry></feed>
