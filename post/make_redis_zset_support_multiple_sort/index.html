@@ -1,7 +1,93 @@
-<!doctype html><html lang=zh-cn data-theme=light><head prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article#"><meta charset=utf-8><meta name=generator content="Hugo 0.85.0"><meta name=theme-color content="#fff"><script>const userPrefers=localStorage.getItem('theme'),darkModeMediaQuery=window.matchMedia('(prefers-color-scheme: dark)'),lightModeMediaQuery=window.matchMedia('(prefers-color-scheme: light)');userPrefers==='dark'?changeModeMeta('dark'):userPrefers==='light'?changeModeMeta('light'):darkModeMediaQuery.matches?changeModeMeta('dark'):lightModeMediaQuery.matches&&changeModeMeta('light');function changeModeMeta(a){document.documentElement.setAttribute('data-theme',a),a==='dark'?changeThemeColor('#16171d'):changeThemeColor('#fff')}function changeThemeColor(a){document.querySelector('meta[name="theme-color"]').setAttribute('content',a)}</script><meta name=viewport content="width=device-width,initial-scale=1"><meta name=format-detection content="telephone=no, date=no, address=no, email=no"><meta http-equiv=cache-control content="no-transform"><meta http-equiv=cache-control content="no-siteapp"><title>让 Redis zset 支持多条件排序 | Voiddd</title><link rel=stylesheet href=/css/meme.min.0966dbadd6b86c4d59e7f381c87e80ffe09631c44d227313a4cbb1cd9e890019.css integrity="sha256-CWbbrda4bE1Z5/OByH6A/+CWMcRNInMTpMuxzZ6JABk="><link rel=preconnect href=https://fonts.gstatic.com crossorigin><link rel=stylesheet href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,700;1,400;1,700&family=Noto+Serif+SC:wght@400;500;700&family=Source+Code+Pro:ital,wght@0,400;0,700;1,400;1,700&display=swap" media=print onload="this.media='all'"><noscript><link rel=stylesheet href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,700;1,400;1,700&family=Noto+Serif+SC:wght@400;500;700&family=Source+Code+Pro:ital,wght@0,400;0,700;1,400;1,700&display=swap"></noscript><meta name=author content="Voiddd"><meta name=description content="一些需求中经常要我们实现一个排行榜，数据量少的话可以使用 RDB 数据库排序，数据量大可以自……"><link rel="shortcut icon" href=/favicon.ico type=image/x-icon><link rel=mask-icon href=/icons/safari-pinned-tab.svg color=#2a6df4><link rel=apple-touch-icon sizes=180x180 href=/icons/apple-touch-icon.png><meta name=apple-mobile-web-app-capable content="yes"><meta name=apple-mobile-web-app-title content="Voiddd"><meta name=apple-mobile-web-app-status-bar-style content="black-translucent"><meta name=mobile-web-app-capable content="yes"><meta name=application-name content="Voiddd"><meta name=msapplication-starturl content="../../"><meta name=msapplication-TileColor content="#fff"><meta name=msapplication-TileImage content="../../icons/mstile-150x150.png"><link rel=manifest href=/manifest.json><link rel=canonical href=https://ld000.space/post/make_redis_zset_support_multiple_sort/><script type=application/ld+json>{"@context":"https://schema.org","@type":"BlogPosting","datePublished":"2019-10-23T00:00:00+00:00","dateModified":"2021-07-15T11:58:45+00:00","url":"https://ld000.space/post/make_redis_zset_support_multiple_sort/","headline":"让 Redis zset 支持多条件排序","description":"一些需求中经常要我们实现一个排行榜，数据量少的话可以使用 RDB 数据库排序，数据量大可以自……","inLanguage":"zh-CN","articleSection":"post","wordCount":2835,"image":["https://void.oss-cn-beijing.aliyuncs.com/img/20200107114011.png","https://void.oss-cn-beijing.aliyuncs.com/img/20200107114033.png"],"author":{"@type":"Person","description":"lalala","email":"voidd247@outlook.com","image":"https://ld000.space/icons/apple-touch-icon.png","url":"https://ld000.space","name":"Voiddd"},"license":"[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh)","publisher":{"@type":"Organization","name":"Voiddd","logo":{"@type":"ImageObject","url":"https://ld000.space/icons/apple-touch-icon.png"},"url":"https://ld000.space/"},"mainEntityOfPage":{"@type":"WebSite","@id":"https://ld000.space/"}}</script><meta name=twitter:card content="summary_large_image"><meta name=twitter:site content="@LDtree"><meta name=twitter:creator content="@LDtree"><meta property="og:title" content="让 Redis zset 支持多条件排序"><meta property="og:description" content="一些需求中经常要我们实现一个排行榜，数据量少的话可以使用 RDB 数据库排序，数据量大可以自……"><meta property="og:url" content="https://ld000.space/post/make_redis_zset_support_multiple_sort/"><meta property="og:site_name" content="Voiddd"><meta property="og:locale" content="zh"><meta property="og:image" content="https://void.oss-cn-beijing.aliyuncs.com/img/20200107114011.png"><meta property="og:type" content="article"><meta property="article:published_time" content="2019-10-23T00:00:00+00:00"><meta property="article:modified_time" content="2021-07-15T11:58:45+00:00"><meta property="article:section" content="post"><link rel=preconnect href=https://www.google-analytics.com crossorigin><script async src="https://www.googletagmanager.com/gtag/js?id=UA-89678066-1"></script><script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date),gtag('config','UA-89678066-1')</script></head><body><div class=container><header class=header data-scroll-header><div class=header-wrapper><div class=header-inner><div class=site-brand><a href=/ class=brand>Voiddd</a></div><nav class=nav><ul class=menu id=menu><li class=menu-item><a href=/posts/><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon"><path d="M32 448c0 17.7 14.3 32 32 32h384c17.7.0 32-14.3 32-32V160H32v288zm160-212c0-6.6 5.4-12 12-12h104c6.6.0 12 5.4 12 12v8c0 6.6-5.4 12-12 12H204c-6.6.0-12-5.4-12-12v-8zM480 32H32C14.3 32 0 46.3.0 64v48c0 8.8 7.2 16 16 16h480c8.8.0 16-7.2 16-16V64c0-17.7-14.3-32-32-32z"/></svg><span class=menu-item-name>文章</span></a></li><li class=menu-item><a href=/categories/><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon"><path d="M149.333 56v80c0 13.255-10.745 24-24 24H24c-13.255.0-24-10.745-24-24V56c0-13.255 10.745-24 24-24h101.333c13.255.0 24 10.745 24 24zm181.334 240v-80c0-13.255-10.745-24-24-24H205.333c-13.255.0-24 10.745-24 24v80c0 13.255 10.745 24 24 24h101.333c13.256.0 24.001-10.745 24.001-24zm32-240v80c0 13.255 10.745 24 24 24H488c13.255.0 24-10.745 24-24V56c0-13.255-10.745-24-24-24H386.667c-13.255.0-24 10.745-24 24zm-32 80V56c0-13.255-10.745-24-24-24H205.333c-13.255.0-24 10.745-24 24v80c0 13.255 10.745 24 24 24h101.333c13.256.0 24.001-10.745 24.001-24zm-205.334 56H24c-13.255.0-24 10.745-24 24v80c0 13.255 10.745 24 24 24h101.333c13.255.0 24-10.745 24-24v-80c0-13.255-10.745-24-24-24zM0 376v80c0 13.255 10.745 24 24 24h101.333c13.255.0 24-10.745 24-24v-80c0-13.255-10.745-24-24-24H24c-13.255.0-24 10.745-24 24zm386.667-56H488c13.255.0 24-10.745 24-24v-80c0-13.255-10.745-24-24-24H386.667c-13.255.0-24 10.745-24 24v80c0 13.255 10.745 24 24 24zm0 160H488c13.255.0 24-10.745 24-24v-80c0-13.255-10.745-24-24-24H386.667c-13.255.0-24 10.745-24 24v80c0 13.255 10.745 24 24 24zM181.333 376v80c0 13.255 10.745 24 24 24h101.333c13.255.0 24-10.745 24-24v-80c0-13.255-10.745-24-24-24H205.333c-13.255.0-24 10.745-24 24z"/></svg><span class=menu-item-name>分类</span></a></li><li class=menu-item><a href=/tags/><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" class="icon"><path d="M497.941 225.941 286.059 14.059A48 48 0 00252.118.0H48C21.49.0.0 21.49.0 48v204.118a48 48 0 0014.059 33.941l211.882 211.882c18.744 18.745 49.136 18.746 67.882.0l204.118-204.118c18.745-18.745 18.745-49.137.0-67.882zM112 160c-26.51.0-48-21.49-48-48s21.49-48 48-48 48 21.49 48 48-21.49 48-48 48zm513.941 133.823L421.823 497.941c-18.745 18.745-49.137 18.745-67.882.0l-.36-.36L527.64 323.522c16.999-16.999 26.36-39.6 26.36-63.64s-9.362-46.641-26.36-63.64L331.397.0h48.721a48 48 0 0133.941 14.059l211.882 211.882c18.745 18.745 18.745 49.137.0 67.882z"/></svg><span class=menu-item-name>标签</span></a></li><li class=menu-item><a href=/about/><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512" class="icon"><path d="M248 8C111 8 0 119 0 256s111 248 248 248 248-111 248-248S385 8 248 8zm0 96c48.6.0 88 39.4 88 88s-39.4 88-88 88-88-39.4-88-88 39.4-88 88-88zm0 344c-58.7.0-111.3-26.6-146.5-68.2 18.8-35.4 55.6-59.8 98.5-59.8 2.4.0 4.8.4 7.1 1.1 13 4.2 26.6 6.9 40.9 6.9s28-2.7 40.9-6.9c2.3-.7 4.7-1.1 7.1-1.1 42.9.0 79.7 24.4 98.5 59.8C359.3 421.4 306.7 448 248 448z"/></svg><span class=menu-item-name>关于</span></a></li><li class=menu-item><div id=theme-switcher>🌞</div></li><li class=menu-item><a href=/links/><span class=menu-item-name>友链</span></a></li></ul></nav></div></div><input type=checkbox id=nav-toggle aria-hidden=true>
-<label for=nav-toggle class=nav-toggle></label><label for=nav-toggle class=nav-curtain></label></header><main class="main single" id=main><div class=main-inner><article class="content post" data-align=justify data-type=post data-toc-num=true><h1 class=post-title>让 Redis zset 支持多条件排序</h1><div class=post-meta><time datetime=2019-10-23T00:00:00+00:00 class="post-meta-item published"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="icon post-meta-icon"><path d="M148 288h-40c-6.6.0-12-5.4-12-12v-40c0-6.6 5.4-12 12-12h40c6.6.0 12 5.4 12 12v40c0 6.6-5.4 12-12 12zm108-12v-40c0-6.6-5.4-12-12-12h-40c-6.6.0-12 5.4-12 12v40c0 6.6 5.4 12 12 12h40c6.6.0 12-5.4 12-12zm96 0v-40c0-6.6-5.4-12-12-12h-40c-6.6.0-12 5.4-12 12v40c0 6.6 5.4 12 12 12h40c6.6.0 12-5.4 12-12zm-96 96v-40c0-6.6-5.4-12-12-12h-40c-6.6.0-12 5.4-12 12v40c0 6.6 5.4 12 12 12h40c6.6.0 12-5.4 12-12zm-96 0v-40c0-6.6-5.4-12-12-12h-40c-6.6.0-12 5.4-12 12v40c0 6.6 5.4 12 12 12h40c6.6.0 12-5.4 12-12zm192 0v-40c0-6.6-5.4-12-12-12h-40c-6.6.0-12 5.4-12 12v40c0 6.6 5.4 12 12 12h40c6.6.0 12-5.4 12-12zm96-260v352c0 26.5-21.5 48-48 48H48c-26.5.0-48-21.5-48-48V112c0-26.5 21.5-48 48-48h48V12c0-6.6 5.4-12 12-12h40c6.6.0 12 5.4 12 12v52h128V12c0-6.6 5.4-12 12-12h40c6.6.0 12 5.4 12 12v52h48c26.5.0 48 21.5 48 48zm-48 346V160H48v298c0 3.3 2.7 6 6 6h340c3.3.0 6-2.7 6-6z"/></svg>&nbsp;2019.10.23</time>
+<!doctype html><html lang=zh-cn data-theme=light>
+<head prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article#">
+<meta charset=utf-8>
+<meta name=generator content="Hugo 0.88.1"><meta name=theme-color content="#fff">
+<script>const userPrefers=localStorage.getItem('theme'),darkModeMediaQuery=window.matchMedia('(prefers-color-scheme: dark)'),lightModeMediaQuery=window.matchMedia('(prefers-color-scheme: light)');userPrefers==='dark'?changeModeMeta('dark'):userPrefers==='light'?changeModeMeta('light'):darkModeMediaQuery.matches?changeModeMeta('dark'):lightModeMediaQuery.matches&&changeModeMeta('light');function changeModeMeta(a){document.documentElement.setAttribute('data-theme',a),a==='dark'?changeThemeColor('#16171d'):changeThemeColor('#fff')}function changeThemeColor(a){document.querySelector('meta[name="theme-color"]').setAttribute('content',a)}</script>
+<meta name=viewport content="width=device-width,initial-scale=1">
+<meta name=format-detection content="telephone=no, date=no, address=no, email=no">
+<meta http-equiv=cache-control content="no-transform">
+<meta http-equiv=cache-control content="no-siteapp">
+<title>让 Redis zset 支持多条件排序 | Voiddd</title>
+<link rel=stylesheet href=/css/meme.min.0966dbadd6b86c4d59e7f381c87e80ffe09631c44d227313a4cbb1cd9e890019.css integrity="sha256-CWbbrda4bE1Z5/OByH6A/+CWMcRNInMTpMuxzZ6JABk=">
+<link rel=preconnect href=https://fonts.gstatic.com crossorigin>
+<link rel=stylesheet href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,700;1,400;1,700&family=Noto+Serif+SC:wght@400;500;700&family=Source+Code+Pro:ital,wght@0,400;0,700;1,400;1,700&display=swap" media=print onload="this.media='all'">
+<noscript><link rel=stylesheet href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,700;1,400;1,700&family=Noto+Serif+SC:wght@400;500;700&family=Source+Code+Pro:ital,wght@0,400;0,700;1,400;1,700&display=swap"></noscript>
+<meta name=author content="Voiddd">
+<meta name=description content="一些需求中经常要我们实现一个排行榜，数据量少的话可以使用 RDB 数据库排序，数据量大可以自……">
+<link rel="shortcut icon" href=/favicon.ico type=image/x-icon>
+<link rel=mask-icon href=/icons/safari-pinned-tab.svg color=#2a6df4>
+<link rel=apple-touch-icon sizes=180x180 href=/icons/apple-touch-icon.png>
+<meta name=apple-mobile-web-app-capable content="yes">
+<meta name=apple-mobile-web-app-title content="Voiddd">
+<meta name=apple-mobile-web-app-status-bar-style content="black-translucent">
+<meta name=mobile-web-app-capable content="yes">
+<meta name=application-name content="Voiddd">
+<meta name=msapplication-starturl content="../../">
+<meta name=msapplication-TileColor content="#fff">
+<meta name=msapplication-TileImage content="../../icons/mstile-150x150.png">
+<link rel=manifest href=/manifest.json>
+<link rel=canonical href=https://ld000.space/post/make_redis_zset_support_multiple_sort/>
+<script type=application/ld+json>{"@context":"https://schema.org","@type":"BlogPosting","datePublished":"2019-10-23T00:00:00+00:00","dateModified":"2021-10-25T04:11:38+00:00","url":"https://ld000.space/post/make_redis_zset_support_multiple_sort/","headline":"让 Redis zset 支持多条件排序","description":"一些需求中经常要我们实现一个排行榜，数据量少的话可以使用 RDB 数据库排序，数据量大可以自……","inLanguage":"zh-CN","articleSection":"post","wordCount":2835,"image":["https://void.oss-cn-beijing.aliyuncs.com/img/20200107114011.png","https://void.oss-cn-beijing.aliyuncs.com/img/20200107114033.png"],"author":{"@type":"Person","description":"lalala","email":"voidd247@outlook.com","image":"https://ld000.space/icons/apple-touch-icon.png","url":"https://ld000.space","name":"Voiddd"},"license":"[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh)","publisher":{"@type":"Organization","name":"Voiddd","logo":{"@type":"ImageObject","url":"https://ld000.space/icons/apple-touch-icon.png"},"url":"https://ld000.space/"},"mainEntityOfPage":{"@type":"WebSite","@id":"https://ld000.space/"}}</script>
+<meta name=twitter:card content="summary_large_image">
+<meta name=twitter:site content="@LDtree">
+<meta name=twitter:creator content="@LDtree">
+<meta property="og:title" content="让 Redis zset 支持多条件排序">
+<meta property="og:description" content="一些需求中经常要我们实现一个排行榜，数据量少的话可以使用 RDB 数据库排序，数据量大可以自……">
+<meta property="og:url" content="https://ld000.space/post/make_redis_zset_support_multiple_sort/">
+<meta property="og:site_name" content="Voiddd">
+<meta property="og:locale" content="zh"><meta property="og:image" content="https://void.oss-cn-beijing.aliyuncs.com/img/20200107114011.png">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2019-10-23T00:00:00+00:00">
+<meta property="article:modified_time" content="2021-10-25T04:11:38+00:00">
+<meta property="article:section" content="post">
+<link rel=preconnect href=https://www.google-analytics.com crossorigin>
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-89678066-1"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date),gtag('config','UA-89678066-1')</script>
+</head>
+<body>
+<div class=container>
+<header class=header data-scroll-header>
+<div class=header-wrapper>
+<div class=header-inner>
+<div class=site-brand>
+<a href=/ class=brand>Voiddd</a>
+</div>
+<nav class=nav>
+<ul class=menu id=menu>
+<li class=menu-item><a href=/posts/><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon"><path d="M32 448c0 17.7 14.3 32 32 32h384c17.7.0 32-14.3 32-32V160H32v288zm160-212c0-6.6 5.4-12 12-12h104c6.6.0 12 5.4 12 12v8c0 6.6-5.4 12-12 12H204c-6.6.0-12-5.4-12-12v-8zM480 32H32C14.3 32 0 46.3.0 64v48c0 8.8 7.2 16 16 16h480c8.8.0 16-7.2 16-16V64c0-17.7-14.3-32-32-32z"/></svg><span class=menu-item-name>文章</span></a>
+</li>
+<li class=menu-item><a href=/categories/><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon"><path d="M149.333 56v80c0 13.255-10.745 24-24 24H24c-13.255.0-24-10.745-24-24V56c0-13.255 10.745-24 24-24h101.333c13.255.0 24 10.745 24 24zm181.334 240v-80c0-13.255-10.745-24-24-24H205.333c-13.255.0-24 10.745-24 24v80c0 13.255 10.745 24 24 24h101.333c13.256.0 24.001-10.745 24.001-24zm32-240v80c0 13.255 10.745 24 24 24H488c13.255.0 24-10.745 24-24V56c0-13.255-10.745-24-24-24H386.667c-13.255.0-24 10.745-24 24zm-32 80V56c0-13.255-10.745-24-24-24H205.333c-13.255.0-24 10.745-24 24v80c0 13.255 10.745 24 24 24h101.333c13.256.0 24.001-10.745 24.001-24zm-205.334 56H24c-13.255.0-24 10.745-24 24v80c0 13.255 10.745 24 24 24h101.333c13.255.0 24-10.745 24-24v-80c0-13.255-10.745-24-24-24zM0 376v80c0 13.255 10.745 24 24 24h101.333c13.255.0 24-10.745 24-24v-80c0-13.255-10.745-24-24-24H24c-13.255.0-24 10.745-24 24zm386.667-56H488c13.255.0 24-10.745 24-24v-80c0-13.255-10.745-24-24-24H386.667c-13.255.0-24 10.745-24 24v80c0 13.255 10.745 24 24 24zm0 160H488c13.255.0 24-10.745 24-24v-80c0-13.255-10.745-24-24-24H386.667c-13.255.0-24 10.745-24 24v80c0 13.255 10.745 24 24 24zM181.333 376v80c0 13.255 10.745 24 24 24h101.333c13.255.0 24-10.745 24-24v-80c0-13.255-10.745-24-24-24H205.333c-13.255.0-24 10.745-24 24z"/></svg><span class=menu-item-name>分类</span></a>
+</li>
+<li class=menu-item><a href=/tags/><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" class="icon"><path d="M497.941 225.941 286.059 14.059A48 48 0 00252.118.0H48C21.49.0.0 21.49.0 48v204.118a48 48 0 0014.059 33.941l211.882 211.882c18.744 18.745 49.136 18.746 67.882.0l204.118-204.118c18.745-18.745 18.745-49.137.0-67.882zM112 160c-26.51.0-48-21.49-48-48s21.49-48 48-48 48 21.49 48 48-21.49 48-48 48zm513.941 133.823L421.823 497.941c-18.745 18.745-49.137 18.745-67.882.0l-.36-.36L527.64 323.522c16.999-16.999 26.36-39.6 26.36-63.64s-9.362-46.641-26.36-63.64L331.397.0h48.721a48 48 0 0133.941 14.059l211.882 211.882c18.745 18.745 18.745 49.137.0 67.882z"/></svg><span class=menu-item-name>标签</span></a>
+</li>
+<li class=menu-item><a href=/about/><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512" class="icon"><path d="M248 8C111 8 0 119 0 256s111 248 248 248 248-111 248-248S385 8 248 8zm0 96c48.6.0 88 39.4 88 88s-39.4 88-88 88-88-39.4-88-88 39.4-88 88-88zm0 344c-58.7.0-111.3-26.6-146.5-68.2 18.8-35.4 55.6-59.8 98.5-59.8 2.4.0 4.8.4 7.1 1.1 13 4.2 26.6 6.9 40.9 6.9s28-2.7 40.9-6.9c2.3-.7 4.7-1.1 7.1-1.1 42.9.0 79.7 24.4 98.5 59.8C359.3 421.4 306.7 448 248 448z"/></svg><span class=menu-item-name>关于</span></a>
+</li>
+<li class=menu-item>
+<div id=theme-switcher>🌞</div>
+</li>
+<li class=menu-item><a href=/links/><span class=menu-item-name>友链</span></a>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+<input type=checkbox id=nav-toggle aria-hidden=true>
+<label for=nav-toggle class=nav-toggle></label>
+<label for=nav-toggle class=nav-curtain></label>
+</header>
+<main class="main single" id=main>
+<div class=main-inner>
+<article class="content post" data-align=justify data-type=post data-toc-num=true>
+<h1 class=post-title>让 Redis zset 支持多条件排序</h1>
+<div class=post-meta>
+<time datetime=2019-10-23T00:00:00+00:00 class="post-meta-item published"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="icon post-meta-icon"><path d="M148 288h-40c-6.6.0-12-5.4-12-12v-40c0-6.6 5.4-12 12-12h40c6.6.0 12 5.4 12 12v40c0 6.6-5.4 12-12 12zm108-12v-40c0-6.6-5.4-12-12-12h-40c-6.6.0-12 5.4-12 12v40c0 6.6 5.4 12 12 12h40c6.6.0 12-5.4 12-12zm96 0v-40c0-6.6-5.4-12-12-12h-40c-6.6.0-12 5.4-12 12v40c0 6.6 5.4 12 12 12h40c6.6.0 12-5.4 12-12zm-96 96v-40c0-6.6-5.4-12-12-12h-40c-6.6.0-12 5.4-12 12v40c0 6.6 5.4 12 12 12h40c6.6.0 12-5.4 12-12zm-96 0v-40c0-6.6-5.4-12-12-12h-40c-6.6.0-12 5.4-12 12v40c0 6.6 5.4 12 12 12h40c6.6.0 12-5.4 12-12zm192 0v-40c0-6.6-5.4-12-12-12h-40c-6.6.0-12 5.4-12 12v40c0 6.6 5.4 12 12 12h40c6.6.0 12-5.4 12-12zm96-260v352c0 26.5-21.5 48-48 48H48c-26.5.0-48-21.5-48-48V112c0-26.5 21.5-48 48-48h48V12c0-6.6 5.4-12 12-12h40c6.6.0 12 5.4 12 12v52h128V12c0-6.6 5.4-12 12-12h40c6.6.0 12 5.4 12 12v52h48c26.5.0 48 21.5 48 48zm-48 346V160H48v298c0 3.3 2.7 6 6 6h340c3.3.0 6-2.7 6-6z"/></svg>&nbsp;2019.10.23</time>
 <span class="post-meta-item wordcount"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon post-meta-icon"><path d="M497.9 142.1l-46.1 46.1c-4.7 4.7-12.3 4.7-17 0l-111-111c-4.7-4.7-4.7-12.3.0-17l46.1-46.1c18.7-18.7 49.1-18.7 67.9.0l60.1 60.1c18.8 18.7 18.8 49.1.0 67.9zM284.2 99.8 21.6 362.4.4 483.9c-2.9 16.4 11.4 30.6 27.8 27.8l121.5-21.3 262.6-262.6c4.7-4.7 4.7-12.3.0-17l-111-111c-4.8-4.7-12.4-4.7-17.1.0zM124.1 339.9c-5.5-5.5-5.5-14.3.0-19.8l154-154c5.5-5.5 14.3-5.5 19.8.0s5.5 14.3.0 19.8l-154 154c-5.5 5.5-14.3 5.5-19.8.0zM88 424h48v36.3l-64.5 11.3-31.1-31.1L51.7 376H88v48z"/></svg>&nbsp;2835</span>
-<span class="post-meta-item reading-time"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon post-meta-icon"><path d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm0 448c-110.5.0-2e2-89.5-2e2-2e2S145.5 56 256 56s2e2 89.5 2e2 2e2-89.5 2e2-2e2 2e2zm61.8-104.4-84.9-61.7c-3.1-2.3-4.9-5.9-4.9-9.7V116c0-6.6 5.4-12 12-12h32c6.6.0 12 5.4 12 12v141.7l66.8 48.6c5.4 3.9 6.5 11.4 2.6 16.8L334.6 349c-3.9 5.3-11.4 6.5-16.8 2.6z"/></svg>&nbsp;6&nbsp;分钟</span></div><div class=post-body><p>一些需求中经常要我们实现一个排行榜，数据量少的话可以使用 RDB 数据库排序，数据量大可以自己实现算法或者使用 NoSQL 数据库排序，NoSQL 数据库中最方便的可能就是利用 Redis 的 zset 来实现了。 例如要实现一个玩家成就点数的排行榜：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+<span class="post-meta-item reading-time"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon post-meta-icon"><path d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm0 448c-110.5.0-2e2-89.5-2e2-2e2S145.5 56 256 56s2e2 89.5 2e2 2e2-89.5 2e2-2e2 2e2zm61.8-104.4-84.9-61.7c-3.1-2.3-4.9-5.9-4.9-9.7V116c0-6.6 5.4-12 12-12h32c6.6.0 12 5.4 12 12v141.7l66.8 48.6c5.4 3.9 6.5 11.4 2.6 16.8L334.6 349c-3.9 5.3-11.4 6.5-16.8 2.6z"/></svg>&nbsp;6&nbsp;分钟</span>
+</div>
+<div class=post-body><p>一些需求中经常要我们实现一个排行榜，数据量少的话可以使用 RDB 数据库排序，数据量大可以自己实现算法或者使用 NoSQL 数据库排序，NoSQL 数据库中最方便的可能就是利用 Redis 的 zset 来实现了。 例如要实现一个玩家成就点数的排行榜：</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
 </span><span class=lnt> 4
@@ -18,7 +104,9 @@
 </span><span class=lnt>15
 </span><span class=lnt>16
 </span><span class=lnt>17
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-shell data-lang=shell>    &gt;zadd r <span class=m>100</span> A
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell>    &gt;zadd r <span class=m>100</span> A
     <span class=s2>&#34;1&#34;</span>
     &gt;zadd r <span class=m>200</span> B
     <span class=s2>&#34;1&#34;</span>
@@ -35,19 +123,35 @@
     6<span class=o>)</span>  <span class=s2>&#34;200&#34;</span>
     7<span class=o>)</span>  <span class=s2>&#34;D&#34;</span>
     8<span class=o>)</span>  <span class=s2>&#34;300&#34;</span>       
-</code></pre></td></tr></table></div></div><p>其中 B 和 C 的分数是一样的，这时我们可能想让先达到对应分数的人排在前面，相当于增加了一个排序维度。这时直接用 score 就不能实现了，需要做一些转换，这里分享几个我会用到的方法。</p><h2 id=实现方法><a href=#实现方法 class=anchor-link><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon anchor-icon"><path d="M326.612 185.391c59.747 59.809 58.927 155.698.36 214.59-.11.12-.24.25-.36.37l-67.2 67.2c-59.27 59.27-155.699 59.262-214.96.0-59.27-59.26-59.27-155.7.0-214.96l37.106-37.106c9.84-9.84 26.786-3.3 27.294 10.606.648 17.722 3.826 35.527 9.69 52.721 1.986 5.822.567 12.262-3.783 16.612l-13.087 13.087c-28.026 28.026-28.905 73.66-1.155 101.96 28.024 28.579 74.086 28.749 102.325.51l67.2-67.19c28.191-28.191 28.073-73.757.0-101.83-3.701-3.694-7.429-6.564-10.341-8.569a16.037 16.037.0 01-6.947-12.606c-.396-10.567 3.348-21.456 11.698-29.806l21.054-21.055c5.521-5.521 14.182-6.199 20.584-1.731a152.482 152.482.0 0120.522 17.197zM467.547 44.449c-59.261-59.262-155.69-59.27-214.96.0l-67.2 67.2c-.12.12-.25.25-.36.37-58.566 58.892-59.387 154.781.36 214.59a152.454 152.454.0 0020.521 17.196c6.402 4.468 15.064 3.789 20.584-1.731l21.054-21.055c8.35-8.35 12.094-19.239 11.698-29.806a16.037 16.037.0 00-6.947-12.606c-2.912-2.005-6.64-4.875-10.341-8.569-28.073-28.073-28.191-73.639.0-101.83l67.2-67.19c28.239-28.239 74.3-28.069 102.325.51 27.75 28.3 26.872 73.934-1.155 101.96l-13.087 13.087c-4.35 4.35-5.769 10.79-3.783 16.612 5.864 17.194 9.042 34.999 9.69 52.721.509 13.906 17.454 20.446 27.294 10.606l37.106-37.106c59.271-59.259 59.271-155.699.001-214.959z"/></svg></a>实现方法</h2><p>假设我们需要一个三个维度的排序，第一维度是具体的数值，第二个维度是一个是否标志位，第三个维度是时间戳。其中氪金的（0否1是）和时间早的排序靠前。</p><p>以下是原始数据：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</code></pre></td></tr></table>
+</div>
+</div><p>其中 B 和 C 的分数是一样的，这时我们可能想让先达到对应分数的人排在前面，相当于增加了一个排序维度。这时直接用 score 就不能实现了，需要做一些转换，这里分享几个我会用到的方法。</p>
+<h2 id=实现方法><a href=#实现方法 class=anchor-link><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon anchor-icon"><path d="M326.612 185.391c59.747 59.809 58.927 155.698.36 214.59-.11.12-.24.25-.36.37l-67.2 67.2c-59.27 59.27-155.699 59.262-214.96.0-59.27-59.26-59.27-155.7.0-214.96l37.106-37.106c9.84-9.84 26.786-3.3 27.294 10.606.648 17.722 3.826 35.527 9.69 52.721 1.986 5.822.567 12.262-3.783 16.612l-13.087 13.087c-28.026 28.026-28.905 73.66-1.155 101.96 28.024 28.579 74.086 28.749 102.325.51l67.2-67.19c28.191-28.191 28.073-73.757.0-101.83-3.701-3.694-7.429-6.564-10.341-8.569a16.037 16.037.0 01-6.947-12.606c-.396-10.567 3.348-21.456 11.698-29.806l21.054-21.055c5.521-5.521 14.182-6.199 20.584-1.731a152.482 152.482.0 0120.522 17.197zM467.547 44.449c-59.261-59.262-155.69-59.27-214.96.0l-67.2 67.2c-.12.12-.25.25-.36.37-58.566 58.892-59.387 154.781.36 214.59a152.454 152.454.0 0020.521 17.196c6.402 4.468 15.064 3.789 20.584-1.731l21.054-21.055c8.35-8.35 12.094-19.239 11.698-29.806a16.037 16.037.0 00-6.947-12.606c-2.912-2.005-6.64-4.875-10.341-8.569-28.073-28.073-28.191-73.639.0-101.83l67.2-67.19c28.239-28.239 74.3-28.069 102.325.51 27.75 28.3 26.872 73.934-1.155 101.96l-13.087 13.087c-4.35 4.35-5.769 10.79-3.783 16.612 5.864 17.194 9.042 34.999 9.69 52.721.509 13.906 17.454 20.446 27.294 10.606l37.106-37.106c59.271-59.259 59.271-155.699.001-214.959z"/></svg></a>实现方法</h2>
+<p>假设我们需要一个三个维度的排序，第一维度是具体的数值，第二个维度是一个是否标志位，第三个维度是时间戳。其中氪金的（0否1是）和时间早的排序靠前。</p>
+<p>以下是原始数据：</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
 </span><span class=lnt>4
 </span><span class=lnt>5
 </span><span class=lnt>6
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-shell data-lang=shell>    玩家  成就  是否氪金  时间戳
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell>    玩家  成就  是否氪金  时间戳
     A    <span class=m>100</span>  <span class=m>1</span>        <span class=m>1571819021259</span>
     B    <span class=m>200</span>  <span class=m>0</span>        <span class=m>1571819021259</span>
     C    <span class=m>200</span>  <span class=m>1</span>        <span class=m>1571819021259</span>
     D    <span class=m>400</span>  <span class=m>0</span>        <span class=m>1571819021259</span>
     E    <span class=m>200</span>  <span class=m>1</span>        <span class=m>1571810001259</span>
-</code></pre></td></tr></table></div></div><h3 id=1-利用-key-排序><a href=#1-利用-key-排序 class=anchor-link><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon anchor-icon"><path d="M326.612 185.391c59.747 59.809 58.927 155.698.36 214.59-.11.12-.24.25-.36.37l-67.2 67.2c-59.27 59.27-155.699 59.262-214.96.0-59.27-59.26-59.27-155.7.0-214.96l37.106-37.106c9.84-9.84 26.786-3.3 27.294 10.606.648 17.722 3.826 35.527 9.69 52.721 1.986 5.822.567 12.262-3.783 16.612l-13.087 13.087c-28.026 28.026-28.905 73.66-1.155 101.96 28.024 28.579 74.086 28.749 102.325.51l67.2-67.19c28.191-28.191 28.073-73.757.0-101.83-3.701-3.694-7.429-6.564-10.341-8.569a16.037 16.037.0 01-6.947-12.606c-.396-10.567 3.348-21.456 11.698-29.806l21.054-21.055c5.521-5.521 14.182-6.199 20.584-1.731a152.482 152.482.0 0120.522 17.197zM467.547 44.449c-59.261-59.262-155.69-59.27-214.96.0l-67.2 67.2c-.12.12-.25.25-.36.37-58.566 58.892-59.387 154.781.36 214.59a152.454 152.454.0 0020.521 17.196c6.402 4.468 15.064 3.789 20.584-1.731l21.054-21.055c8.35-8.35 12.094-19.239 11.698-29.806a16.037 16.037.0 00-6.947-12.606c-2.912-2.005-6.64-4.875-10.341-8.569-28.073-28.073-28.191-73.639.0-101.83l67.2-67.19c28.239-28.239 74.3-28.069 102.325.51 27.75 28.3 26.872 73.934-1.155 101.96l-13.087 13.087c-4.35 4.35-5.769 10.79-3.783 16.612 5.864 17.194 9.042 34.999 9.69 52.721.509 13.906 17.454 20.446 27.294 10.606l37.106-37.106c59.271-59.259 59.271-155.699.001-214.959z"/></svg></a>1. 利用 key 排序</h3><p>如果后两个维度初始化后就不再变化的话，可以利用 Redis 的排序特性，将不变的维度写到 key 里，这样 score 相同时会用 key 来进行排序。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</code></pre></td></tr></table>
+</div>
+</div><h3 id=1-利用-key-排序><a href=#1-利用-key-排序 class=anchor-link><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon anchor-icon"><path d="M326.612 185.391c59.747 59.809 58.927 155.698.36 214.59-.11.12-.24.25-.36.37l-67.2 67.2c-59.27 59.27-155.699 59.262-214.96.0-59.27-59.26-59.27-155.7.0-214.96l37.106-37.106c9.84-9.84 26.786-3.3 27.294 10.606.648 17.722 3.826 35.527 9.69 52.721 1.986 5.822.567 12.262-3.783 16.612l-13.087 13.087c-28.026 28.026-28.905 73.66-1.155 101.96 28.024 28.579 74.086 28.749 102.325.51l67.2-67.19c28.191-28.191 28.073-73.757.0-101.83-3.701-3.694-7.429-6.564-10.341-8.569a16.037 16.037.0 01-6.947-12.606c-.396-10.567 3.348-21.456 11.698-29.806l21.054-21.055c5.521-5.521 14.182-6.199 20.584-1.731a152.482 152.482.0 0120.522 17.197zM467.547 44.449c-59.261-59.262-155.69-59.27-214.96.0l-67.2 67.2c-.12.12-.25.25-.36.37-58.566 58.892-59.387 154.781.36 214.59a152.454 152.454.0 0020.521 17.196c6.402 4.468 15.064 3.789 20.584-1.731l21.054-21.055c8.35-8.35 12.094-19.239 11.698-29.806a16.037 16.037.0 00-6.947-12.606c-2.912-2.005-6.64-4.875-10.341-8.569-28.073-28.073-28.191-73.639.0-101.83l67.2-67.19c28.239-28.239 74.3-28.069 102.325.51 27.75 28.3 26.872 73.934-1.155 101.96l-13.087 13.087c-4.35 4.35-5.769 10.79-3.783 16.612 5.864 17.194 9.042 34.999 9.69 52.721.509 13.906 17.454 20.446 27.294 10.606l37.106-37.106c59.271-59.259 59.271-155.699.001-214.959z"/></svg></a>1. 利用 key 排序</h3>
+<p>如果后两个维度初始化后就不再变化的话，可以利用 Redis 的排序特性，将不变的维度写到 key 里，这样 score 相同时会用 key 来进行排序。</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
 </span><span class=lnt> 4
@@ -69,7 +173,9 @@
 </span><span class=lnt>20
 </span><span class=lnt>21
 </span><span class=lnt>22
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-shell data-lang=shell>    <span class=c1># 这里反转时间戳(9999999999999 - 1571810001259)，让时间早的排在前面</span>
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell>    <span class=c1># 这里反转时间戳(9999999999999 - 1571810001259)，让时间早的排在前面</span>
     &gt;zadd r <span class=m>100</span> A-1-8428180978740
     <span class=s2>&#34;1&#34;</span>
     &gt;zadd r <span class=m>200</span> B-0-8428180978740
@@ -91,7 +197,15 @@
      8<span class=o>)</span>  <span class=s2>&#34;200&#34;</span>
      9<span class=o>)</span>  <span class=s2>&#34;D-0-8428180978740&#34;</span>
      10<span class=o>)</span>  <span class=s2>&#34;400&#34;</span>
-</code></pre></td></tr></table></div></div><p>以上就是第一种方法了，实现起来非常简单。</p><hr><h3 id=score-存储格式><a href=#score-存储格式 class=anchor-link><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon anchor-icon"><path d="M326.612 185.391c59.747 59.809 58.927 155.698.36 214.59-.11.12-.24.25-.36.37l-67.2 67.2c-59.27 59.27-155.699 59.262-214.96.0-59.27-59.26-59.27-155.7.0-214.96l37.106-37.106c9.84-9.84 26.786-3.3 27.294 10.606.648 17.722 3.826 35.527 9.69 52.721 1.986 5.822.567 12.262-3.783 16.612l-13.087 13.087c-28.026 28.026-28.905 73.66-1.155 101.96 28.024 28.579 74.086 28.749 102.325.51l67.2-67.19c28.191-28.191 28.073-73.757.0-101.83-3.701-3.694-7.429-6.564-10.341-8.569a16.037 16.037.0 01-6.947-12.606c-.396-10.567 3.348-21.456 11.698-29.806l21.054-21.055c5.521-5.521 14.182-6.199 20.584-1.731a152.482 152.482.0 0120.522 17.197zM467.547 44.449c-59.261-59.262-155.69-59.27-214.96.0l-67.2 67.2c-.12.12-.25.25-.36.37-58.566 58.892-59.387 154.781.36 214.59a152.454 152.454.0 0020.521 17.196c6.402 4.468 15.064 3.789 20.584-1.731l21.054-21.055c8.35-8.35 12.094-19.239 11.698-29.806a16.037 16.037.0 00-6.947-12.606c-2.912-2.005-6.64-4.875-10.341-8.569-28.073-28.073-28.191-73.639.0-101.83l67.2-67.19c28.239-28.239 74.3-28.069 102.325.51 27.75 28.3 26.872 73.934-1.155 101.96l-13.087 13.087c-4.35 4.35-5.769 10.79-3.783 16.612 5.864 17.194 9.042 34.999 9.69 52.721.509 13.906 17.454 20.446 27.294 10.606l37.106-37.106c59.271-59.259 59.271-155.699.001-214.959z"/></svg></a>score 存储格式</h3><p>在介绍下两种方法前先来看看 zset 的 score 是怎么存储的，能保留多少精度，直接看跳表 node 的结构。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</code></pre></td></tr></table>
+</div>
+</div><p>以上就是第一种方法了，实现起来非常简单。</p>
+<hr>
+<h3 id=score-存储格式><a href=#score-存储格式 class=anchor-link><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon anchor-icon"><path d="M326.612 185.391c59.747 59.809 58.927 155.698.36 214.59-.11.12-.24.25-.36.37l-67.2 67.2c-59.27 59.27-155.699 59.262-214.96.0-59.27-59.26-59.27-155.7.0-214.96l37.106-37.106c9.84-9.84 26.786-3.3 27.294 10.606.648 17.722 3.826 35.527 9.69 52.721 1.986 5.822.567 12.262-3.783 16.612l-13.087 13.087c-28.026 28.026-28.905 73.66-1.155 101.96 28.024 28.579 74.086 28.749 102.325.51l67.2-67.19c28.191-28.191 28.073-73.757.0-101.83-3.701-3.694-7.429-6.564-10.341-8.569a16.037 16.037.0 01-6.947-12.606c-.396-10.567 3.348-21.456 11.698-29.806l21.054-21.055c5.521-5.521 14.182-6.199 20.584-1.731a152.482 152.482.0 0120.522 17.197zM467.547 44.449c-59.261-59.262-155.69-59.27-214.96.0l-67.2 67.2c-.12.12-.25.25-.36.37-58.566 58.892-59.387 154.781.36 214.59a152.454 152.454.0 0020.521 17.196c6.402 4.468 15.064 3.789 20.584-1.731l21.054-21.055c8.35-8.35 12.094-19.239 11.698-29.806a16.037 16.037.0 00-6.947-12.606c-2.912-2.005-6.64-4.875-10.341-8.569-28.073-28.073-28.191-73.639.0-101.83l67.2-67.19c28.239-28.239 74.3-28.069 102.325.51 27.75 28.3 26.872 73.934-1.155 101.96l-13.087 13.087c-4.35 4.35-5.769 10.79-3.783 16.612 5.864 17.194 9.042 34.999 9.69 52.721.509 13.906 17.454 20.446 27.294 10.606l37.106-37.106c59.271-59.259 59.271-155.699.001-214.959z"/></svg></a>score 存储格式</h3>
+<p>在介绍下两种方法前先来看看 zset 的 score 是怎么存储的，能保留多少精度，直接看跳表 node 的结构。</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
 </span><span class=lnt> 4
@@ -115,7 +229,9 @@
 </span><span class=lnt>22
 </span><span class=lnt>23
 </span><span class=lnt>24
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-c data-lang=c>    <span class=cm>/*
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-c data-lang=c>    <span class=cm>/*
 </span><span class=cm>     * 跳跃表节点
 </span><span class=cm>     */</span>
     <span class=k>typedef</span> <span class=k>struct</span> <span class=n>zskiplistNode</span> <span class=p>{</span>
@@ -139,12 +255,47 @@
         <span class=p>}</span> <span class=n>level</span><span class=p>[];</span>
     
     <span class=p>}</span> <span class=n>zskiplistNode</span><span class=p>;</span>
-</code></pre></td></tr></table></div></div><p>我们可以看到 score 是用 double 存储的，它是一个 IEEE 754 标准的 double 浮点数。（IEEE 754 标准的详细存储规则可以搜索其他文章，这里重点分析保留的精度）</p><p><img src=https://void.oss-cn-beijing.aliyuncs.com/img/20200107114011.png alt></p><p>一个 64 位浮点数存储时分为3段</p><ul><li>S:符号位，第一段，占1位，0表示正数，1表示负数。</li><li>Exp:指数字，第二段，占11位，移码方式表示正负数，排除全0和全1表示零和无穷大的特殊情况，指数部分是−1022～+1023加上1023，指数值的大小从1～2046</li><li>Fraction:有效数字，占52位，定点数，小数点放在尾数最前面</li></ul><pre><code>    实际数字 = (-1)^S * Fraction * 2^Exp  (二进制计算)
-</code></pre><p>double 存储的有效数据是第三段的52位，超出会损失精度，由于标准规定小数点是在有效数字最前面，所以实际可以存储 53 位数字。比如有个数字是 <code>111___(53个1)</code>，有效数字位存储的是 <code>.11___(52个1)</code>，计算时会在个位补1，得到<code>1.11___(53个1)</code>，最大值为 <code>2^53 = 9007199254740991</code>，大概 <code>log2^53 = 15.95</code> 位。</p><p>可以看到只要保证有效数字小于等于<code>9007199254740991</code>就不会损失精度。</p><p>好了，现在有了理论基础，接下来看看我们可以怎么实现。</p><hr><h3 id=2-二进制分段><a href=#2-二进制分段 class=anchor-link><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon anchor-icon"><path d="M326.612 185.391c59.747 59.809 58.927 155.698.36 214.59-.11.12-.24.25-.36.37l-67.2 67.2c-59.27 59.27-155.699 59.262-214.96.0-59.27-59.26-59.27-155.7.0-214.96l37.106-37.106c9.84-9.84 26.786-3.3 27.294 10.606.648 17.722 3.826 35.527 9.69 52.721 1.986 5.822.567 12.262-3.783 16.612l-13.087 13.087c-28.026 28.026-28.905 73.66-1.155 101.96 28.024 28.579 74.086 28.749 102.325.51l67.2-67.19c28.191-28.191 28.073-73.757.0-101.83-3.701-3.694-7.429-6.564-10.341-8.569a16.037 16.037.0 01-6.947-12.606c-.396-10.567 3.348-21.456 11.698-29.806l21.054-21.055c5.521-5.521 14.182-6.199 20.584-1.731a152.482 152.482.0 0120.522 17.197zM467.547 44.449c-59.261-59.262-155.69-59.27-214.96.0l-67.2 67.2c-.12.12-.25.25-.36.37-58.566 58.892-59.387 154.781.36 214.59a152.454 152.454.0 0020.521 17.196c6.402 4.468 15.064 3.789 20.584-1.731l21.054-21.055c8.35-8.35 12.094-19.239 11.698-29.806a16.037 16.037.0 00-6.947-12.606c-2.912-2.005-6.64-4.875-10.341-8.569-28.073-28.073-28.191-73.639.0-101.83l67.2-67.19c28.239-28.239 74.3-28.069 102.325.51 27.75 28.3 26.872 73.934-1.155 101.96l-13.087 13.087c-4.35 4.35-5.769 10.79-3.783 16.612 5.864 17.194 9.042 34.999 9.69 52.721.509 13.906 17.454 20.446 27.294 10.606l37.106-37.106c59.271-59.259 59.271-155.699.001-214.959z"/></svg></a>2. 二进制分段</h3><p>第二种方法，可以利用二进制 64 位 long 分段存储各个维度。</p><p>首先时间戳如果全存储就太长了，可以通过一些计算缩小一些，先忽略毫秒，然后和一个大数计算差值。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</code></pre></td></tr></table>
+</div>
+</div><p>我们可以看到 score 是用 double 存储的，它是一个 IEEE 754 标准的 double 浮点数。（IEEE 754 标准的详细存储规则可以搜索其他文章，这里重点分析保留的精度）</p>
+<p><img src=https://void.oss-cn-beijing.aliyuncs.com/img/20200107114011.png alt></p>
+<p>一个 64 位浮点数存储时分为3段</p>
+<ul>
+<li>S:符号位，第一段，占1位，0表示正数，1表示负数。</li>
+<li>Exp:指数字，第二段，占11位，移码方式表示正负数，排除全0和全1表示零和无穷大的特殊情况，指数部分是−1022～+1023加上1023，指数值的大小从1～2046</li>
+<li>Fraction:有效数字，占52位，定点数，小数点放在尾数最前面</li>
+</ul>
+<pre tabindex=0><code>    实际数字 = (-1)^S * Fraction * 2^Exp  (二进制计算)
+</code></pre><p>double 存储的有效数据是第三段的52位，超出会损失精度，由于标准规定小数点是在有效数字最前面，所以实际可以存储 53 位数字。比如有个数字是 <code>111___(53个1)</code>，有效数字位存储的是 <code>.11___(52个1)</code>，计算时会在个位补1，得到<code>1.11___(53个1)</code>，最大值为 <code>2^53 = 9007199254740991</code>，大概 <code>log2^53 = 15.95</code> 位。</p>
+<p>可以看到只要保证有效数字小于等于<code>9007199254740991</code>就不会损失精度。</p>
+<p>好了，现在有了理论基础，接下来看看我们可以怎么实现。</p>
+<hr>
+<h3 id=2-二进制分段><a href=#2-二进制分段 class=anchor-link><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon anchor-icon"><path d="M326.612 185.391c59.747 59.809 58.927 155.698.36 214.59-.11.12-.24.25-.36.37l-67.2 67.2c-59.27 59.27-155.699 59.262-214.96.0-59.27-59.26-59.27-155.7.0-214.96l37.106-37.106c9.84-9.84 26.786-3.3 27.294 10.606.648 17.722 3.826 35.527 9.69 52.721 1.986 5.822.567 12.262-3.783 16.612l-13.087 13.087c-28.026 28.026-28.905 73.66-1.155 101.96 28.024 28.579 74.086 28.749 102.325.51l67.2-67.19c28.191-28.191 28.073-73.757.0-101.83-3.701-3.694-7.429-6.564-10.341-8.569a16.037 16.037.0 01-6.947-12.606c-.396-10.567 3.348-21.456 11.698-29.806l21.054-21.055c5.521-5.521 14.182-6.199 20.584-1.731a152.482 152.482.0 0120.522 17.197zM467.547 44.449c-59.261-59.262-155.69-59.27-214.96.0l-67.2 67.2c-.12.12-.25.25-.36.37-58.566 58.892-59.387 154.781.36 214.59a152.454 152.454.0 0020.521 17.196c6.402 4.468 15.064 3.789 20.584-1.731l21.054-21.055c8.35-8.35 12.094-19.239 11.698-29.806a16.037 16.037.0 00-6.947-12.606c-2.912-2.005-6.64-4.875-10.341-8.569-28.073-28.073-28.191-73.639.0-101.83l67.2-67.19c28.239-28.239 74.3-28.069 102.325.51 27.75 28.3 26.872 73.934-1.155 101.96l-13.087 13.087c-4.35 4.35-5.769 10.79-3.783 16.612 5.864 17.194 9.042 34.999 9.69 52.721.509 13.906 17.454 20.446 27.294 10.606l37.106-37.106c59.271-59.259 59.271-155.699.001-214.959z"/></svg></a>2. 二进制分段</h3>
+<p>第二种方法，可以利用二进制 64 位 long 分段存储各个维度。</p>
+<p>首先时间戳如果全存储就太长了，可以通过一些计算缩小一些，先忽略毫秒，然后和一个大数计算差值。</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-java data-lang=java>    <span class=kt>int</span> <span class=n>MAX_SECOND</span> <span class=o>=</span> <span class=n>1861891200</span><span class=o>;</span> <span class=c1>// 2029.1.1 0:0:0
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-java data-lang=java>    <span class=kt>int</span> <span class=n>MAX_SECOND</span> <span class=o>=</span> <span class=n>1861891200</span><span class=o>;</span> <span class=c1>// 2029.1.1 0:0:0
 </span><span class=c1></span>    <span class=kt>int</span> <span class=n>sts</span> <span class=o>=</span> <span class=o>(</span><span class=n>MAX_SECOND</span> <span class=o>-</span> <span class=o>(</span><span class=kt>int</span><span class=o>)(</span><span class=n>ts</span> <span class=o>/</span> <span class=n>1000</span><span class=o>))</span>
-</code></pre></td></tr></table></div></div><p>这样时间就缩小到了300000000以内。</p><p>接下来进行划分，首位标志位不用，剩下63位，然后我划分高33位存分数，1位存标志位，最后29位存时间戳，存储结构是这样的：</p><p><img src=https://void.oss-cn-beijing.aliyuncs.com/img/20200107114033.png alt></p><p>如果要不损失精度，第一段可存储位数 = 53 - 1 - 29 = 23。</p><p>第一段最大值 = 2^33 = 8589934591，不损失精度 = 2^23 = 8388607。</p><p>第三段最大值 = 2^29 = 536870911。</p><ul><li>使用时可以适当缩短第三段时间戳的长度，或者不追求时间戳一定精确的话，第一段分数可以超出不损失精度的长度，也只会损失一点时间戳的精度而已。</li></ul><p>然后就可以用下面的方法计算 score 了，因为是二进制，可以全用位运算。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</code></pre></td></tr></table>
+</div>
+</div><p>这样时间就缩小到了300000000以内。</p>
+<p>接下来进行划分，首位标志位不用，剩下63位，然后我划分高33位存分数，1位存标志位，最后29位存时间戳，存储结构是这样的：</p>
+<p><img src=https://void.oss-cn-beijing.aliyuncs.com/img/20200107114033.png alt></p>
+<p>如果要不损失精度，第一段可存储位数 = 53 - 1 - 29 = 23。</p>
+<p>第一段最大值 = 2^33 = 8589934591，不损失精度 = 2^23 = 8388607。</p>
+<p>第三段最大值 = 2^29 = 536870911。</p>
+<ul>
+<li>使用时可以适当缩短第三段时间戳的长度，或者不追求时间戳一定精确的话，第一段分数可以超出不损失精度的长度，也只会损失一点时间戳的精度而已。</li>
+</ul>
+<p>然后就可以用下面的方法计算 score 了，因为是二进制，可以全用位运算。</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
 </span><span class=lnt> 4
@@ -171,7 +322,9 @@
 </span><span class=lnt>25
 </span><span class=lnt>26
 </span><span class=lnt>27
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-java data-lang=java>    <span class=kt>int</span> <span class=n>size1</span> <span class=o>=</span> <span class=n>33</span><span class=o>;</span>
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-java data-lang=java>    <span class=kt>int</span> <span class=n>size1</span> <span class=o>=</span> <span class=n>33</span><span class=o>;</span>
     <span class=kt>int</span> <span class=n>size2</span> <span class=o>=</span> <span class=n>1</span><span class=o>;</span>
     <span class=kt>int</span> <span class=n>size3</span> <span class=o>=</span> <span class=n>29</span><span class=o>;</span>
     
@@ -198,7 +351,13 @@
     
         <span class=k>return</span> <span class=n>r</span><span class=o>;</span>
     <span class=o>}</span>
-</code></pre></td></tr></table></div></div><p>增加高位分数的话直接把低维度设为0，计算出分数后调用 ZINCRBY 就行了。</p><p>改变低位维度值的话就不能调用 <code>ZINCRBY</code> 了，需要调用<code>ZADD</code>，我们用自旋加 CAS 更新，防止覆盖掉新更新的值。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</code></pre></td></tr></table>
+</div>
+</div><p>增加高位分数的话直接把低维度设为0，计算出分数后调用 ZINCRBY 就行了。</p>
+<p>改变低位维度值的话就不能调用 <code>ZINCRBY</code> 了，需要调用<code>ZADD</code>，我们用自旋加 CAS 更新，防止覆盖掉新更新的值。</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
 </span><span class=lnt> 4
@@ -272,7 +431,9 @@
 </span><span class=lnt>72
 </span><span class=lnt>73
 </span><span class=lnt>74
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-java data-lang=java>    <span class=cm>/**
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-java data-lang=java>    <span class=cm>/**
 </span><span class=cm>     * 设置维度值
 </span><span class=cm>     * 
 </span><span class=cm>     * @param key zset key
@@ -346,21 +507,34 @@
                 <span class=n>ReturnType</span><span class=o>.</span><span class=na>fromJavaType</span><span class=o>(</span><span class=n>String</span><span class=o>.</span><span class=na>class</span><span class=o>),</span>
                 <span class=n>1</span><span class=o>,</span> <span class=n>key</span><span class=o>.</span><span class=na>getBytes</span><span class=o>(),</span> <span class=n>value</span><span class=o>.</span><span class=na>getBytes</span><span class=o>()));</span>
     <span class=o>}</span>
-</code></pre></td></tr></table></div></div><p>这里初始 score 值获取使用的是 <code>zscoreBytes()</code> 而不是<code>redisTemplate.opsForZSet().score()</code>是为了防止损失精度，这个方法返回的 score 值其实是可能损失精度的，我们看源码分析下：</p><p>直接进到最底层的执行方法 <code>zscore</code></p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</code></pre></td></tr></table>
+</div>
+</div><p>这里初始 score 值获取使用的是 <code>zscoreBytes()</code> 而不是<code>redisTemplate.opsForZSet().score()</code>是为了防止损失精度，这个方法返回的 score 值其实是可能损失精度的，我们看源码分析下：</p>
+<p>直接进到最底层的执行方法 <code>zscore</code></p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
 </span><span class=lnt>4
 </span><span class=lnt>5
 </span><span class=lnt>6
 </span><span class=lnt>7
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-java data-lang=java>    <span class=c1>// class RedisCommandBuilder
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-java data-lang=java>    <span class=c1>// class RedisCommandBuilder
 </span><span class=c1></span>    
     <span class=n>Command</span><span class=o>&lt;</span><span class=n>K</span><span class=o>,</span> <span class=n>V</span><span class=o>,</span> <span class=n>Double</span><span class=o>&gt;</span> <span class=nf>zscore</span><span class=o>(</span><span class=n>K</span> <span class=n>key</span><span class=o>,</span> <span class=n>V</span> <span class=n>member</span><span class=o>)</span> <span class=o>{</span>
         <span class=n>notNullKey</span><span class=o>(</span><span class=n>key</span><span class=o>);</span>
     
         <span class=k>return</span> <span class=n>createCommand</span><span class=o>(</span><span class=n>ZSCORE</span><span class=o>,</span> <span class=k>new</span> <span class=n>DoubleOutput</span><span class=o>&lt;&gt;(</span><span class=n>codec</span><span class=o>),</span> <span class=n>key</span><span class=o>,</span> <span class=n>member</span><span class=o>);</span>
     <span class=o>}</span>
-</code></pre></td></tr></table></div></div><p><code>DoubleOutput</code> 将 Redis 的返回值转成 Double</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</code></pre></td></tr></table>
+</div>
+</div><p><code>DoubleOutput</code> 将 Redis 的返回值转成 Double</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
 </span><span class=lnt> 4
@@ -373,7 +547,9 @@
 </span><span class=lnt>11
 </span><span class=lnt>12
 </span><span class=lnt>13
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-java data-lang=java>    <span class=c1>// 将 Redis 返回值转成 Double
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-java data-lang=java>    <span class=c1>// 将 Redis 返回值转成 Double
 </span><span class=c1></span>    <span class=kd>public</span> <span class=kd>class</span> <span class=nc>DoubleOutput</span><span class=o>&lt;</span><span class=n>K</span><span class=o>,</span> <span class=n>V</span><span class=o>&gt;</span> <span class=kd>extends</span> <span class=n>CommandOutput</span><span class=o>&lt;</span><span class=n>K</span><span class=o>,</span> <span class=n>V</span><span class=o>,</span> <span class=n>Double</span><span class=o>&gt;</span> <span class=o>{</span>
     
         <span class=kd>public</span> <span class=nf>DoubleOutput</span><span class=o>(</span><span class=n>RedisCodec</span><span class=o>&lt;</span><span class=n>K</span><span class=o>,</span> <span class=n>V</span><span class=o>&gt;</span> <span class=n>codec</span><span class=o>)</span> <span class=o>{</span>
@@ -386,11 +562,24 @@
             <span class=n>output</span> <span class=o>=</span> <span class=o>(</span><span class=n>bytes</span> <span class=o>==</span> <span class=kc>null</span><span class=o>)</span> <span class=o>?</span> <span class=kc>null</span> <span class=o>:</span> <span class=n>parseDouble</span><span class=o>(</span><span class=n>decodeAscii</span><span class=o>(</span><span class=n>bytes</span><span class=o>));</span>
         <span class=o>}</span>
     <span class=o>}</span>
-</code></pre></td></tr></table></div></div><p>Redis 原始的返回值其实是个类似 <code>1.3094266712875436e+18</code> 的字符串，<code>DoubleOutput</code> 在转换成 Double 的时候有可能会损失精度，用 <code>BigDecimal</code> 转的话是不会丢精度的。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</code></pre></td></tr></table>
+</div>
+</div><p>Redis 原始的返回值其实是个类似 <code>1.3094266712875436e+18</code> 的字符串，<code>DoubleOutput</code> 在转换成 Double 的时候有可能会损失精度，用 <code>BigDecimal</code> 转的话是不会丢精度的。</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-java data-lang=java>    <span class=n>String</span> <span class=n>a</span> <span class=o>=</span> <span class=s>&#34;1.3094266712875436e+18&#34;</span><span class=o>;</span>
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-java data-lang=java>    <span class=n>String</span> <span class=n>a</span> <span class=o>=</span> <span class=s>&#34;1.3094266712875436e+18&#34;</span><span class=o>;</span>
     <span class=kt>long</span> <span class=n>value</span> <span class=o>=</span> <span class=k>new</span> <span class=n>BigDecimal</span><span class=o>(</span><span class=n>a</span><span class=o>).</span><span class=na>longValue</span><span class=o>();</span>
-</code></pre></td></tr></table></div></div><p>所以要不损失精度的话，可以修改下原始方法重新打个包或者用 lua 取出来原始的字符串再转成自己需要的值。</p><p>最后利用 <code>genScore</code> 方法就可以生成score值并排序了</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</code></pre></td></tr></table>
+</div>
+</div><p>所以要不损失精度的话，可以修改下原始方法重新打个包或者用 lua 取出来原始的字符串再转成自己需要的值。</p>
+<p>最后利用 <code>genScore</code> 方法就可以生成score值并排序了</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
 </span><span class=lnt> 4
@@ -416,7 +605,9 @@
 </span><span class=lnt>24
 </span><span class=lnt>25
 </span><span class=lnt>26
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-shell data-lang=shell>    <span class=c1># genScore(100, 1, 290072179)</span>
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell>    <span class=c1># genScore(100, 1, 290072179)</span>
     &gt;zadd r <span class=m>108201125491</span> A
     <span class=s2>&#34;1&#34;</span>
     <span class=c1># genScore(200, 0, 290072179)</span>
@@ -442,14 +633,122 @@
      8<span class=o>)</span>  <span class=s2>&#34;215575316911&#34;</span>
      9<span class=o>)</span>  <span class=s2>&#34;D&#34;</span>
      10<span class=o>)</span>  <span class=s2>&#34;429786801779&#34;</span>
-</code></pre></td></tr></table></div></div><h3 id=3-直接拆分-double><a href=#3-直接拆分-double class=anchor-link><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon anchor-icon"><path d="M326.612 185.391c59.747 59.809 58.927 155.698.36 214.59-.11.12-.24.25-.36.37l-67.2 67.2c-59.27 59.27-155.699 59.262-214.96.0-59.27-59.26-59.27-155.7.0-214.96l37.106-37.106c9.84-9.84 26.786-3.3 27.294 10.606.648 17.722 3.826 35.527 9.69 52.721 1.986 5.822.567 12.262-3.783 16.612l-13.087 13.087c-28.026 28.026-28.905 73.66-1.155 101.96 28.024 28.579 74.086 28.749 102.325.51l67.2-67.19c28.191-28.191 28.073-73.757.0-101.83-3.701-3.694-7.429-6.564-10.341-8.569a16.037 16.037.0 01-6.947-12.606c-.396-10.567 3.348-21.456 11.698-29.806l21.054-21.055c5.521-5.521 14.182-6.199 20.584-1.731a152.482 152.482.0 0120.522 17.197zM467.547 44.449c-59.261-59.262-155.69-59.27-214.96.0l-67.2 67.2c-.12.12-.25.25-.36.37-58.566 58.892-59.387 154.781.36 214.59a152.454 152.454.0 0020.521 17.196c6.402 4.468 15.064 3.789 20.584-1.731l21.054-21.055c8.35-8.35 12.094-19.239 11.698-29.806a16.037 16.037.0 00-6.947-12.606c-2.912-2.005-6.64-4.875-10.341-8.569-28.073-28.073-28.191-73.639.0-101.83l67.2-67.19c28.239-28.239 74.3-28.069 102.325.51 27.75 28.3 26.872 73.934-1.155 101.96l-13.087 13.087c-4.35 4.35-5.769 10.79-3.783 16.612 5.864 17.194 9.042 34.999 9.69 52.721.509 13.906 17.454 20.446 27.294 10.606l37.106-37.106c59.271-59.259 59.271-155.699.001-214.959z"/></svg></a>3. 直接拆分 double</h3><p>可以用二进制拆分当然也可以直接拆分十进制数，为了方便，还可以用小数划分维度，比如将分数放在整数位，标志位和时间戳放在小数位。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</code></pre></td></tr></table>
+</div>
+</div><h3 id=3-直接拆分-double><a href=#3-直接拆分-double class=anchor-link><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon anchor-icon"><path d="M326.612 185.391c59.747 59.809 58.927 155.698.36 214.59-.11.12-.24.25-.36.37l-67.2 67.2c-59.27 59.27-155.699 59.262-214.96.0-59.27-59.26-59.27-155.7.0-214.96l37.106-37.106c9.84-9.84 26.786-3.3 27.294 10.606.648 17.722 3.826 35.527 9.69 52.721 1.986 5.822.567 12.262-3.783 16.612l-13.087 13.087c-28.026 28.026-28.905 73.66-1.155 101.96 28.024 28.579 74.086 28.749 102.325.51l67.2-67.19c28.191-28.191 28.073-73.757.0-101.83-3.701-3.694-7.429-6.564-10.341-8.569a16.037 16.037.0 01-6.947-12.606c-.396-10.567 3.348-21.456 11.698-29.806l21.054-21.055c5.521-5.521 14.182-6.199 20.584-1.731a152.482 152.482.0 0120.522 17.197zM467.547 44.449c-59.261-59.262-155.69-59.27-214.96.0l-67.2 67.2c-.12.12-.25.25-.36.37-58.566 58.892-59.387 154.781.36 214.59a152.454 152.454.0 0020.521 17.196c6.402 4.468 15.064 3.789 20.584-1.731l21.054-21.055c8.35-8.35 12.094-19.239 11.698-29.806a16.037 16.037.0 00-6.947-12.606c-2.912-2.005-6.64-4.875-10.341-8.569-28.073-28.073-28.191-73.639.0-101.83l67.2-67.19c28.239-28.239 74.3-28.069 102.325.51 27.75 28.3 26.872 73.934-1.155 101.96l-13.087 13.087c-4.35 4.35-5.769 10.79-3.783 16.612 5.864 17.194 9.042 34.999 9.69 52.721.509 13.906 17.454 20.446 27.294 10.606l37.106-37.106c59.271-59.259 59.271-155.699.001-214.959z"/></svg></a>3. 直接拆分 double</h3>
+<p>可以用二进制拆分当然也可以直接拆分十进制数，为了方便，还可以用小数划分维度，比如将分数放在整数位，标志位和时间戳放在小数位。</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
 </span><span class=lnt>4
 </span><span class=lnt>5
-</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-shell data-lang=shell>    A 100.1290072179
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell>    A 100.1290072179
     B 200.0290072179
     C 200.1290072179
     D 400.0290072179
     E 200.1290081199
-</code></pre></td></tr></table></div></div><p>不过这样不丢精度存储的分数比二进制拆分小。</p><p>原理和二进制拆分一样，就不赘述了。</p><h2 id=总结><a href=#总结 class=anchor-link><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon anchor-icon"><path d="M326.612 185.391c59.747 59.809 58.927 155.698.36 214.59-.11.12-.24.25-.36.37l-67.2 67.2c-59.27 59.27-155.699 59.262-214.96.0-59.27-59.26-59.27-155.7.0-214.96l37.106-37.106c9.84-9.84 26.786-3.3 27.294 10.606.648 17.722 3.826 35.527 9.69 52.721 1.986 5.822.567 12.262-3.783 16.612l-13.087 13.087c-28.026 28.026-28.905 73.66-1.155 101.96 28.024 28.579 74.086 28.749 102.325.51l67.2-67.19c28.191-28.191 28.073-73.757.0-101.83-3.701-3.694-7.429-6.564-10.341-8.569a16.037 16.037.0 01-6.947-12.606c-.396-10.567 3.348-21.456 11.698-29.806l21.054-21.055c5.521-5.521 14.182-6.199 20.584-1.731a152.482 152.482.0 0120.522 17.197zM467.547 44.449c-59.261-59.262-155.69-59.27-214.96.0l-67.2 67.2c-.12.12-.25.25-.36.37-58.566 58.892-59.387 154.781.36 214.59a152.454 152.454.0 0020.521 17.196c6.402 4.468 15.064 3.789 20.584-1.731l21.054-21.055c8.35-8.35 12.094-19.239 11.698-29.806a16.037 16.037.0 00-6.947-12.606c-2.912-2.005-6.64-4.875-10.341-8.569-28.073-28.073-28.191-73.639.0-101.83l67.2-67.19c28.239-28.239 74.3-28.069 102.325.51 27.75 28.3 26.872 73.934-1.155 101.96l-13.087 13.087c-4.35 4.35-5.769 10.79-3.783 16.612 5.864 17.194 9.042 34.999 9.69 52.721.509 13.906 17.454 20.446 27.294 10.606l37.106-37.106c59.271-59.259 59.271-155.699.001-214.959z"/></svg></a>总结</h2><p>数据量不大的情况下直接使用 RDB 就可以了，比较方便。用 Redis 的时候，一级以外的维度不变的情况下可以直接用 key 排序，比较简单，如果维度会更新，可以使用拆分二进制或十进制的方法存储，二进制的优点是存储的数比较大，而且可以用位运算，十进制的优点是计算简单，可读性比较好。各个维度的长度还可以做成配置项，这样就可以满足不同的业务需求了。</p></div></article><ul class=post-copyright><li class="copyright-item author"><span class=copyright-item-text>作者</span>：<a href=https://ld000.space target=_blank rel=noopener>Voiddd</a></li><li class="copyright-item link"><span class=copyright-item-text>链接</span>：<a href=/post/make_redis_zset_support_multiple_sort/ target=_blank rel=noopener>https://ld000.space/post/make_redis_zset_support_multiple_sort/</a></li><li class="copyright-item license"><span class=copyright-item-text>许可</span>：<a href=https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh target=_blank rel=noopener>CC BY-NC-SA 4.0</a></li></ul><div class=updated-badge-container><div title="Updated @ 2021-07-15 11:58:45 UTC" style=cursor:help;display:inline-block><svg xmlns="http://www.w3.org/2000/svg" width="130" height="20" class="updated-badge"><linearGradient id="b" x2="0" y2="100%"><stop offset="0" stop-color="#bbb" stop-opacity=".1"/><stop offset="1" stop-opacity=".1"/></linearGradient><clipPath id="a"><rect width="130" height="20" rx="3" fill="#fff"/></clipPath><g clip-path="url(#a)"><path class="updated-badge-left" d="M0 0h55v20H0z"/><path class="updated-badge-right" d="M55 0h75v20H55z"/><path fill="url(#b)" d="M0 0h130v20H0z"/></g><g fill="#fff" text-anchor="middle" font-size="110"><text x="285" y="150" fill="#010101" fill-opacity=".3" textLength="450" transform="scale(.1)">updated</text><text x="285" y="140" textLength="450" transform="scale(.1)">updated</text><text x="915" y="150" fill="#010101" fill-opacity=".3" textLength="650" transform="scale(.1)">2021-07-15</text><text x="915" y="140" textLength="650" transform="scale(.1)">2021-07-15</text></g></svg></div></div><div class=post-share><div class=share-items><div class="share-item twitter"><a href="https://twitter.com/share?url=https://ld000.space/post/make_redis_zset_support_multiple_sort/&text=%e8%ae%a9%20Redis%20zset%20%e6%94%af%e6%8c%81%e5%a4%9a%e6%9d%a1%e4%bb%b6%e6%8e%92%e5%ba%8f&hashtags=java,&via=LDtree" title=分享到「Twitter」 target=_blank rel=noopener><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon twitter-icon"><path d="M459.37 151.716c.325 4.548.325 9.097.325 13.645.0 138.72-105.583 298.558-298.558 298.558-59.452.0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055.0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421.0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391.0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04.0-57.828 46.782-104.934 104.934-104.934 30.213.0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"/></svg></a></div><div class="share-item facebook"><a href="https://www.facebook.com/sharer/sharer.php?u=https://ld000.space/post/make_redis_zset_support_multiple_sort/&hashtag=%23java" title=分享到「Facebook」 target=_blank rel=noopener><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon facebook-icon"><path d="M504 256C504 119 393 8 256 8S8 119 8 256c0 123.78 90.69 226.38 209.25 245V327.69h-63V256h63v-54.64c0-62.15 37-96.48 93.67-96.48 27.14.0 55.52 4.84 55.52 4.84v61h-31.28c-30.8.0-40.41 19.12-40.41 38.73V256h68.78l-11 71.69h-57.78V501C413.31 482.38 504 379.78 504 256z"/></svg></a></div><div class="share-item linkedin"><a href="https://www.linkedin.com/shareArticle?mini=true&url=https://ld000.space/post/make_redis_zset_support_multiple_sort/&title=%e8%ae%a9%20Redis%20zset%20%e6%94%af%e6%8c%81%e5%a4%9a%e6%9d%a1%e4%bb%b6%e6%8e%92%e5%ba%8f&summary=%e4%b8%80%e4%ba%9b%e9%9c%80%e6%b1%82%e4%b8%ad%e7%bb%8f%e5%b8%b8%e8%a6%81%e6%88%91%e4%bb%ac%e5%ae%9e%e7%8e%b0%e4%b8%80%e4%b8%aa%e6%8e%92%e8%a1%8c%e6%a6%9c%ef%bc%8c%e6%95%b0%e6%8d%ae%e9%87%8f%e5%b0%91%e7%9a%84%e8%af%9d%e5%8f%af%e4%bb%a5%e4%bd%bf%e7%94%a8%20RDB%20%e6%95%b0%e6%8d%ae%e5%ba%93%e6%8e%92%e5%ba%8f%ef%bc%8c%e6%95%b0%e6%8d%ae%e9%87%8f%e5%a4%a7%e5%8f%af%e4%bb%a5%e8%87%aa%e2%80%a6%e2%80%a6&source=Voiddd" title=分享到「LinkedIn」 target=_blank rel=noopener><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="icon linkedin-icon"><path d="M416 32H31.9C14.3 32 0 46.5.0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6.0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3zM135.4 416H69V202.2h66.5V416zm-33.2-243c-21.3.0-38.5-17.3-38.5-38.5S80.9 96 102.2 96c21.2.0 38.5 17.3 38.5 38.5.0 21.3-17.2 38.5-38.5 38.5zm282.1 243h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6.0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2.0 79.7 44.3 79.7 101.9V416z"/></svg></a></div><div class="share-item telegram"><a href="https://t.me/share/url?url=https://ld000.space/post/make_redis_zset_support_multiple_sort/&text=%e8%ae%a9%20Redis%20zset%20%e6%94%af%e6%8c%81%e5%a4%9a%e6%9d%a1%e4%bb%b6%e6%8e%92%e5%ba%8f" title=分享到「Telegram」 target=_blank rel=noopener><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512" class="icon telegram-icon"><path d="M248 8C111 8 0 119 0 256s111 248 248 248 248-111 248-248S385 8 248 8zm121.8 169.9-40.7 191.8c-3 13.6-11.1 16.9-22.4 10.5l-62-45.7-29.9 28.8c-3.3 3.3-6.1 6.1-12.5 6.1l4.4-63.1 114.9-103.8c5-4.4-1.1-6.9-7.7-2.5l-142 89.4-61.2-19.1c-13.3-4.2-13.6-13.3 2.8-19.7l239.1-92.2c11.1-4 20.8 2.7 17.2 19.5z"/></svg></a></div><div class="share-item weibo"><a href="https://service.weibo.com/share/share.php?&url=https://ld000.space/post/make_redis_zset_support_multiple_sort/&title=%e8%ae%a9%20Redis%20zset%20%e6%94%af%e6%8c%81%e5%a4%9a%e6%9d%a1%e4%bb%b6%e6%8e%92%e5%ba%8f&pic=https://void.oss-cn-beijing.aliyuncs.com/img/20200107114011.png&searchPic=false" title=分享到「新浪微博」 target=_blank rel=noopener><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon weibo-icon"><path d="M407 177.6c7.6-24-13.4-46.8-37.4-41.7-22 4.8-28.8-28.1-7.1-32.8 50.1-10.9 92.3 37.1 76.5 84.8-6.8 21.2-38.8 10.8-32-10.3zM214.8 446.7C108.5 446.7.0 395.3.0 310.4c0-44.3 28-95.4 76.3-143.7C176 67 279.5 65.8 249.9 161c-4 13.1 12.3 5.7 12.3 6 79.5-33.6 140.5-16.8 114 51.4-3.7 9.4 1.1 10.9 8.3 13.1 135.7 42.3 34.8 215.2-169.7 215.2zm143.7-146.3c-5.4-55.7-78.5-94-163.4-85.7-84.8 8.6-148.8 60.3-143.4 116s78.5 94 163.4 85.7c84.8-8.6 148.8-60.3 143.4-116zM347.9 35.1c-25.9 5.6-16.8 43.7 8.3 38.3 72.3-15.2 134.8 52.8 111.7 124-7.4 24.2 29.1 37 37.4 12 31.9-99.8-55.1-195.9-157.4-174.3zm-78.5 311c-17.1 38.8-66.8 60-109.1 46.3-40.8-13.1-58-53.4-40.3-89.7 17.7-35.4 63.1-55.4 103.4-45.1 42 10.8 63.1 50.2 46 88.5zm-86.3-30c-12.9-5.4-30 .3-38 12.9-8.3 12.9-4.3 28 8.6 34 13.1 6 30.8.3 39.1-12.9 8-13.1 3.7-28.3-9.7-34zm32.6-13.4c-5.1-1.7-11.4.6-14.3 5.4-2.9 5.1-1.4 10.6 3.7 12.9 5.1 2 11.7-.3 14.6-5.4 2.8-5.2 1.1-10.9-4-12.9z"/></svg></a></div><div class="share-item douban"><a href="https://www.douban.com/share/service?href=https://ld000.space/post/make_redis_zset_support_multiple_sort/&name=%e8%ae%a9%20Redis%20zset%20%e6%94%af%e6%8c%81%e5%a4%9a%e6%9d%a1%e4%bb%b6%e6%8e%92%e5%ba%8f&text=%e4%b8%80%e4%ba%9b%e9%9c%80%e6%b1%82%e4%b8%ad%e7%bb%8f%e5%b8%b8%e8%a6%81%e6%88%91%e4%bb%ac%e5%ae%9e%e7%8e%b0%e4%b8%80%e4%b8%aa%e6%8e%92%e8%a1%8c%e6%a6%9c%ef%bc%8c%e6%95%b0%e6%8d%ae%e9%87%8f%e5%b0%91%e7%9a%84%e8%af%9d%e5%8f%af%e4%bb%a5%e4%bd%bf%e7%94%a8%20RDB%20%e6%95%b0%e6%8d%ae%e5%ba%93%e6%8e%92%e5%ba%8f%ef%bc%8c%e6%95%b0%e6%8d%ae%e9%87%8f%e5%a4%a7%e5%8f%af%e4%bb%a5%e8%87%aa%e2%80%a6%e2%80%a6" title=分享到「豆瓣」 target=_blank rel=noopener><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon douban-icon"><path d="M.643.92v2.412h22.714V.92H.643zm1.974 4.926v9.42h18.764v-9.42H2.617zm2.72 2.408H18.69v4.605H5.338V8.254zm1.657 7.412-2.512.938c1.037 1.461 1.87 2.825 2.512 4.091H0v2.385h24v-2.385h-6.678c.818-1.176 1.589-2.543 2.303-4.091l-2.73-.938a29.952 29.952.0 01-2.479 5.03h-4.75c-.786-1.962-1.677-3.641-2.672-5.03z"/></svg></a></div><div class="share-item qq"><a href="https://connect.qq.com/widget/shareqq/index.html?url=https://ld000.space/post/make_redis_zset_support_multiple_sort/&title=%e8%ae%a9%20Redis%20zset%20%e6%94%af%e6%8c%81%e5%a4%9a%e6%9d%a1%e4%bb%b6%e6%8e%92%e5%ba%8f&summary=%e4%b8%80%e4%ba%9b%e9%9c%80%e6%b1%82%e4%b8%ad%e7%bb%8f%e5%b8%b8%e8%a6%81%e6%88%91%e4%bb%ac%e5%ae%9e%e7%8e%b0%e4%b8%80%e4%b8%aa%e6%8e%92%e8%a1%8c%e6%a6%9c%ef%bc%8c%e6%95%b0%e6%8d%ae%e9%87%8f%e5%b0%91%e7%9a%84%e8%af%9d%e5%8f%af%e4%bb%a5%e4%bd%bf%e7%94%a8%20RDB%20%e6%95%b0%e6%8d%ae%e5%ba%93%e6%8e%92%e5%ba%8f%ef%bc%8c%e6%95%b0%e6%8d%ae%e9%87%8f%e5%a4%a7%e5%8f%af%e4%bb%a5%e8%87%aa%e2%80%a6%e2%80%a6&pics=https://void.oss-cn-beijing.aliyuncs.com/img/20200107114011.png&site=Voiddd" title=分享到「QQ」 target=_blank rel=noopener><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="icon qq-icon"><path d="M433.754 420.445c-11.526 1.393-44.86-52.741-44.86-52.741.0 31.345-16.136 72.247-51.051 101.786 16.842 5.192 54.843 19.167 45.803 34.421-7.316 12.343-125.51 7.881-159.632 4.037-34.122 3.844-152.316 8.306-159.632-4.037-9.045-15.25 28.918-29.214 45.783-34.415-34.92-29.539-51.059-70.445-51.059-101.792.0.0-33.334 54.134-44.859 52.741-5.37-.65-12.424-29.644 9.347-99.704 10.261-33.024 21.995-60.478 40.144-105.779C60.683 98.063 108.982.006 224 0c113.737.006 163.156 96.133 160.264 214.963 18.118 45.223 29.912 72.85 40.144 105.778 21.768 70.06 14.716 99.053 9.346 99.704z"/></svg></a></div><div class="share-item qzone"><a href="https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=https://ld000.space/post/make_redis_zset_support_multiple_sort/&title=%e8%ae%a9%20Redis%20zset%20%e6%94%af%e6%8c%81%e5%a4%9a%e6%9d%a1%e4%bb%b6%e6%8e%92%e5%ba%8f&summary=%e4%b8%80%e4%ba%9b%e9%9c%80%e6%b1%82%e4%b8%ad%e7%bb%8f%e5%b8%b8%e8%a6%81%e6%88%91%e4%bb%ac%e5%ae%9e%e7%8e%b0%e4%b8%80%e4%b8%aa%e6%8e%92%e8%a1%8c%e6%a6%9c%ef%bc%8c%e6%95%b0%e6%8d%ae%e9%87%8f%e5%b0%91%e7%9a%84%e8%af%9d%e5%8f%af%e4%bb%a5%e4%bd%bf%e7%94%a8%20RDB%20%e6%95%b0%e6%8d%ae%e5%ba%93%e6%8e%92%e5%ba%8f%ef%bc%8c%e6%95%b0%e6%8d%ae%e9%87%8f%e5%a4%a7%e5%8f%af%e4%bb%a5%e8%87%aa%e2%80%a6%e2%80%a6&pics=https://void.oss-cn-beijing.aliyuncs.com/img/20200107114011.png&site=Voiddd" title="分享到「QQ 空间」" target=_blank rel=noopener><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon qzone-icon"><path d="M23.985 9.202c-.032-.099-.127-.223-.334-.258-.207-.036-7.351-1.406-7.351-1.406s-.105-.022-.198-.07c-.092-.047-.127-.167-.127-.167S12.447.956 12.349.77C12.25.583 12.104.532 12 .532s-.251.051-.349.238c-.098.186-3.626 6.531-3.626 6.531s-.035.12-.128.167c-.092.047-.197.07-.197.07S.556 8.908.348 8.943c-.208.036-.302.16-.333.258a.477.477.0 00.125.449l5.362 5.49s.072.08.119.172c.016.104.005.21.005.21s-1.189 7.242-1.22 7.45.075.369.159.43c.083.062.233.106.421.013.189-.093 6.812-3.261 6.812-3.261s.098-.044.201-.061.201.061.201.061 6.623 3.168 6.812 3.261c.188.094.338.049.421-.013a.463.463.0 00.159-.43c-.021-.14-.93-5.677-.93-5.677.876-.54 1.425-1.039 1.849-1.747-2.594.969-6.006 1.717-9.415 1.866-.915.041-2.41.097-3.473-.015-.678-.071-1.17-.144-1.243-.438-.053-.215.054-.46.545-.831a2640.5 2640.5.0 012.861-2.155c1.285-.968 3.559-2.47 3.559-2.731.0-.285-2.144-.781-4.037-.781-1.945.0-2.275.132-2.811.168-.488.034-.769.005-.804-.138-.06-.248.183-.389.588-.568.709-.314 1.86-.594 1.984-.626.194-.052 3.082-.805 5.618-.535 1.318.14 3.244.668 3.244 1.276.0.342-1.721 1.494-3.225 2.597-1.149.843-2.217 1.561-2.217 1.688.0.342 3.533 1.241 6.689 1.01l.003-.022c.048-.092.119-.172.119-.172l5.362-5.49a.477.477.0 00.127-.449z"/></svg></a></div><div class="share-item qrcode"><div class=qrcode-container title=通过「二维码」><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="icon qrcode-icon"><path d="M0 224h192V32H0v192zM64 96h64v64H64V96zm192-64v192h192V32H256zm128 128h-64V96h64v64zM0 480h192V288H0v192zm64-128h64v64H64v-64zm352-64h32v128h-96v-32h-32v96h-64V288h96v32h64v-32zm0 160h32v32h-32v-32zm-64 0h32v32h-32v-32z"/></svg><div id=qrcode-img></div></div><script src=https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js></script><script>var typeNumber=0,errorCorrectionLevel='L',qr=qrcode(typeNumber,errorCorrectionLevel);qr.addData('https://ld000.space/post/make_redis_zset_support_multiple_sort/'),qr.make(),document.getElementById('qrcode-img').innerHTML=qr.createImgTag()</script></div></div></div><div class=related-posts><h2 class=related-title>相关文章：<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon related-icon"><path d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm144 276c0 6.6-5.4 12-12 12h-92v92c0 6.6-5.4 12-12 12h-56c-6.6.0-12-5.4-12-12v-92h-92c-6.6.0-12-5.4-12-12v-56c0-6.6 5.4-12 12-12h92v-92c0-6.6 5.4-12 12-12h56c6.6.0 12 5.4 12 12v92h92c6.6.0 12 5.4 12 12v56z"/></svg></h2><ul class=related-list><li class=related-item><a href=/post/mybatis_scale_localcache/ class=related-link>MyBatis 一级缓存在分布式下的坑</a></li><li class=related-item><a href=/post/spring_boot_tomcat/ class=related-link>用外置 Tomcat 部署 Spring Boot 应用</a></li><li class=related-item><a href=/post/sharding_proxy_cache/ class=related-link>sharding-proxy 连接缓存导致 fullGC 内存不释放</a></li><li class=related-item><a href=/post/java_memorypoolmxbean/ class=related-link>MemoryPoolMXBean 各内存池名字</a></li><li class=related-item><a href=/post/mac_clion_debug_mysql_source/ class=related-link>Mac下用CLion debug MySQL5.7源码</a></li></ul></div><div class=post-tags><a href=/tags/java/ rel=tag class=post-tags-link><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon tag-icon"><path d="M0 252.118V48C0 21.49 21.49.0 48 0h204.118a48 48 0 0133.941 14.059l211.882 211.882c18.745 18.745 18.745 49.137.0 67.882L293.823 497.941c-18.745 18.745-49.137 18.745-67.882.0L14.059 286.059A48 48 0 010 252.118zM112 64c-26.51.0-48 21.49-48 48s21.49 48 48 48 48-21.49 48-48-21.49-48-48-48z"/></svg>java</a></div><ul class=post-nav><li class=post-nav-prev><a href=/post/spring_boot_tomcat/ rel=prev>< 用外置 Tomcat 部署 Spring Boot 应用</a></li><li class=post-nav-next><a href=/post/automator_brewfile/ rel=next>MacOS 用 automater 自动备份安装的软件列表 ></a></li></ul><div class=load-comments><div id=load-comments>加载评论</div></div><div id=vcomments></div></div></main><div id=back-to-top class=back-to-top><a href=#><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="icon"><path d="M34.9 289.5l-22.2-22.2c-9.4-9.4-9.4-24.6.0-33.9L207 39c9.4-9.4 24.6-9.4 33.9.0l194.3 194.3c9.4 9.4 9.4 24.6.0 33.9L413 289.4c-9.5 9.5-25 9.3-34.3-.4L264 168.6V456c0 13.3-10.7 24-24 24h-32c-13.3.0-24-10.7-24-24V168.6L69.2 289.1c-9.3 9.8-24.8 10-34.3.4z"/></svg></a></div><footer id=footer class=footer><div class=footer-inner><div class=site-info>©&nbsp;2017–2021&nbsp;<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon footer-icon"><path d="M462.3 62.6C407.5 15.9 326 24.3 275.7 76.2L256 96.5l-19.7-20.3C186.1 24.3 104.5 15.9 49.7 62.6c-62.8 53.6-66.1 149.8-9.9 207.9l193.5 199.8c12.5 12.9 32.8 12.9 45.3.0l193.5-199.8c56.3-58.1 53-154.3-9.8-207.9z"/></svg>&nbsp;Voiddd</div><div class=powered-by>Powered by <a href=https://github.com/gohugoio/hugo target=_blank rel=noopener>Hugo</a> | Theme is <a href=https://github.com/reuixiy/hugo-theme-meme target=_blank rel=noopener>MemE</a></div><div class=site-copyright><a href=https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh target=_blank rel=noopener>CC BY-NC-SA 4.0</a></div></div></footer></div><script src=/js/meme.min.af6748649862e36f212e4ac53cd9bcd8d51fd7b5d93788d4a59b4352237984dc.js integrity="sha256-r2dIZJhi428hLkrFPNm82NUf17XZN4jUpZtDUiN5hNw="></script><script src=https://cdn.jsdelivr.net/gh/cferdinandi/smooth-scroll/dist/smooth-scroll.polyfills.min.js></script><script>var scroll=new SmoothScroll('a[href*="#"]',{speedAsDuration:!0,header:'[data-scroll-header]'})</script><script>function loadComments(){if(typeof Valine=='undefined'){var a=b=>{var a=document.createElement('script');a.defer=!0,a.crossOrigin='anonymous',Object.keys(b).forEach(c=>{a[c]=b[c]}),document.body.appendChild(a)};a({src:'https://cdn.jsdelivr.net/npm/valine@1.3.10/dist/Valine.min.js',onload:()=>{newValine()}})}else newValine()}function newValine(){new Valine({el:'#vcomments',appId:'AFs8rmDpRQqeC3NTgVgmTJqe-gzGzoHsz',appKey:'iGnkj3kADESCYsTkfxFPmrmy',placeholder:'Just go go',notify:!1,verify:!1,path:window.location.pathname,avatar:'mm',meta:["nick","mail","link"],pageSize:10,lang:'zh-cn',visitor:!0,highlight:!0,avatarForce:!1,recordIP:!0,serverURLs:''})}</script><script src=https://cdn.jsdelivr.net/npm/medium-zoom@latest/dist/medium-zoom.min.js></script><script>mediumZoom(document.querySelectorAll('div.post-body img'),{background:'hsla(var(--color-bg-h), var(--color-bg-s), var(--color-bg-l), 0.95)'})</script><script src=https://cdn.jsdelivr.net/npm/instant.page@3.0.0/instantpage.min.js type=module defer></script></body></html>
+</code></pre></td></tr></table>
+</div>
+</div><p>不过这样不丢精度存储的分数比二进制拆分小。</p>
+<p>原理和二进制拆分一样，就不赘述了。</p>
+<h2 id=总结><a href=#总结 class=anchor-link><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon anchor-icon"><path d="M326.612 185.391c59.747 59.809 58.927 155.698.36 214.59-.11.12-.24.25-.36.37l-67.2 67.2c-59.27 59.27-155.699 59.262-214.96.0-59.27-59.26-59.27-155.7.0-214.96l37.106-37.106c9.84-9.84 26.786-3.3 27.294 10.606.648 17.722 3.826 35.527 9.69 52.721 1.986 5.822.567 12.262-3.783 16.612l-13.087 13.087c-28.026 28.026-28.905 73.66-1.155 101.96 28.024 28.579 74.086 28.749 102.325.51l67.2-67.19c28.191-28.191 28.073-73.757.0-101.83-3.701-3.694-7.429-6.564-10.341-8.569a16.037 16.037.0 01-6.947-12.606c-.396-10.567 3.348-21.456 11.698-29.806l21.054-21.055c5.521-5.521 14.182-6.199 20.584-1.731a152.482 152.482.0 0120.522 17.197zM467.547 44.449c-59.261-59.262-155.69-59.27-214.96.0l-67.2 67.2c-.12.12-.25.25-.36.37-58.566 58.892-59.387 154.781.36 214.59a152.454 152.454.0 0020.521 17.196c6.402 4.468 15.064 3.789 20.584-1.731l21.054-21.055c8.35-8.35 12.094-19.239 11.698-29.806a16.037 16.037.0 00-6.947-12.606c-2.912-2.005-6.64-4.875-10.341-8.569-28.073-28.073-28.191-73.639.0-101.83l67.2-67.19c28.239-28.239 74.3-28.069 102.325.51 27.75 28.3 26.872 73.934-1.155 101.96l-13.087 13.087c-4.35 4.35-5.769 10.79-3.783 16.612 5.864 17.194 9.042 34.999 9.69 52.721.509 13.906 17.454 20.446 27.294 10.606l37.106-37.106c59.271-59.259 59.271-155.699.001-214.959z"/></svg></a>总结</h2>
+<p>数据量不大的情况下直接使用 RDB 就可以了，比较方便。用 Redis 的时候，一级以外的维度不变的情况下可以直接用 key 排序，比较简单，如果维度会更新，可以使用拆分二进制或十进制的方法存储，二进制的优点是存储的数比较大，而且可以用位运算，十进制的优点是计算简单，可读性比较好。各个维度的长度还可以做成配置项，这样就可以满足不同的业务需求了。</p>
+</div>
+</article>
+<ul class=post-copyright>
+<li class="copyright-item author"><span class=copyright-item-text>作者</span>：<a href=https://ld000.space target=_blank rel=noopener>Voiddd</a></li>
+<li class="copyright-item link"><span class=copyright-item-text>链接</span>：<a href=/post/make_redis_zset_support_multiple_sort/ target=_blank rel=noopener>https://ld000.space/post/make_redis_zset_support_multiple_sort/</a></li>
+<li class="copyright-item license"><span class=copyright-item-text>许可</span>：<a href=https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh target=_blank rel=noopener>CC BY-NC-SA 4.0</a></li>
+</ul>
+<div class=post-share>
+<div class=share-items>
+<div class="share-item twitter">
+<a href="https://twitter.com/share?url=https://ld000.space/post/make_redis_zset_support_multiple_sort/&text=%e8%ae%a9%20Redis%20zset%20%e6%94%af%e6%8c%81%e5%a4%9a%e6%9d%a1%e4%bb%b6%e6%8e%92%e5%ba%8f&hashtags=java,&via=LDtree" title=分享到「Twitter」 target=_blank rel=noopener><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon twitter-icon"><path d="M459.37 151.716c.325 4.548.325 9.097.325 13.645.0 138.72-105.583 298.558-298.558 298.558-59.452.0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055.0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421.0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391.0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04.0-57.828 46.782-104.934 104.934-104.934 30.213.0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"/></svg></a>
+</div>
+<div class="share-item facebook">
+<a href="https://www.facebook.com/sharer/sharer.php?u=https://ld000.space/post/make_redis_zset_support_multiple_sort/&hashtag=%23java" title=分享到「Facebook」 target=_blank rel=noopener><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon facebook-icon"><path d="M504 256C504 119 393 8 256 8S8 119 8 256c0 123.78 90.69 226.38 209.25 245V327.69h-63V256h63v-54.64c0-62.15 37-96.48 93.67-96.48 27.14.0 55.52 4.84 55.52 4.84v61h-31.28c-30.8.0-40.41 19.12-40.41 38.73V256h68.78l-11 71.69h-57.78V501C413.31 482.38 504 379.78 504 256z"/></svg></a>
+</div>
+<div class="share-item linkedin">
+<a href="https://www.linkedin.com/shareArticle?mini=true&url=https://ld000.space/post/make_redis_zset_support_multiple_sort/&title=%e8%ae%a9%20Redis%20zset%20%e6%94%af%e6%8c%81%e5%a4%9a%e6%9d%a1%e4%bb%b6%e6%8e%92%e5%ba%8f&summary=%e4%b8%80%e4%ba%9b%e9%9c%80%e6%b1%82%e4%b8%ad%e7%bb%8f%e5%b8%b8%e8%a6%81%e6%88%91%e4%bb%ac%e5%ae%9e%e7%8e%b0%e4%b8%80%e4%b8%aa%e6%8e%92%e8%a1%8c%e6%a6%9c%ef%bc%8c%e6%95%b0%e6%8d%ae%e9%87%8f%e5%b0%91%e7%9a%84%e8%af%9d%e5%8f%af%e4%bb%a5%e4%bd%bf%e7%94%a8%20RDB%20%e6%95%b0%e6%8d%ae%e5%ba%93%e6%8e%92%e5%ba%8f%ef%bc%8c%e6%95%b0%e6%8d%ae%e9%87%8f%e5%a4%a7%e5%8f%af%e4%bb%a5%e8%87%aa%e2%80%a6%e2%80%a6&source=Voiddd" title=分享到「LinkedIn」 target=_blank rel=noopener><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="icon linkedin-icon"><path d="M416 32H31.9C14.3 32 0 46.5.0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6.0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3zM135.4 416H69V202.2h66.5V416zm-33.2-243c-21.3.0-38.5-17.3-38.5-38.5S80.9 96 102.2 96c21.2.0 38.5 17.3 38.5 38.5.0 21.3-17.2 38.5-38.5 38.5zm282.1 243h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6.0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2.0 79.7 44.3 79.7 101.9V416z"/></svg></a>
+</div>
+<div class="share-item telegram">
+<a href="https://t.me/share/url?url=https://ld000.space/post/make_redis_zset_support_multiple_sort/&text=%e8%ae%a9%20Redis%20zset%20%e6%94%af%e6%8c%81%e5%a4%9a%e6%9d%a1%e4%bb%b6%e6%8e%92%e5%ba%8f" title=分享到「Telegram」 target=_blank rel=noopener><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512" class="icon telegram-icon"><path d="M248 8C111 8 0 119 0 256s111 248 248 248 248-111 248-248S385 8 248 8zm121.8 169.9-40.7 191.8c-3 13.6-11.1 16.9-22.4 10.5l-62-45.7-29.9 28.8c-3.3 3.3-6.1 6.1-12.5 6.1l4.4-63.1 114.9-103.8c5-4.4-1.1-6.9-7.7-2.5l-142 89.4-61.2-19.1c-13.3-4.2-13.6-13.3 2.8-19.7l239.1-92.2c11.1-4 20.8 2.7 17.2 19.5z"/></svg></a>
+</div>
+<div class="share-item weibo">
+<a href="https://service.weibo.com/share/share.php?&url=https://ld000.space/post/make_redis_zset_support_multiple_sort/&title=%e8%ae%a9%20Redis%20zset%20%e6%94%af%e6%8c%81%e5%a4%9a%e6%9d%a1%e4%bb%b6%e6%8e%92%e5%ba%8f&pic=https://void.oss-cn-beijing.aliyuncs.com/img/20200107114011.png&searchPic=false" title=分享到「新浪微博」 target=_blank rel=noopener><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon weibo-icon"><path d="M407 177.6c7.6-24-13.4-46.8-37.4-41.7-22 4.8-28.8-28.1-7.1-32.8 50.1-10.9 92.3 37.1 76.5 84.8-6.8 21.2-38.8 10.8-32-10.3zM214.8 446.7C108.5 446.7.0 395.3.0 310.4c0-44.3 28-95.4 76.3-143.7C176 67 279.5 65.8 249.9 161c-4 13.1 12.3 5.7 12.3 6 79.5-33.6 140.5-16.8 114 51.4-3.7 9.4 1.1 10.9 8.3 13.1 135.7 42.3 34.8 215.2-169.7 215.2zm143.7-146.3c-5.4-55.7-78.5-94-163.4-85.7-84.8 8.6-148.8 60.3-143.4 116s78.5 94 163.4 85.7c84.8-8.6 148.8-60.3 143.4-116zM347.9 35.1c-25.9 5.6-16.8 43.7 8.3 38.3 72.3-15.2 134.8 52.8 111.7 124-7.4 24.2 29.1 37 37.4 12 31.9-99.8-55.1-195.9-157.4-174.3zm-78.5 311c-17.1 38.8-66.8 60-109.1 46.3-40.8-13.1-58-53.4-40.3-89.7 17.7-35.4 63.1-55.4 103.4-45.1 42 10.8 63.1 50.2 46 88.5zm-86.3-30c-12.9-5.4-30 .3-38 12.9-8.3 12.9-4.3 28 8.6 34 13.1 6 30.8.3 39.1-12.9 8-13.1 3.7-28.3-9.7-34zm32.6-13.4c-5.1-1.7-11.4.6-14.3 5.4-2.9 5.1-1.4 10.6 3.7 12.9 5.1 2 11.7-.3 14.6-5.4 2.8-5.2 1.1-10.9-4-12.9z"/></svg></a>
+</div>
+<div class="share-item douban">
+<a href="https://www.douban.com/share/service?href=https://ld000.space/post/make_redis_zset_support_multiple_sort/&name=%e8%ae%a9%20Redis%20zset%20%e6%94%af%e6%8c%81%e5%a4%9a%e6%9d%a1%e4%bb%b6%e6%8e%92%e5%ba%8f&text=%e4%b8%80%e4%ba%9b%e9%9c%80%e6%b1%82%e4%b8%ad%e7%bb%8f%e5%b8%b8%e8%a6%81%e6%88%91%e4%bb%ac%e5%ae%9e%e7%8e%b0%e4%b8%80%e4%b8%aa%e6%8e%92%e8%a1%8c%e6%a6%9c%ef%bc%8c%e6%95%b0%e6%8d%ae%e9%87%8f%e5%b0%91%e7%9a%84%e8%af%9d%e5%8f%af%e4%bb%a5%e4%bd%bf%e7%94%a8%20RDB%20%e6%95%b0%e6%8d%ae%e5%ba%93%e6%8e%92%e5%ba%8f%ef%bc%8c%e6%95%b0%e6%8d%ae%e9%87%8f%e5%a4%a7%e5%8f%af%e4%bb%a5%e8%87%aa%e2%80%a6%e2%80%a6" title=分享到「豆瓣」 target=_blank rel=noopener><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon douban-icon"><path d="M.643.92v2.412h22.714V.92H.643zm1.974 4.926v9.42h18.764v-9.42H2.617zm2.72 2.408H18.69v4.605H5.338V8.254zm1.657 7.412-2.512.938c1.037 1.461 1.87 2.825 2.512 4.091H0v2.385h24v-2.385h-6.678c.818-1.176 1.589-2.543 2.303-4.091l-2.73-.938a29.952 29.952.0 01-2.479 5.03h-4.75c-.786-1.962-1.677-3.641-2.672-5.03z"/></svg></a>
+</div>
+<div class="share-item qq">
+<a href="https://connect.qq.com/widget/shareqq/index.html?url=https://ld000.space/post/make_redis_zset_support_multiple_sort/&title=%e8%ae%a9%20Redis%20zset%20%e6%94%af%e6%8c%81%e5%a4%9a%e6%9d%a1%e4%bb%b6%e6%8e%92%e5%ba%8f&summary=%e4%b8%80%e4%ba%9b%e9%9c%80%e6%b1%82%e4%b8%ad%e7%bb%8f%e5%b8%b8%e8%a6%81%e6%88%91%e4%bb%ac%e5%ae%9e%e7%8e%b0%e4%b8%80%e4%b8%aa%e6%8e%92%e8%a1%8c%e6%a6%9c%ef%bc%8c%e6%95%b0%e6%8d%ae%e9%87%8f%e5%b0%91%e7%9a%84%e8%af%9d%e5%8f%af%e4%bb%a5%e4%bd%bf%e7%94%a8%20RDB%20%e6%95%b0%e6%8d%ae%e5%ba%93%e6%8e%92%e5%ba%8f%ef%bc%8c%e6%95%b0%e6%8d%ae%e9%87%8f%e5%a4%a7%e5%8f%af%e4%bb%a5%e8%87%aa%e2%80%a6%e2%80%a6&pics=https://void.oss-cn-beijing.aliyuncs.com/img/20200107114011.png&site=Voiddd" title=分享到「QQ」 target=_blank rel=noopener><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="icon qq-icon"><path d="M433.754 420.445c-11.526 1.393-44.86-52.741-44.86-52.741.0 31.345-16.136 72.247-51.051 101.786 16.842 5.192 54.843 19.167 45.803 34.421-7.316 12.343-125.51 7.881-159.632 4.037-34.122 3.844-152.316 8.306-159.632-4.037-9.045-15.25 28.918-29.214 45.783-34.415-34.92-29.539-51.059-70.445-51.059-101.792.0.0-33.334 54.134-44.859 52.741-5.37-.65-12.424-29.644 9.347-99.704 10.261-33.024 21.995-60.478 40.144-105.779C60.683 98.063 108.982.006 224 0c113.737.006 163.156 96.133 160.264 214.963 18.118 45.223 29.912 72.85 40.144 105.778 21.768 70.06 14.716 99.053 9.346 99.704z"/></svg></a>
+</div>
+<div class="share-item qzone">
+<a href="https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=https://ld000.space/post/make_redis_zset_support_multiple_sort/&title=%e8%ae%a9%20Redis%20zset%20%e6%94%af%e6%8c%81%e5%a4%9a%e6%9d%a1%e4%bb%b6%e6%8e%92%e5%ba%8f&summary=%e4%b8%80%e4%ba%9b%e9%9c%80%e6%b1%82%e4%b8%ad%e7%bb%8f%e5%b8%b8%e8%a6%81%e6%88%91%e4%bb%ac%e5%ae%9e%e7%8e%b0%e4%b8%80%e4%b8%aa%e6%8e%92%e8%a1%8c%e6%a6%9c%ef%bc%8c%e6%95%b0%e6%8d%ae%e9%87%8f%e5%b0%91%e7%9a%84%e8%af%9d%e5%8f%af%e4%bb%a5%e4%bd%bf%e7%94%a8%20RDB%20%e6%95%b0%e6%8d%ae%e5%ba%93%e6%8e%92%e5%ba%8f%ef%bc%8c%e6%95%b0%e6%8d%ae%e9%87%8f%e5%a4%a7%e5%8f%af%e4%bb%a5%e8%87%aa%e2%80%a6%e2%80%a6&pics=https://void.oss-cn-beijing.aliyuncs.com/img/20200107114011.png&site=Voiddd" title="分享到「QQ 空间」" target=_blank rel=noopener><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon qzone-icon"><path d="M23.985 9.202c-.032-.099-.127-.223-.334-.258-.207-.036-7.351-1.406-7.351-1.406s-.105-.022-.198-.07c-.092-.047-.127-.167-.127-.167S12.447.956 12.349.77C12.25.583 12.104.532 12 .532s-.251.051-.349.238c-.098.186-3.626 6.531-3.626 6.531s-.035.12-.128.167c-.092.047-.197.07-.197.07S.556 8.908.348 8.943c-.208.036-.302.16-.333.258a.477.477.0 00.125.449l5.362 5.49s.072.08.119.172c.016.104.005.21.005.21s-1.189 7.242-1.22 7.45.075.369.159.43c.083.062.233.106.421.013.189-.093 6.812-3.261 6.812-3.261s.098-.044.201-.061.201.061.201.061 6.623 3.168 6.812 3.261c.188.094.338.049.421-.013a.463.463.0 00.159-.43c-.021-.14-.93-5.677-.93-5.677.876-.54 1.425-1.039 1.849-1.747-2.594.969-6.006 1.717-9.415 1.866-.915.041-2.41.097-3.473-.015-.678-.071-1.17-.144-1.243-.438-.053-.215.054-.46.545-.831a2640.5 2640.5.0 012.861-2.155c1.285-.968 3.559-2.47 3.559-2.731.0-.285-2.144-.781-4.037-.781-1.945.0-2.275.132-2.811.168-.488.034-.769.005-.804-.138-.06-.248.183-.389.588-.568.709-.314 1.86-.594 1.984-.626.194-.052 3.082-.805 5.618-.535 1.318.14 3.244.668 3.244 1.276.0.342-1.721 1.494-3.225 2.597-1.149.843-2.217 1.561-2.217 1.688.0.342 3.533 1.241 6.689 1.01l.003-.022c.048-.092.119-.172.119-.172l5.362-5.49a.477.477.0 00.127-.449z"/></svg></a>
+</div>
+<div class="share-item qrcode">
+<div class=qrcode-container title=通过「二维码」><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="icon qrcode-icon"><path d="M0 224h192V32H0v192zM64 96h64v64H64V96zm192-64v192h192V32H256zm128 128h-64V96h64v64zM0 480h192V288H0v192zm64-128h64v64H64v-64zm352-64h32v128h-96v-32h-32v96h-64V288h96v32h64v-32zm0 160h32v32h-32v-32zm-64 0h32v32h-32v-32z"/></svg><div id=qrcode-img></div>
+</div>
+<script src=https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js></script>
+<script>var typeNumber=0,errorCorrectionLevel='L',qr=qrcode(typeNumber,errorCorrectionLevel);qr.addData('https://ld000.space/post/make_redis_zset_support_multiple_sort/'),qr.make(),document.getElementById('qrcode-img').innerHTML=qr.createImgTag()</script>
+</div>
+</div>
+</div>
+<div class=related-posts>
+<h2 class=related-title>相关文章：<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon related-icon"><path d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm144 276c0 6.6-5.4 12-12 12h-92v92c0 6.6-5.4 12-12 12h-56c-6.6.0-12-5.4-12-12v-92h-92c-6.6.0-12-5.4-12-12v-56c0-6.6 5.4-12 12-12h92v-92c0-6.6 5.4-12 12-12h56c6.6.0 12 5.4 12 12v92h92c6.6.0 12 5.4 12 12v56z"/></svg></h2>
+<ul class=related-list>
+<li class=related-item>
+<a href=/post/mybatis_scale_localcache/ class=related-link>MyBatis 一级缓存在分布式下的坑</a>
+</li>
+<li class=related-item>
+<a href=/post/spring_boot_tomcat/ class=related-link>用外置 Tomcat 部署 Spring Boot 应用</a>
+</li>
+<li class=related-item>
+<a href=/post/sharding_proxy_cache/ class=related-link>sharding-proxy 连接缓存导致 fullGC 内存不释放</a>
+</li>
+<li class=related-item>
+<a href=/post/java_memorypoolmxbean/ class=related-link>MemoryPoolMXBean 各内存池名字</a>
+</li>
+<li class=related-item>
+<a href=/post/mac_clion_debug_mysql_source/ class=related-link>Mac下用CLion debug MySQL5.7源码</a>
+</li>
+</ul>
+</div>
+<div class=post-tags>
+<a href=/tags/java/ rel=tag class=post-tags-link><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon tag-icon"><path d="M0 252.118V48C0 21.49 21.49.0 48 0h204.118a48 48 0 0133.941 14.059l211.882 211.882c18.745 18.745 18.745 49.137.0 67.882L293.823 497.941c-18.745 18.745-49.137 18.745-67.882.0L14.059 286.059A48 48 0 010 252.118zM112 64c-26.51.0-48 21.49-48 48s21.49 48 48 48 48-21.49 48-48-21.49-48-48-48z"/></svg>java</a>
+</div>
+<ul class=post-nav>
+<li class=post-nav-prev>
+<a href=/post/spring_boot_tomcat/ rel=prev>< 用外置 Tomcat 部署 Spring Boot 应用</a>
+</li>
+<li class=post-nav-next>
+<a href=/post/automator_brewfile/ rel=next>MacOS 用 automater 自动备份安装的软件列表 ></a>
+</li>
+</ul>
+<div class=load-comments>
+<div id=load-comments>加载评论</div>
+</div>
+<div id=vcomments></div>
+</div>
+</main>
+<div id=back-to-top class=back-to-top>
+<a href=#><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="icon"><path d="M34.9 289.5l-22.2-22.2c-9.4-9.4-9.4-24.6.0-33.9L207 39c9.4-9.4 24.6-9.4 33.9.0l194.3 194.3c9.4 9.4 9.4 24.6.0 33.9L413 289.4c-9.5 9.5-25 9.3-34.3-.4L264 168.6V456c0 13.3-10.7 24-24 24h-32c-13.3.0-24-10.7-24-24V168.6L69.2 289.1c-9.3 9.8-24.8 10-34.3.4z"/></svg></a>
+</div>
+<footer id=footer class=footer>
+<div class=footer-inner><div class=site-info>©&nbsp;2017–2021&nbsp;<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon footer-icon"><path d="M462.3 62.6C407.5 15.9 326 24.3 275.7 76.2L256 96.5l-19.7-20.3C186.1 24.3 104.5 15.9 49.7 62.6c-62.8 53.6-66.1 149.8-9.9 207.9l193.5 199.8c12.5 12.9 32.8 12.9 45.3.0l193.5-199.8c56.3-58.1 53-154.3-9.8-207.9z"/></svg>&nbsp;Voiddd</div><div class=powered-by>Powered by <a href=https://github.com/gohugoio/hugo target=_blank rel=noopener>Hugo</a> | Theme is <a href=https://github.com/reuixiy/hugo-theme-meme target=_blank rel=noopener>MemE</a></div><div class=site-copyright><a href=https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh target=_blank rel=noopener>CC BY-NC-SA 4.0</a></div>
+</div>
+</footer>
+</div>
+<script src=/js/meme.min.af6748649862e36f212e4ac53cd9bcd8d51fd7b5d93788d4a59b4352237984dc.js integrity="sha256-r2dIZJhi428hLkrFPNm82NUf17XZN4jUpZtDUiN5hNw="></script>
+<script src=https://cdn.jsdelivr.net/gh/cferdinandi/smooth-scroll/dist/smooth-scroll.polyfills.min.js></script>
+<script>var scroll=new SmoothScroll('a[href*="#"]',{speedAsDuration:!0,header:'[data-scroll-header]'})</script>
+<script>function loadComments(){if(typeof Valine=='undefined'){var a=b=>{var a=document.createElement('script');a.defer=!0,a.crossOrigin='anonymous',Object.keys(b).forEach(c=>{a[c]=b[c]}),document.body.appendChild(a)};a({src:'https://cdn.jsdelivr.net/npm/valine@1.3.10/dist/Valine.min.js',onload:()=>{newValine()}})}else newValine()}function newValine(){new Valine({el:'#vcomments',appId:'AFs8rmDpRQqeC3NTgVgmTJqe-gzGzoHsz',appKey:'iGnkj3kADESCYsTkfxFPmrmy',placeholder:'Just go go',notify:!1,verify:!1,path:window.location.pathname,avatar:'mm',meta:["nick","mail","link"],pageSize:10,lang:'zh-cn',visitor:!0,highlight:!0,avatarForce:!1,recordIP:!0,serverURLs:''})}</script>
+<script src=https://cdn.jsdelivr.net/npm/medium-zoom@latest/dist/medium-zoom.min.js></script>
+<script>mediumZoom(document.querySelectorAll('div.post-body img'),{background:'hsla(var(--color-bg-h), var(--color-bg-s), var(--color-bg-l), 0.95)'})</script>
+<script src=https://cdn.jsdelivr.net/npm/instant.page@3.0.0/instantpage.min.js type=module defer></script>
+</body>
+</html>

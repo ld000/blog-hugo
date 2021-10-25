@@ -1,11 +1,11 @@
-<?xml version="1.0" encoding="utf-8"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>Voiddd</title><link>https://ld000.space/</link><description>MemE 是一个强大且可高度定制的 GoHugo 博客主题，专为个人博客设计。</description><generator>Hugo 0.85.0 https://gohugo.io/</generator><language>zh-CN</language><managingEditor>voidd247@outlook.com (Voiddd)</managingEditor><webMaster>voidd247@outlook.com (Voiddd)</webMaster><copyright>[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh)</copyright><lastBuildDate>Thu, 15 Jul 2021 11:58:47 +0000</lastBuildDate><atom:link rel="self" type="application/rss+xml" href="https://ld000.space/rss.xml"/><item><title>为 Traefik 添加从 nacos 读取服务地址功能</title><link>https://ld000.space/post/traefik_nacos_naming/</link><guid isPermaLink="true">https://ld000.space/post/traefik_nacos_naming/</guid><pubDate>Sat, 12 Jun 2021 00:00:00 +0000</pubDate><author>voidd247@outlook.com (Voiddd)</author><copyright>[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh)</copyright><description><![CDATA[<h2 id="软件版本">软件版本</h2>
+<?xml version="1.0" encoding="utf-8"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>Voiddd</title><link>https://ld000.space/</link><description>MemE 是一个强大且可高度定制的 GoHugo 博客主题，专为个人博客设计。</description><generator>Hugo 0.88.1 https://gohugo.io/</generator><language>zh-CN</language><managingEditor>voidd247@outlook.com (Voiddd)</managingEditor><webMaster>voidd247@outlook.com (Voiddd)</webMaster><copyright>[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh)</copyright><lastBuildDate>Mon, 25 Oct 2021 04:11:43 +0000</lastBuildDate><atom:link rel="self" type="application/rss+xml" href="https://ld000.space/rss.xml"/><item><title>为 Traefik 添加从 nacos 读取服务地址功能</title><link>https://ld000.space/post/traefik_nacos_naming/</link><guid isPermaLink="true">https://ld000.space/post/traefik_nacos_naming/</guid><pubDate>Sat, 12 Jun 2021 00:00:00 +0000</pubDate><author>voidd247@outlook.com (Voiddd)</author><copyright>[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh)</copyright><description><![CDATA[<h2 id="软件版本">软件版本</h2>
 <p>Traefik 版本：2.4.0</p>
 <h2 id="背景">背景</h2>
 <p>Traefik 是一个 go 实现的高性能 API 网关，本身支持多种配置加载方式，包括 file, k8s, consul 等。</p>
 <p>我们之前用的file作为配置文件，路由配置文件中会配置应用的路由信息和应用的负载信息。一个服务的配置信息类似下面这样：</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -20,7 +20,7 @@
 </span><span class="lnt">13
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="nt">http</span><span class="p">:</span><span class="w">
+<pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="nt">http</span><span class="p">:</span><span class="w">
 </span><span class="w">  </span><span class="nt">services</span><span class="p">:</span><span class="w">
 </span><span class="w">    </span><span class="nt">dev-service</span><span class="p">:</span><span class="w">
 </span><span class="w">      </span><span class="nt">loadBalancer</span><span class="p">:</span><span class="w">
@@ -49,7 +49,7 @@
 <h3 id="静态配置里的-provider-配置">静态配置里的 provider 配置</h3>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -63,7 +63,7 @@
 </span><span class="lnt">12
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="nt">providers</span><span class="p">:</span><span class="w">
+<pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="nt">providers</span><span class="p">:</span><span class="w">
 </span><span class="w">  </span><span class="nt">nacos</span><span class="p">:</span><span class="w">
 </span><span class="w">    </span><span class="nt">file</span><span class="p">:</span><span class="w">
 </span><span class="w">      </span><span class="nt">watch</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
@@ -85,7 +85,7 @@
 <h3 id="路由配置">路由配置</h3>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -101,7 +101,7 @@
 </span><span class="lnt">14
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="nt">http</span><span class="p">:</span><span class="w">
+<pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="nt">http</span><span class="p">:</span><span class="w">
 </span><span class="w">  </span><span class="nt">routers</span><span class="p">:</span><span class="w">
 </span><span class="w">    </span><span class="nt">dev</span><span class="p">:</span><span class="w">
 </span><span class="w">      </span><span class="nt">entryPoints</span><span class="p">:</span><span class="w">
@@ -128,7 +128,7 @@
 <p>首先添加从文件读取配置的代码，这里大部分代码都可以复用 Traefik 自带的文件解析 provider</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -157,7 +157,7 @@
 </span><span class="lnt">27
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">// 把文件解析成配置，复用 Traefik 原有代码
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="c1">// 把文件解析成配置，复用 Traefik 原有代码
 </span><span class="c1"></span><span class="nx">fileProvider</span> <span class="o">:=</span> <span class="nx">file</span><span class="p">.</span><span class="nx">Provider</span><span class="p">{</span>
 	<span class="nx">Directory</span><span class="p">:</span> <span class="nx">p</span><span class="p">.</span><span class="nx">File</span><span class="p">.</span><span class="nx">Directory</span><span class="p">,</span>
 	<span class="nx">Watch</span><span class="p">:</span> <span class="nx">p</span><span class="p">.</span><span class="nx">File</span><span class="p">.</span><span class="nx">Watch</span><span class="p">,</span>
@@ -191,16 +191,16 @@
 <p>先安装 SDK</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-bash" data-lang="bash">go get -u github.com/nacos-group/nacos-sdk-go
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash">go get -u github.com/nacos-group/nacos-sdk-go
 </code></pre></td></tr></table>
 </div>
 </div><p>和 nacos 的交互主要是获取实例信息和注册服务变化监听。</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -227,7 +227,7 @@
 </span><span class="lnt">25
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">// 首先初始化 nacos 实例
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="c1">// 首先初始化 nacos 实例
 </span><span class="c1"></span><span class="nx">p</span><span class="p">.</span><span class="nx">client</span><span class="p">,</span> <span class="nx">err</span> <span class="p">=</span> <span class="nf">createClient</span><span class="p">(</span><span class="nx">p</span><span class="p">.</span><span class="nx">EndPoint</span><span class="p">)</span>
 
 <span class="c1">// 获取需要的服务，循环获取地址。我这里简化了，获取了所有服务
@@ -257,7 +257,7 @@
 </div><p>之后还需要注册个定时任务，来定时拉取最新的服务状态，做个兜底。</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -292,7 +292,7 @@
 </span><span class="lnt">33
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">pool</span><span class="p">.</span><span class="nf">GoCtx</span><span class="p">(</span><span class="kd">func</span><span class="p">(</span><span class="nx">routineCtx</span> <span class="nx">context</span><span class="p">.</span><span class="nx">Context</span><span class="p">)</span> <span class="p">{</span>
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="nx">pool</span><span class="p">.</span><span class="nf">GoCtx</span><span class="p">(</span><span class="kd">func</span><span class="p">(</span><span class="nx">routineCtx</span> <span class="nx">context</span><span class="p">.</span><span class="nx">Context</span><span class="p">)</span> <span class="p">{</span>
 		<span class="nx">ctxLog</span> <span class="o">:=</span> <span class="nx">log</span><span class="p">.</span><span class="nf">With</span><span class="p">(</span><span class="nx">routineCtx</span><span class="p">,</span> <span class="nx">log</span><span class="p">.</span><span class="nf">Str</span><span class="p">(</span><span class="nx">log</span><span class="p">.</span><span class="nx">ProviderName</span><span class="p">,</span> <span class="s">&#34;nacos&#34;</span><span class="p">))</span>
 		<span class="nx">logger</span> <span class="o">:=</span> <span class="nx">log</span><span class="p">.</span><span class="nf">FromContext</span><span class="p">(</span><span class="nx">ctxLog</span><span class="p">)</span>
 
@@ -330,7 +330,7 @@
 </div><p>最终的 nacos 文件</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">  1
+<pre tabindex="0" class="chroma"><code><span class="lnt">  1
 </span><span class="lnt">  2
 </span><span class="lnt">  3
 </span><span class="lnt">  4
@@ -731,7 +731,7 @@
 </span><span class="lnt">399
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">nacos</span>
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">nacos</span>
 
 <span class="kn">import</span> <span class="p">(</span>
 	<span class="s">&#34;context&#34;</span>
@@ -1137,14 +1137,14 @@
 <p>在<code>pkg/config/static/static_config.go</code> 里添加 nacos 配置结构体：</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
 </span><span class="lnt">5
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">type</span> <span class="nx">Providers</span> <span class="kd">struct</span> <span class="p">{</span>
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="kd">type</span> <span class="nx">Providers</span> <span class="kd">struct</span> <span class="p">{</span>
 <span class="c1">// 省略原有代码
 </span><span class="c1"></span>
 	<span class="nx">Nacos</span>     <span class="o">*</span><span class="nx">nacos</span><span class="p">.</span><span class="nx">Provider</span> <span class="s">`description:&#34;Enable Nacos backend with default settings.&#34; json:&#34;nacos,omitempty&#34; toml:&#34;nacos,omitempty&#34; yaml:&#34;nacos,omitempty&#34;`</span>
@@ -1154,7 +1154,7 @@
 </div><p>在<code>pkg/provider/aggregator/aggregator.go</code> 里添加 nacos 初始化：</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -1165,7 +1165,7 @@
 </span><span class="lnt">9
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="nf">NewProviderAggregator</span><span class="p">(</span><span class="nx">conf</span> <span class="nx">static</span><span class="p">.</span><span class="nx">Providers</span><span class="p">)</span> <span class="nx">ProviderAggregator</span> <span class="p">{</span>
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="nf">NewProviderAggregator</span><span class="p">(</span><span class="nx">conf</span> <span class="nx">static</span><span class="p">.</span><span class="nx">Providers</span><span class="p">)</span> <span class="nx">ProviderAggregator</span> <span class="p">{</span>
 <span class="c1">// 省略原有代码
 </span><span class="c1"></span>
 	<span class="k">if</span> <span class="nx">conf</span><span class="p">.</span><span class="nx">Nacos</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
@@ -1189,7 +1189,7 @@
 <p><img src="https://void.oss-cn-beijing.aliyuncs.com/img/20201014142902.png" alt="https://void.oss-cn-beijing.aliyuncs.com/img/20201014142902.png"></p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">  1
+<pre tabindex="0" class="chroma"><code><span class="lnt">  1
 </span><span class="lnt">  2
 </span><span class="lnt">  3
 </span><span class="lnt">  4
@@ -1351,7 +1351,7 @@
 </span><span class="lnt">160
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">auth</span>
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">auth</span>
 
 <span class="kn">import</span> <span class="p">(</span>
 	<span class="s">&#34;context&#34;</span>
@@ -1517,7 +1517,7 @@
 <p>这里添加配置文件和实体的映射关系</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1539,7 +1539,7 @@
 </span><span class="lnt">20
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">// pkg/config/dynamic/middlewares.go
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="c1">// pkg/config/dynamic/middlewares.go
 </span><span class="c1"></span>
 <span class="kn">package</span> <span class="nx">dynamic</span>
 
@@ -1565,7 +1565,7 @@
 <p>这里写创建插件实体的代码</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1584,7 +1584,7 @@
 </span><span class="lnt">17
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">// pkg/server/middleware/middlewares.go
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="c1">// pkg/server/middleware/middlewares.go
 </span><span class="c1"></span>
 <span class="kd">func</span> <span class="p">(</span><span class="nx">b</span> <span class="o">*</span><span class="nx">Builder</span><span class="p">)</span> <span class="nf">buildConstructor</span><span class="p">(</span><span class="nx">ctx</span> <span class="nx">context</span><span class="p">.</span><span class="nx">Context</span><span class="p">,</span> <span class="nx">middlewareName</span> <span class="kt">string</span><span class="p">)</span> <span class="p">(</span><span class="nx">alice</span><span class="p">.</span><span class="nx">Constructor</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
 	<span class="cm">/* ... */</span>
@@ -1607,10 +1607,10 @@
 <p>直接用自带的打包命令打linux包(需要安装docker)。</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-bash" data-lang="bash">make binary
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash">make binary
 </code></pre></td></tr></table>
 </div>
 </div><p>之后会在dist文件夹下生成可执行文件。</p>
@@ -1618,7 +1618,7 @@
 <p>添加插件配置</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -1626,7 +1626,7 @@
 </span><span class="lnt">6
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="nt">http</span><span class="p">:</span><span class="w">
+<pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="nt">http</span><span class="p">:</span><span class="w">
 </span><span class="w">  </span><span class="nt">middlewares</span><span class="p">:</span><span class="w">
 </span><span class="w">    </span><span class="c"># token验证</span><span class="w">
 </span><span class="w">    </span><span class="nt">token-auth</span><span class="p">:</span><span class="w">
@@ -1637,7 +1637,7 @@
 </div><p>增加动态路由配置</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -1648,7 +1648,7 @@
 </span><span class="lnt">9
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="nt">http</span><span class="p">:</span><span class="w">
+<pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="nt">http</span><span class="p">:</span><span class="w">
 </span><span class="w">  </span><span class="nt">routers</span><span class="p">:</span><span class="w">
 </span><span class="w">    </span><span class="nt">svc</span><span class="p">:</span><span class="w">
 </span><span class="w">      </span><span class="nt">entryPoints</span><span class="p">:</span><span class="w">
@@ -1744,10 +1744,10 @@
 <p>一时无法确定原因，先将流量都切到一台备用 sharding-proxy，然后执行 <code>jmap</code> 导出内存到MAT里进行分析。</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-bash" data-lang="bash">jmap -dump,format<span class="o">=</span>b,file<span class="o">=</span>proxy.hprof <span class="o">[</span>pid<span class="o">]</span>
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash">jmap -dump,format<span class="o">=</span>b,file<span class="o">=</span>proxy.hprof <span class="o">[</span>pid<span class="o">]</span>
 </code></pre></td></tr></table>
 </div>
 </div><p>可以看到1.8G的内存都被 Guava 的 cache 占用了。猜测是用了强引用，缓存没有释放。</p>
@@ -1757,7 +1757,7 @@
 <p>接下来分析下代码，</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1799,7 +1799,7 @@
 </span><span class="lnt">40
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">final</span> <span class="kd">class</span> <span class="nc">ChannelRegistry</span> <span class="o">{</span>
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">final</span> <span class="kd">class</span> <span class="nc">ChannelRegistry</span> <span class="o">{</span>
     
     <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">ChannelRegistry</span> <span class="n">INSTANCE</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ChannelRegistry</span><span class="o">();</span>
     
@@ -1851,12 +1851,12 @@
 <p>首先修改 <code>io.shardingsphere.shardingproxy.runtime.ChannelRegistry</code>，添加一个释放缓存的方法。</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kt">void</span> <span class="nf">invalidate</span><span class="o">(</span><span class="kd">final</span> <span class="n">String</span> <span class="n">channelId</span><span class="o">)</span> <span class="o">{</span>
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kt">void</span> <span class="nf">invalidate</span><span class="o">(</span><span class="kd">final</span> <span class="n">String</span> <span class="n">channelId</span><span class="o">)</span> <span class="o">{</span>
     <span class="n">connectionIds</span><span class="o">.</span><span class="na">invalidate</span><span class="o">(</span><span class="n">channelId</span><span class="o">);</span>
 <span class="o">}</span>
 </code></pre></td></tr></table>
@@ -1864,7 +1864,7 @@
 </div><p>然后修改 <code>io.shardingsphere.shardingproxy.frontend.common.FrontendHandler</code>，这是连接处理的父类，继承的是Netty的ChannelInboundHandlerAdapter。我们修改 <code>channelInactive</code> 方法，添加一个剩余资源处理逻辑，并添加一个抽象方法供子类继承。</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1878,7 +1878,7 @@
 </span><span class="lnt">12
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-java" data-lang="java"><span class="nd">@Override</span>
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="nd">@Override</span>
 <span class="nd">@SneakyThrows</span>
 <span class="kd">public</span> <span class="kd">final</span> <span class="kt">void</span> <span class="nf">channelInactive</span><span class="o">(</span><span class="kd">final</span> <span class="n">ChannelHandlerContext</span> <span class="n">context</span><span class="o">)</span> <span class="o">{</span>
     <span class="n">context</span><span class="o">.</span><span class="na">fireChannelInactive</span><span class="o">();</span>
@@ -1895,13 +1895,13 @@
 </div><p>最后，修改<code>FrontendHandler</code>的子类，继承刚刚的抽象方法。</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-java" data-lang="java"><span class="nd">@Override</span>
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="nd">@Override</span>
 <span class="kd">protected</span> <span class="kt">void</span> <span class="nf">inactive</span><span class="o">(</span><span class="n">ChannelHandlerContext</span> <span class="n">context</span><span class="o">)</span> <span class="o">{</span>
     <span class="n">ChannelRegistry</span><span class="o">.</span><span class="na">getInstance</span><span class="o">().</span><span class="na">invalidate</span><span class="o">(</span><span class="n">context</span><span class="o">.</span><span class="na">channel</span><span class="o">().</span><span class="na">id</span><span class="o">().</span><span class="na">asShortText</span><span class="o">());</span>
 <span class="o">}</span>
@@ -1912,9 +1912,9 @@
 <p>下面整理下各版本内存池的名字。</p>
 <h2 id="code-cache">Code Cache</h2>
 <h3 id="jdk7-jdk8">JDK7, JDK8</h3>
-<pre><code>    Code Cache
+<pre tabindex="0"><code>    Code Cache
 </code></pre><h3 id="jdk9-后">JDK9 后</h3>
-<pre><code>    CodeHeap 'non-nmethods'
+<pre tabindex="0"><code>    CodeHeap 'non-nmethods'
     CodeHeap 'profiled nmethods'
     CodeHeap 'non-profiled nmethods'
 </code></pre><h2 id="perm-gen">Perm Gen</h2>
@@ -1924,27 +1924,27 @@
 <p>SerialGC: <code>Perm Gen</code></p>
 <h2 id="metaspace">Metaspace</h2>
 <h3 id="jdk8-之后">JDK8 之后</h3>
-<pre><code>    Metaspace
+<pre tabindex="0"><code>    Metaspace
     Compressed Class Space
 </code></pre><h2 id="serialgc">SerialGC</h2>
-<pre><code>    Eden Space
+<pre tabindex="0"><code>    Eden Space
     Survivor Space
     Tenured Gen
 </code></pre><h2 id="parallelgc--paralleloldgc">ParallelGC + ParallelOldGC</h2>
-<pre><code>    PS Eden Space
+<pre tabindex="0"><code>    PS Eden Space
     PS Survivor Space
     PS Old Gen
 </code></pre><h2 id="concmarksweepgc--parnewgc">ConcMarkSweepGC + ParNewGC</h2>
 <p>JDK9后 deprecated，JDK14后移除</p>
-<pre><code>    Par Eden Space
+<pre tabindex="0"><code>    Par Eden Space
     Par Survivor Space
     CMS Old Gen
 </code></pre><h2 id="g1gc">G1GC</h2>
-<pre><code>    G1 Eden Space
+<pre tabindex="0"><code>    G1 Eden Space
     G1 Survivor Space
     G1 Old Gen
 </code></pre><h2 id="zgc">ZGC</h2>
-<pre><code>    ZHeap
+<pre tabindex="0"><code>    ZHeap
 </code></pre>]]></description><category domain="https://ld000.space/tags/java/">java</category></item><item><title>gorm调用sharding-proxy, 参数带单引号sql报错</title><link>https://ld000.space/post/gorm_sharding_proxy_sql_error/</link><guid isPermaLink="true">https://ld000.space/post/gorm_sharding_proxy_sql_error/</guid><pubDate>Fri, 27 Mar 2020 00:00:00 +0000</pubDate><author>voidd247@outlook.com (Voiddd)</author><copyright>[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh)</copyright><description><![CDATA[<h2 id="软件版本">软件版本</h2>
 <p>sharding-proxy-3.1.0</p>
 <p>MySQL-5.7</p>
@@ -1953,22 +1953,22 @@
 <p>但是上了 sharding-proxy 之后之前参数中带 <code>'</code> 的 sql 全都报错了。</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell">// 报错信息
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell">// 报错信息
 Error 3054: Unknown exception: Illegal input, unterminated <span class="s1">&#39;&#39;</span><span class="err">&#39;</span>.
 </code></pre></td></tr></table>
 </div>
 </div><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">// 执行 sql 的代码
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="c1">// 执行 sql 的代码
 </span><span class="c1">// 这里参数 dd&#39;dd 中有个 &#39;
 </span><span class="c1"></span><span class="nx">db</span><span class="p">.</span><span class="nf">Exec</span><span class="p">(</span><span class="s">&#34;update md_user_info set nickname = ? where user_id = ?&#34;</span><span class="p">,</span> <span class="s">&#34;dd&#39;dd&#34;</span><span class="p">,</span> <span class="mi">1000002082</span><span class="p">)</span>
 </code></pre></td></tr></table>
@@ -1977,7 +1977,7 @@ Error 3054: Unknown exception: Illegal input, unterminated <span class="s1">&#39
 <p>中间都没发现问题，直接一路 debug 到最底层 sql 库。</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -2001,7 +2001,7 @@ Error 3054: Unknown exception: Illegal input, unterminated <span class="s1">&#39
 </span><span class="lnt">22
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">// go/src/database/sql/sql.go
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="c1">// go/src/database/sql/sql.go
 </span><span class="c1"></span>
 <span class="kd">func</span> <span class="p">(</span><span class="nx">db</span> <span class="o">*</span><span class="nx">DB</span><span class="p">)</span> <span class="nf">execDC</span><span class="p">(</span><span class="nx">ctx</span> <span class="nx">context</span><span class="p">.</span><span class="nx">Context</span><span class="p">,</span> <span class="nx">dc</span> <span class="o">*</span><span class="nx">driverConn</span><span class="p">,</span> <span class="nx">release</span> <span class="kd">func</span><span class="p">(</span><span class="kt">error</span><span class="p">),</span> <span class="nx">query</span> <span class="kt">string</span><span class="p">,</span> <span class="nx">args</span> <span class="p">[]</span><span class="kd">interface</span><span class="p">{})</span> <span class="p">(</span><span class="nx">res</span> <span class="nx">Result</span><span class="p">,</span> <span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
     <span class="cm">/* ... */</span>
@@ -2028,7 +2028,7 @@ Error 3054: Unknown exception: Illegal input, unterminated <span class="s1">&#39
 </div><p>debug 进 <code>ctxDriverExec</code> 方法，走到最后的 mysql 驱动。</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -2063,7 +2063,7 @@ Error 3054: Unknown exception: Illegal input, unterminated <span class="s1">&#39
 </span><span class="lnt">33
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">// github.com/go-sql-driver/mysql/connection.go
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="c1">// github.com/go-sql-driver/mysql/connection.go
 </span><span class="c1"></span>
 <span class="kd">func</span> <span class="p">(</span><span class="nx">mc</span> <span class="o">*</span><span class="nx">mysqlConn</span><span class="p">)</span> <span class="nf">Exec</span><span class="p">(</span><span class="nx">query</span> <span class="kt">string</span><span class="p">,</span> <span class="nx">args</span> <span class="p">[]</span><span class="nx">driver</span><span class="p">.</span><span class="nx">Value</span><span class="p">)</span> <span class="p">(</span><span class="nx">driver</span><span class="p">.</span><span class="nx">Result</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
     <span class="cm">/* ... */</span>
@@ -2105,11 +2105,11 @@ Error 3054: Unknown exception: Illegal input, unterminated <span class="s1">&#39
 <p>先返回程序创建数据库连接的地方。</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">connString</span> <span class="p">=</span> <span class="nx">fmt</span><span class="p">.</span><span class="nf">Sprintf</span><span class="p">(</span><span class="s">&#34;%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&amp;parseTime=True&amp;loc=Local&amp;interpolateParams=true&#34;</span><span class="p">,</span>
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="nx">connString</span> <span class="p">=</span> <span class="nx">fmt</span><span class="p">.</span><span class="nf">Sprintf</span><span class="p">(</span><span class="s">&#34;%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&amp;parseTime=True&amp;loc=Local&amp;interpolateParams=true&#34;</span><span class="p">,</span>
         <span class="nx">conf</span><span class="p">.</span><span class="nx">User</span><span class="p">,</span> <span class="nx">conf</span><span class="p">.</span><span class="nx">Password</span><span class="p">,</span> <span class="nx">conf</span><span class="p">.</span><span class="nx">Host</span><span class="p">,</span> <span class="nx">conf</span><span class="p">.</span><span class="nx">Port</span><span class="p">,</span> <span class="nx">conf</span><span class="p">.</span><span class="nx">Database</span><span class="p">)</span>
 </code></pre></td></tr></table>
 </div>
@@ -2118,12 +2118,12 @@ Error 3054: Unknown exception: Illegal input, unterminated <span class="s1">&#39
 <p>先简单介绍下 sql 解析的处理过程。sql 解析分为，词法分析、语法和语义分析、优化、执行代码生成。词法分析主要是把输入转化成一个个 token，语法分析是生成语法树的过程。</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell">            前端                      中部                后端
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell">            前端                      中部                后端
            /   <span class="se">\ </span>                     <span class="p">|</span>                   <span class="p">|</span>
      词法分析   语法分析                优化             执行代码生成
 </code></pre></td></tr></table>
@@ -2139,7 +2139,7 @@ Error 3054: Unknown exception: Illegal input, unterminated <span class="s1">&#39
 <p>正常解析这条 sql 应该生成10个 token：</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -2151,7 +2151,7 @@ Error 3054: Unknown exception: Illegal input, unterminated <span class="s1">&#39
 </span><span class="lnt">10
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell">update
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell">update
 md_user_info
 <span class="nb">set</span>
 <span class="nv">nickname</span>
@@ -2170,7 +2170,7 @@ where
 <p>update 语句解析在 <code>AbstractUpdateParser.parse()</code> 处，经过 <code>LexerEngine</code>，最后用 <code>Tokenizer</code> 生成 token。</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -2180,7 +2180,7 @@ where
 </span><span class="lnt">8
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-java" data-lang="java"><span class="c1">// src/main/java/io/shardingsphere/core/parsing/lexer/analyzer/Tokenizer.java
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="c1">// src/main/java/io/shardingsphere/core/parsing/lexer/analyzer/Tokenizer.java
 </span><span class="c1"></span>
 <span class="kd">private</span> <span class="n">Token</span> <span class="nf">scanChars</span><span class="o">(</span><span class="kd">final</span> <span class="kt">char</span> <span class="n">terminatedChar</span><span class="o">)</span> <span class="o">{</span>
     <span class="c1">// 获取 token 的字符串长度
@@ -2192,7 +2192,7 @@ where
 </div>
 </div><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -2214,7 +2214,7 @@ where
 </span><span class="lnt">20
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-java" data-lang="java"><span class="c1">// src/main/java/io/shardingsphere/core/parsing/lexer/analyzer/Tokenizer.java
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="c1">// src/main/java/io/shardingsphere/core/parsing/lexer/analyzer/Tokenizer.java
 </span><span class="c1"></span>
 <span class="c1">// 获取 token 的字符串长度
 </span><span class="c1"></span><span class="kd">private</span> <span class="kt">int</span> <span class="nf">getLengthUntilTerminatedChar</span><span class="o">(</span><span class="kd">final</span> <span class="kt">char</span> <span class="n">terminatedChar</span><span class="o">)</span> <span class="o">{</span>
@@ -2246,7 +2246,7 @@ where
 <p>转化 token 的代码在 sql_lex.cc 的 MYSQLlex → lex_one_token 方法中。</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -2258,7 +2258,7 @@ where
 </span><span class="lnt">10
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-c" data-lang="c"><span class="c1">// sql/sql_lex.cc
+<pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="c1">// sql/sql_lex.cc
 </span><span class="c1"></span>
 <span class="kt">int</span> <span class="nf">MYSQLlex</span><span class="p">(</span><span class="n">YYSTYPE</span> <span class="o">*</span><span class="n">yylval</span><span class="p">,</span> <span class="n">YYLTYPE</span> <span class="o">*</span><span class="n">yylloc</span><span class="p">,</span> <span class="n">THD</span> <span class="o">*</span><span class="n">thd</span><span class="p">)</span>
 <span class="p">{</span>
@@ -2273,7 +2273,7 @@ where
 </div><p>普通字符的解析最后会走进 <code>get_text</code> 方法进行截取。</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -2293,7 +2293,7 @@ where
 </span><span class="lnt">18
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-c" data-lang="c"><span class="c1">// sql/sql_lex.cc
+<pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="c1">// sql/sql_lex.cc
 </span><span class="c1"></span>
 <span class="k">static</span> <span class="kt">char</span> <span class="o">*</span><span class="nf">get_text</span><span class="p">(</span><span class="n">Lex_input_stream</span> <span class="o">*</span><span class="n">lip</span><span class="p">,</span> <span class="kt">int</span> <span class="n">pre_skip</span><span class="p">,</span> <span class="kt">int</span> <span class="n">post_skip</span><span class="p">)</span>
 <span class="p">{</span>
@@ -2318,7 +2318,7 @@ where
 <p>最终的 token 列表。(token 是个 int，对应关系在 sql_yacc.h 中)</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -2331,7 +2331,7 @@ where
 </span><span class="lnt">11
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="m">865</span> UPDATE_SYM      update 
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="m">865</span> UPDATE_SYM      update 
 <span class="m">484</span> IDENT_QUOTED    md_user_info 
 <span class="m">757</span> SET             <span class="nb">set</span> 
 <span class="m">484</span> IDENT_QUOTED    nickname 
@@ -2349,7 +2349,7 @@ where
 <p>修改也很简单，加上处理转义字符的逻辑就可以了，修改 <code>Tokenizer</code> 的 <code>getLengthUntilTerminatedChar</code> 方法，增加处理转义字符的逻辑。</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -2371,7 +2371,7 @@ where
 </span><span class="lnt">20
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-java" data-lang="java"><span class="c1">// src/main/java/io/shardingsphere/core/parsing/lexer/analyzer/Tokenizer.java
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="c1">// src/main/java/io/shardingsphere/core/parsing/lexer/analyzer/Tokenizer.java
 </span><span class="c1"></span>
 <span class="kd">private</span> <span class="kt">int</span> <span class="nf">getLengthUntilTerminatedChar</span><span class="o">(</span><span class="kd">final</span> <span class="kt">char</span> <span class="n">terminatedChar</span><span class="o">)</span> <span class="o">{</span>
     <span class="kt">int</span> <span class="n">length</span> <span class="o">=</span> <span class="n">1</span><span class="o">;</span>
@@ -2398,7 +2398,7 @@ where
 <p>在没修改的情况下顺手用 Java 也测试下 sharding-jdbc 是否支持客户端预编译。</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -2412,7 +2412,7 @@ where
 </span><span class="lnt">12
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-java" data-lang="java"><span class="n">Class</span><span class="o">.</span><span class="na">forName</span><span class="o">(</span><span class="s">&#34;com.mysql.jdbc.Driver&#34;</span><span class="o">);</span>
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="n">Class</span><span class="o">.</span><span class="na">forName</span><span class="o">(</span><span class="s">&#34;com.mysql.jdbc.Driver&#34;</span><span class="o">);</span>
 <span class="n">String</span> <span class="n">url</span> <span class="o">=</span> <span class="s">&#34;jdbc:mysql://localhost:3307/xxx?useServerPrepStmts=false&#34;</span><span class="o">;</span>
 <span class="n">String</span> <span class="n">username</span> <span class="o">=</span> <span class="s">&#34;xxx&#34;</span><span class="o">;</span>
 <span class="n">String</span> <span class="n">password</span> <span class="o">=</span> <span class="s">&#34;xxx&#34;</span><span class="o">;</span>
@@ -2429,26 +2429,26 @@ where
 </div><p>Java 库的客户端预编译参数是<code>useServerPrepStmts</code>，默认值就是 false，表示关闭服务端预编译，开启客户端预编译，为了方便看我就写上了。执行一下，果然报错了。</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell">Exception in thread <span class="s2">&#34;main&#34;</span> java.sql.SQLException: Unknown exception: Illegal input, unterminated <span class="s1">&#39;&#39;</span><span class="err">&#39;</span>.
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell">Exception in thread <span class="s2">&#34;main&#34;</span> java.sql.SQLException: Unknown exception: Illegal input, unterminated <span class="s1">&#39;&#39;</span><span class="err">&#39;</span>.
 </code></pre></td></tr></table>
 </div>
 </div>]]></description><category domain="https://ld000.space/tags/go/">go</category><category domain="https://ld000.space/tags/gorm/">gorm</category><category domain="https://ld000.space/tags/sharding-proxy/">sharding-proxy</category><category domain="https://ld000.space/tags/mysql/">MySQL</category></item><item><title>Mac下用CLion debug MySQL5.7源码</title><link>https://ld000.space/post/mac_clion_debug_mysql_source/</link><guid isPermaLink="true">https://ld000.space/post/mac_clion_debug_mysql_source/</guid><pubDate>Thu, 26 Mar 2020 00:00:00 +0000</pubDate><author>voidd247@outlook.com (Voiddd)</author><copyright>[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh)</copyright><description><![CDATA[<h2 id="编译安装-mysql">编译安装 MySQL</h2>
 <p>首先从 github 下载 mysql 源码</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell">    https://github.com/mysql/mysql-server
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell">    https://github.com/mysql/mysql-server
 </code></pre></td></tr></table>
 </div>
 </div><p>接下来编译安装</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -2470,7 +2470,7 @@ where
 </span><span class="lnt">20
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell">    // 进到源码目录
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell">    // 进到源码目录
     <span class="nb">cd</span> /Users/d/c/mysql-server-5.7
     
     // cmake
@@ -2496,7 +2496,7 @@ where
 <p><code>-DWITH_SSL=/usr/local/opt/openssl@1.1</code> 指定 openssl 路径，不指定有可能会报以下错误</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -2507,7 +2507,7 @@ where
 </span><span class="lnt">9
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell">    Cannot find appropriate system libraries <span class="k">for</span> <span class="nv">WITH_SSL</span><span class="o">=</span>system.
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell">    Cannot find appropriate system libraries <span class="k">for</span> <span class="nv">WITH_SSL</span><span class="o">=</span>system.
     Make sure you have specified a supported SSL version.
     Valid options are :
     system <span class="o">(</span>use the OS openssl library<span class="o">)</span>,
@@ -2523,10 +2523,10 @@ where
 <p><img src="https://void.oss-cn-beijing.aliyuncs.com/img/20200326121222.jpg" alt="https://void.oss-cn-beijing.aliyuncs.com/img/20200326121222.jpg"></p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell">    -DCMAKE_INSTALL_PREFIX<span class="o">=</span>/Users/d/c/mysql_build -DMYSQL_DATADIR<span class="o">=</span>/Users/d/c/mysql_build/data -DSYSCONFDIR<span class="o">=</span>/Users/d/c/mysql_build -DMYSQL_UNIX_ADDR<span class="o">=</span>/Users/d/c/mysql_build/data/mysql.sock -DWITH_DEBUG<span class="o">=</span><span class="m">1</span> -DDOWNLOAD_BOOST<span class="o">=</span><span class="m">1</span> -DWITH_BOOST<span class="o">=</span>/Users/d/c/boost -DWITH_SSL<span class="o">=</span>/usr/local/opt/openssl@1.1
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell">    -DCMAKE_INSTALL_PREFIX<span class="o">=</span>/Users/d/c/mysql_build -DMYSQL_DATADIR<span class="o">=</span>/Users/d/c/mysql_build/data -DSYSCONFDIR<span class="o">=</span>/Users/d/c/mysql_build -DMYSQL_UNIX_ADDR<span class="o">=</span>/Users/d/c/mysql_build/data/mysql.sock -DWITH_DEBUG<span class="o">=</span><span class="m">1</span> -DDOWNLOAD_BOOST<span class="o">=</span><span class="m">1</span> -DWITH_BOOST<span class="o">=</span>/Users/d/c/boost -DWITH_SSL<span class="o">=</span>/usr/local/opt/openssl@1.1
 </code></pre></td></tr></table>
 </div>
 </div><p>之后选择 mysqld，然后点击 debug 按钮就可以开始调试了。</p>
@@ -2540,7 +2540,7 @@ where
 <h3 id="测试1">测试1</h3>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -2553,7 +2553,7 @@ where
 </span><span class="lnt">11
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kt">void</span> <span class="nf">test1</span><span class="o">()</span> <span class="o">{</span>
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kt">void</span> <span class="nf">test1</span><span class="o">()</span> <span class="o">{</span>
     <span class="n">SqlSession</span> <span class="n">sqlSession</span> <span class="o">=</span> <span class="n">sqlSessionFactory</span><span class="o">.</span><span class="na">openSession</span><span class="o">(</span><span class="kc">true</span><span class="o">);</span>
     <span class="n">UserWalletMapperExt</span> <span class="n">mapper</span> <span class="o">=</span> <span class="n">sqlSession</span><span class="o">.</span><span class="na">getMapper</span><span class="o">(</span><span class="n">UserWalletMapperExt</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
 
@@ -2568,7 +2568,7 @@ where
 </div>
 </div><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -2584,7 +2584,7 @@ where
 </span><span class="lnt">14
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell">...queryUserBalance:debug:181 <span class="o">==</span>&gt;  Preparing: <span class="k">select</span> balance from user_wallet WHERE <span class="nv">user_id</span> <span class="o">=</span> ? and <span class="nb">type</span> <span class="o">=</span> ? 
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell">...queryUserBalance:debug:181 <span class="o">==</span>&gt;  Preparing: <span class="k">select</span> balance from user_wallet WHERE <span class="nv">user_id</span> <span class="o">=</span> ? and <span class="nb">type</span> <span class="o">=</span> ? 
 ...queryUserBalance:debug:181 <span class="o">==</span>&gt; Parameters: 10<span class="o">(</span>Long<span class="o">)</span>, 1<span class="o">(</span>Integer<span class="o">)</span>
 ...queryUserBalance:debug:181 &lt;<span class="o">==</span>      Total: <span class="m">1</span>
 <span class="m">200</span>
@@ -2604,7 +2604,7 @@ where
 <h3 id="测试2">测试2</h3>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -2619,7 +2619,7 @@ where
 </span><span class="lnt">13
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kt">void</span> <span class="nf">test2</span><span class="o">()</span> <span class="o">{</span>
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kt">void</span> <span class="nf">test2</span><span class="o">()</span> <span class="o">{</span>
     <span class="n">SqlSession</span> <span class="n">sqlSession1</span> <span class="o">=</span> <span class="n">sqlSessionFactory</span><span class="o">.</span><span class="na">openSession</span><span class="o">(</span><span class="kc">true</span><span class="o">);</span>
     <span class="n">UserWalletMapperExt</span> <span class="n">mapper1</span> <span class="o">=</span> <span class="n">sqlSession1</span><span class="o">.</span><span class="na">getMapper</span><span class="o">(</span><span class="n">UserWalletMapperExt</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
     <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;session1: &#34;</span> <span class="o">+</span> <span class="n">mapper1</span><span class="o">.</span><span class="na">queryUserBalance</span><span class="o">(</span><span class="n">10L</span><span class="o">,</span> <span class="n">1</span><span class="o">));</span>
@@ -2636,7 +2636,7 @@ where
 </div>
 </div><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -2654,7 +2654,7 @@ where
 </span><span class="lnt">16
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell">...queryUserBalance:debug:181 <span class="o">==</span>&gt;  Preparing: <span class="k">select</span> balance from user_wallet WHERE <span class="nv">user_id</span> <span class="o">=</span> ? and <span class="nb">type</span> <span class="o">=</span> ? 
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell">...queryUserBalance:debug:181 <span class="o">==</span>&gt;  Preparing: <span class="k">select</span> balance from user_wallet WHERE <span class="nv">user_id</span> <span class="o">=</span> ? and <span class="nb">type</span> <span class="o">=</span> ? 
 ...queryUserBalance:debug:181 <span class="o">==</span>&gt; Parameters: 10<span class="o">(</span>Long<span class="o">)</span>, 1<span class="o">(</span>Integer<span class="o">)</span>
 ...queryUserBalance:debug:181 &lt;<span class="o">==</span>      Total: <span class="m">1</span>
 session1: <span class="m">500</span>
@@ -2677,13 +2677,13 @@ session1: <span class="m">500</span>
 <p>接下来关闭一级缓存试一下，设置 LocalCache 级别为 statement 或者在语句上设置flushCache=&quot;true&quot; 都可以。</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-java" data-lang="java"><span class="c1">// 设置全局一级缓存级别为 STATEMENT
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="c1">// 设置全局一级缓存级别为 STATEMENT
 </span><span class="c1"></span><span class="n">org</span><span class="o">.</span><span class="na">apache</span><span class="o">.</span><span class="na">ibatis</span><span class="o">.</span><span class="na">session</span><span class="o">.</span><span class="na">Configuration</span> <span class="n">configuration</span> <span class="o">=</span> <span class="k">new</span> <span class="n">org</span><span class="o">.</span><span class="na">apache</span><span class="o">.</span><span class="na">ibatis</span><span class="o">.</span><span class="na">session</span><span class="o">.</span><span class="na">Configuration</span><span class="o">();</span>
 <span class="n">configuration</span><span class="o">.</span><span class="na">setLocalCacheScope</span><span class="o">(</span><span class="n">LocalCacheScope</span><span class="o">.</span><span class="na">STATEMENT</span><span class="o">);</span>
 <span class="n">sqlSessionFactoryBean</span><span class="o">.</span><span class="na">setConfiguration</span><span class="o">(</span><span class="n">configuration</span><span class="o">);</span>
@@ -2691,18 +2691,18 @@ session1: <span class="m">500</span>
 </div>
 </div><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-xml" data-lang="xml"><span class="c">&lt;!-- 设置单个语句不使用一级缓存 --&gt;</span>
+<pre tabindex="0" class="chroma"><code class="language-xml" data-lang="xml"><span class="c">&lt;!-- 设置单个语句不使用一级缓存 --&gt;</span>
 <span class="nt">&lt;select</span> <span class="na">id=</span><span class="s">&#34;queryUserBalance&#34;</span> <span class="na">resultType=</span><span class="s">&#34;java.lang.Long&#34;</span> <span class="na">flushCache=</span><span class="s">&#34;true&#34;</span><span class="nt">&gt;</span>
 </code></pre></td></tr></table>
 </div>
 </div><p>测试</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -2712,7 +2712,7 @@ session1: <span class="m">500</span>
 </span><span class="lnt">8
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kt">void</span> <span class="nf">test3</span><span class="o">()</span> <span class="o">{</span>
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kt">void</span> <span class="nf">test3</span><span class="o">()</span> <span class="o">{</span>
     <span class="n">SqlSession</span> <span class="n">sqlSession</span> <span class="o">=</span> <span class="n">sqlSessionFactory</span><span class="o">.</span><span class="na">openSession</span><span class="o">(</span><span class="kc">true</span><span class="o">);</span>
     <span class="n">UserWalletMapperExt</span> <span class="n">mapper</span> <span class="o">=</span> <span class="n">sqlSession</span><span class="o">.</span><span class="na">getMapper</span><span class="o">(</span><span class="n">UserWalletMapperExt</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
 
@@ -2724,7 +2724,7 @@ session1: <span class="m">500</span>
 </div>
 </div><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -2738,7 +2738,7 @@ session1: <span class="m">500</span>
 </span><span class="lnt">12
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell">...queryUserBalance:debug:181 <span class="o">==</span>&gt;  Preparing: <span class="k">select</span> balance from user_wallet WHERE <span class="nv">user_id</span> <span class="o">=</span> ? and <span class="nb">type</span> <span class="o">=</span> ? 
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell">...queryUserBalance:debug:181 <span class="o">==</span>&gt;  Preparing: <span class="k">select</span> balance from user_wallet WHERE <span class="nv">user_id</span> <span class="o">=</span> ? and <span class="nb">type</span> <span class="o">=</span> ? 
 ...queryUserBalance:debug:181 <span class="o">==</span>&gt; Parameters: 10<span class="o">(</span>Long<span class="o">)</span>, 1<span class="o">(</span>Integer<span class="o">)</span>
 ...queryUserBalance:debug:181 &lt;<span class="o">==</span>      Total: <span class="m">1</span>
 <span class="m">600</span>
@@ -2760,23 +2760,23 @@ session1: <span class="m">500</span>
 <p>修改 pom.xml 文件，将打包方式设置为 war</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-xml" data-lang="xml">    <span class="nt">&lt;packaging&gt;</span>war<span class="nt">&lt;/packaging&gt;</span>
+<pre tabindex="0" class="chroma"><code class="language-xml" data-lang="xml">    <span class="nt">&lt;packaging&gt;</span>war<span class="nt">&lt;/packaging&gt;</span>
 </code></pre></td></tr></table>
 </div>
 </div><p>添加 war 插件</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
 </span><span class="lnt">5
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-xml" data-lang="xml">    <span class="nt">&lt;plugin&gt;</span> 
+<pre tabindex="0" class="chroma"><code class="language-xml" data-lang="xml">    <span class="nt">&lt;plugin&gt;</span> 
         <span class="nt">&lt;groupId&gt;</span>org.apache.maven.plugins<span class="nt">&lt;/groupId&gt;</span> 
         <span class="nt">&lt;artifactId&gt;</span>maven-war-plugin<span class="nt">&lt;/artifactId&gt;</span> 
         <span class="nt">&lt;version&gt;</span>3.0.0<span class="nt">&lt;/version&gt;</span> 
@@ -2786,7 +2786,7 @@ session1: <span class="m">500</span>
 </div><p>将 <code>spring-boot-starter-web</code> 的 Tomcat 依赖设为 provided，这样还能继续在 IDE 里调试，而且打包时排除了 tomcat 依赖。</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -2804,7 +2804,7 @@ session1: <span class="m">500</span>
 </span><span class="lnt">16
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-xml" data-lang="xml">    <span class="nt">&lt;dependency&gt;</span>
+<pre tabindex="0" class="chroma"><code class="language-xml" data-lang="xml">    <span class="nt">&lt;dependency&gt;</span>
         <span class="nt">&lt;groupId&gt;</span>org.springframework.boot<span class="nt">&lt;/groupId&gt;</span>
         <span class="nt">&lt;artifactId&gt;</span>spring-boot-starter-web<span class="nt">&lt;/artifactId&gt;</span>
         <span class="nt">&lt;exclusions&gt;</span>
@@ -2827,7 +2827,7 @@ session1: <span class="m">500</span>
 <p>继承<code>SpringBootServletInitializer</code>类，并且重写<code>configure</code>方法</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -2842,7 +2842,7 @@ session1: <span class="m">500</span>
 </span><span class="lnt">13
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-java" data-lang="java">    <span class="nd">@SpringBootApplication</span> 
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java">    <span class="nd">@SpringBootApplication</span> 
     <span class="kd">public</span> <span class="kd">class</span> <span class="nc">Application</span> <span class="kd">extends</span> <span class="n">SpringBootServletInitializer</span> <span class="o">{</span> 
     
         <span class="nd">@Override</span> 
@@ -2866,7 +2866,7 @@ session1: <span class="m">500</span>
 <p>直接用 Spring Boot 内置容器启动应用时，一些启动后运行的代码可以直接写在 main 方法里</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -2879,7 +2879,7 @@ session1: <span class="m">500</span>
 </span><span class="lnt">11
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-java" data-lang="java">    <span class="nd">@SpringBootApplication</span> 
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java">    <span class="nd">@SpringBootApplication</span> 
     <span class="kd">public</span> <span class="kd">class</span> <span class="nc">Application</span> <span class="o">{</span> 
     
         <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span> 
@@ -2895,7 +2895,7 @@ session1: <span class="m">500</span>
 </div><p>换成 war 包运行后这样写就无法运行了，因为启动不是走得 main 方法。这时可以实现 <code>CommandLineRunner</code> 接口来实现。</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -2923,7 +2923,7 @@ session1: <span class="m">500</span>
 </span><span class="lnt">26
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-java" data-lang="java">    <span class="cm">/**
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java">    <span class="cm">/**
 </span><span class="cm">     * Interface used to indicate that a bean should &lt;em&gt;run&lt;/em&gt; when it is contained within
 </span><span class="cm">     * a {@link SpringApplication}. Multiple {@link CommandLineRunner} beans can be defined
 </span><span class="cm">     * within the same application context and can be ordered using the {@link Ordered}
@@ -2954,7 +2954,7 @@ session1: <span class="m">500</span>
 </div><p>实现这个接口后把要运行的代码写在 <code>run</code> 方法中就可以了</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -2965,7 +2965,7 @@ session1: <span class="m">500</span>
 </span><span class="lnt">9
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-java" data-lang="java">    <span class="nd">@Component</span>
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java">    <span class="nd">@Component</span>
     <span class="nd">@Order</span><span class="o">(</span><span class="n">value</span> <span class="o">=</span> <span class="n">1</span><span class="o">)</span>
     <span class="kd">public</span> <span class="kd">class</span> <span class="nc">MotanSwitcherRunner</span> <span class="kd">implements</span> <span class="n">CommandLineRunner</span> <span class="o">{</span>
         <span class="nd">@Override</span>
@@ -2979,7 +2979,7 @@ session1: <span class="m">500</span>
 </div>]]></description><category domain="https://ld000.space/tags/java/">java</category></item><item><title>让 Redis zset 支持多条件排序</title><link>https://ld000.space/post/make_redis_zset_support_multiple_sort/</link><guid isPermaLink="true">https://ld000.space/post/make_redis_zset_support_multiple_sort/</guid><pubDate>Wed, 23 Oct 2019 00:00:00 +0000</pubDate><author>voidd247@outlook.com (Voiddd)</author><copyright>[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh)</copyright><description><![CDATA[<p>一些需求中经常要我们实现一个排行榜，数据量少的话可以使用 RDB 数据库排序，数据量大可以自己实现算法或者使用 NoSQL 数据库排序，NoSQL 数据库中最方便的可能就是利用 Redis 的 zset 来实现了。 例如要实现一个玩家成就点数的排行榜：</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -2998,7 +2998,7 @@ session1: <span class="m">500</span>
 </span><span class="lnt">17
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell">    &gt;zadd r <span class="m">100</span> A
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell">    &gt;zadd r <span class="m">100</span> A
     <span class="s2">&#34;1&#34;</span>
     &gt;zadd r <span class="m">200</span> B
     <span class="s2">&#34;1&#34;</span>
@@ -3023,7 +3023,7 @@ session1: <span class="m">500</span>
 <p>以下是原始数据：</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -3031,7 +3031,7 @@ session1: <span class="m">500</span>
 </span><span class="lnt">6
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell">    玩家  成就  是否氪金  时间戳
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell">    玩家  成就  是否氪金  时间戳
     A    <span class="m">100</span>  <span class="m">1</span>        <span class="m">1571819021259</span>
     B    <span class="m">200</span>  <span class="m">0</span>        <span class="m">1571819021259</span>
     C    <span class="m">200</span>  <span class="m">1</span>        <span class="m">1571819021259</span>
@@ -3043,7 +3043,7 @@ session1: <span class="m">500</span>
 <p>如果后两个维度初始化后就不再变化的话，可以利用 Redis 的排序特性，将不变的维度写到 key 里，这样 score 相同时会用 key 来进行排序。</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -3067,7 +3067,7 @@ session1: <span class="m">500</span>
 </span><span class="lnt">22
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell">    <span class="c1"># 这里反转时间戳(9999999999999 - 1571810001259)，让时间早的排在前面</span>
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell">    <span class="c1"># 这里反转时间戳(9999999999999 - 1571810001259)，让时间早的排在前面</span>
     &gt;zadd r <span class="m">100</span> A-1-8428180978740
     <span class="s2">&#34;1&#34;</span>
     &gt;zadd r <span class="m">200</span> B-0-8428180978740
@@ -3097,7 +3097,7 @@ session1: <span class="m">500</span>
 <p>在介绍下两种方法前先来看看 zset 的 score 是怎么存储的，能保留多少精度，直接看跳表 node 的结构。</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -3123,7 +3123,7 @@ session1: <span class="m">500</span>
 </span><span class="lnt">24
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-c" data-lang="c">    <span class="cm">/*
+<pre tabindex="0" class="chroma"><code class="language-c" data-lang="c">    <span class="cm">/*
 </span><span class="cm">     * 跳跃表节点
 </span><span class="cm">     */</span>
     <span class="k">typedef</span> <span class="k">struct</span> <span class="n">zskiplistNode</span> <span class="p">{</span>
@@ -3157,7 +3157,7 @@ session1: <span class="m">500</span>
 <li>Exp:指数字，第二段，占11位，移码方式表示正负数，排除全0和全1表示零和无穷大的特殊情况，指数部分是−1022～+1023加上1023，指数值的大小从1～2046</li>
 <li>Fraction:有效数字，占52位，定点数，小数点放在尾数最前面</li>
 </ul>
-<pre><code>    实际数字 = (-1)^S * Fraction * 2^Exp  (二进制计算)
+<pre tabindex="0"><code>    实际数字 = (-1)^S * Fraction * 2^Exp  (二进制计算)
 </code></pre><p>double 存储的有效数据是第三段的52位，超出会损失精度，由于标准规定小数点是在有效数字最前面，所以实际可以存储 53 位数字。比如有个数字是 <code>111___(53个1)</code>，有效数字位存储的是 <code>.11___(52个1)</code>，计算时会在个位补1，得到<code>1.11___(53个1)</code>，最大值为 <code>2^53 = 9007199254740991</code>，大概 <code>log2^53 = 15.95</code> 位。</p>
 <p>可以看到只要保证有效数字小于等于<code>9007199254740991</code>就不会损失精度。</p>
 <p>好了，现在有了理论基础，接下来看看我们可以怎么实现。</p>
@@ -3167,11 +3167,11 @@ session1: <span class="m">500</span>
 <p>首先时间戳如果全存储就太长了，可以通过一些计算缩小一些，先忽略毫秒，然后和一个大数计算差值。</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-java" data-lang="java">    <span class="kt">int</span> <span class="n">MAX_SECOND</span> <span class="o">=</span> <span class="n">1861891200</span><span class="o">;</span> <span class="c1">// 2029.1.1 0:0:0
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java">    <span class="kt">int</span> <span class="n">MAX_SECOND</span> <span class="o">=</span> <span class="n">1861891200</span><span class="o">;</span> <span class="c1">// 2029.1.1 0:0:0
 </span><span class="c1"></span>    <span class="kt">int</span> <span class="n">sts</span> <span class="o">=</span> <span class="o">(</span><span class="n">MAX_SECOND</span> <span class="o">-</span> <span class="o">(</span><span class="kt">int</span><span class="o">)(</span><span class="n">ts</span> <span class="o">/</span> <span class="n">1000</span><span class="o">))</span>
 </code></pre></td></tr></table>
 </div>
@@ -3187,7 +3187,7 @@ session1: <span class="m">500</span>
 <p>然后就可以用下面的方法计算 score 了，因为是二进制，可以全用位运算。</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -3216,7 +3216,7 @@ session1: <span class="m">500</span>
 </span><span class="lnt">27
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-java" data-lang="java">    <span class="kt">int</span> <span class="n">size1</span> <span class="o">=</span> <span class="n">33</span><span class="o">;</span>
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java">    <span class="kt">int</span> <span class="n">size1</span> <span class="o">=</span> <span class="n">33</span><span class="o">;</span>
     <span class="kt">int</span> <span class="n">size2</span> <span class="o">=</span> <span class="n">1</span><span class="o">;</span>
     <span class="kt">int</span> <span class="n">size3</span> <span class="o">=</span> <span class="n">29</span><span class="o">;</span>
     
@@ -3249,7 +3249,7 @@ session1: <span class="m">500</span>
 <p>改变低位维度值的话就不能调用 <code>ZINCRBY</code> 了，需要调用<code>ZADD</code>，我们用自旋加 CAS 更新，防止覆盖掉新更新的值。</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -3325,7 +3325,7 @@ session1: <span class="m">500</span>
 </span><span class="lnt">74
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-java" data-lang="java">    <span class="cm">/**
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java">    <span class="cm">/**
 </span><span class="cm">     * 设置维度值
 </span><span class="cm">     * 
 </span><span class="cm">     * @param key zset key
@@ -3405,7 +3405,7 @@ session1: <span class="m">500</span>
 <p>直接进到最底层的执行方法 <code>zscore</code></p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -3414,7 +3414,7 @@ session1: <span class="m">500</span>
 </span><span class="lnt">7
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-java" data-lang="java">    <span class="c1">// class RedisCommandBuilder
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java">    <span class="c1">// class RedisCommandBuilder
 </span><span class="c1"></span>    
     <span class="n">Command</span><span class="o">&lt;</span><span class="n">K</span><span class="o">,</span> <span class="n">V</span><span class="o">,</span> <span class="n">Double</span><span class="o">&gt;</span> <span class="nf">zscore</span><span class="o">(</span><span class="n">K</span> <span class="n">key</span><span class="o">,</span> <span class="n">V</span> <span class="n">member</span><span class="o">)</span> <span class="o">{</span>
         <span class="n">notNullKey</span><span class="o">(</span><span class="n">key</span><span class="o">);</span>
@@ -3426,7 +3426,7 @@ session1: <span class="m">500</span>
 </div><p><code>DoubleOutput</code> 将 Redis 的返回值转成 Double</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -3441,7 +3441,7 @@ session1: <span class="m">500</span>
 </span><span class="lnt">13
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-java" data-lang="java">    <span class="c1">// 将 Redis 返回值转成 Double
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java">    <span class="c1">// 将 Redis 返回值转成 Double
 </span><span class="c1"></span>    <span class="kd">public</span> <span class="kd">class</span> <span class="nc">DoubleOutput</span><span class="o">&lt;</span><span class="n">K</span><span class="o">,</span> <span class="n">V</span><span class="o">&gt;</span> <span class="kd">extends</span> <span class="n">CommandOutput</span><span class="o">&lt;</span><span class="n">K</span><span class="o">,</span> <span class="n">V</span><span class="o">,</span> <span class="n">Double</span><span class="o">&gt;</span> <span class="o">{</span>
     
         <span class="kd">public</span> <span class="nf">DoubleOutput</span><span class="o">(</span><span class="n">RedisCodec</span><span class="o">&lt;</span><span class="n">K</span><span class="o">,</span> <span class="n">V</span><span class="o">&gt;</span> <span class="n">codec</span><span class="o">)</span> <span class="o">{</span>
@@ -3459,11 +3459,11 @@ session1: <span class="m">500</span>
 </div><p>Redis 原始的返回值其实是个类似 <code>1.3094266712875436e+18</code> 的字符串，<code>DoubleOutput</code> 在转换成 Double 的时候有可能会损失精度，用 <code>BigDecimal</code> 转的话是不会丢精度的。</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-java" data-lang="java">    <span class="n">String</span> <span class="n">a</span> <span class="o">=</span> <span class="s">&#34;1.3094266712875436e+18&#34;</span><span class="o">;</span>
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java">    <span class="n">String</span> <span class="n">a</span> <span class="o">=</span> <span class="s">&#34;1.3094266712875436e+18&#34;</span><span class="o">;</span>
     <span class="kt">long</span> <span class="n">value</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BigDecimal</span><span class="o">(</span><span class="n">a</span><span class="o">).</span><span class="na">longValue</span><span class="o">();</span>
 </code></pre></td></tr></table>
 </div>
@@ -3471,7 +3471,7 @@ session1: <span class="m">500</span>
 <p>最后利用 <code>genScore</code> 方法就可以生成score值并排序了</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -3499,7 +3499,7 @@ session1: <span class="m">500</span>
 </span><span class="lnt">26
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell">    <span class="c1"># genScore(100, 1, 290072179)</span>
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell">    <span class="c1"># genScore(100, 1, 290072179)</span>
     &gt;zadd r <span class="m">108201125491</span> A
     <span class="s2">&#34;1&#34;</span>
     <span class="c1"># genScore(200, 0, 290072179)</span>
@@ -3531,14 +3531,14 @@ session1: <span class="m">500</span>
 <p>可以用二进制拆分当然也可以直接拆分十进制数，为了方便，还可以用小数划分维度，比如将分数放在整数位，标志位和时间戳放在小数位。</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
 </span><span class="lnt">5
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-shell" data-lang="shell">    A 100.1290072179
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell">    A 100.1290072179
     B 200.0290072179
     C 200.1290072179
     D 400.0290072179
@@ -3559,22 +3559,22 @@ session1: <span class="m">500</span>
 <p>靠一行命令就可以安装：</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-sh" data-lang="sh">    /usr/bin/ruby -e <span class="s2">&#34;</span><span class="k">$(</span>curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install<span class="k">)</span><span class="s2">&#34;</span>
+<pre tabindex="0" class="chroma"><code class="language-sh" data-lang="sh">    /usr/bin/ruby -e <span class="s2">&#34;</span><span class="k">$(</span>curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install<span class="k">)</span><span class="s2">&#34;</span>
 </code></pre></td></tr></table>
 </div>
 </div><p>安装好后就可以靠命令来快速安装软件了</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-sh" data-lang="sh">    <span class="c1"># 安装不带界面的命令行下的工具或三方库</span>
+<pre tabindex="0" class="chroma"><code class="language-sh" data-lang="sh">    <span class="c1"># 安装不带界面的命令行下的工具或三方库</span>
     brew install wget
     <span class="c1"># 安装带界面的应用程序</span>
     brew cask install firefox
@@ -3586,25 +3586,25 @@ session1: <span class="m">500</span>
 </blockquote>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-sh" data-lang="sh">    brew install mas
+<pre tabindex="0" class="chroma"><code class="language-sh" data-lang="sh">    brew install mas
 </code></pre></td></tr></table>
 </div>
 </div><p>之后我们就可以执行命令将安装过的软件列表导出了</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-sh" data-lang="sh">    brew bundle dump --force --describe
+<pre tabindex="0" class="chroma"><code class="language-sh" data-lang="sh">    brew bundle dump --force --describe
 </code></pre></td></tr></table>
 </div>
 </div><p>执行上面命令后会导出个 Brewfile 文件，里面大概长这样</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -3615,7 +3615,7 @@ session1: <span class="m">500</span>
 </span><span class="lnt">9
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-sh" data-lang="sh">    tap <span class="s2">&#34;homebrew/bundle&#34;</span>
+<pre tabindex="0" class="chroma"><code class="language-sh" data-lang="sh">    tap <span class="s2">&#34;homebrew/bundle&#34;</span>
     tap <span class="s2">&#34;homebrew/cask&#34;</span>
     tap <span class="s2">&#34;homebrew/core&#34;</span>
     
@@ -3644,7 +3644,7 @@ session1: <span class="m">500</span>
 <p><img src="/img/automator_brewfile/automator3.png" alt=""></p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -3655,7 +3655,7 @@ session1: <span class="m">500</span>
 </span><span class="lnt">9
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-sh" data-lang="sh">    <span class="nb">cd</span> ~/workspace/github-self/mac-init
+<pre tabindex="0" class="chroma"><code class="language-sh" data-lang="sh">    <span class="nb">cd</span> ~/workspace/github-self/mac-init
     <span class="c1"># 导出 Brewfile，注意 brew 命令要写全路径</span>
     /usr/local/bin/brew bundle dump --force --describe
     
@@ -3693,7 +3693,7 @@ session1: <span class="m">500</span>
 </ul>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -3710,7 +3710,7 @@ session1: <span class="m">500</span>
 </span><span class="lnt">15
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-sh" data-lang="sh"><span class="c1"># 需要 CAS 打开允许 iframe, 否则报错: Refused to display &#39;URL&#39; in a frame because it set &#39;X-Frame-Options&#39; to &#39;DENY&#39;</span>
+<pre tabindex="0" class="chroma"><code class="language-sh" data-lang="sh"><span class="c1"># 需要 CAS 打开允许 iframe, 否则报错: Refused to display &#39;URL&#39; in a frame because it set &#39;X-Frame-Options&#39; to &#39;DENY&#39;</span>
 <span class="c1"># cas 配置：cas.httpWebRequest.header.xframe=false</span>
 &lt;script <span class="nv">type</span><span class="o">=</span><span class="s2">&#34;text/javascript&#34;</span>&gt;
 <span class="o">(</span><span class="k">function</span> <span class="o">()</span> <span class="o">{</span>
@@ -3733,14 +3733,14 @@ session1: <span class="m">500</span>
 <h2 id="在cas文件夹中创建-casclientconfigphp">在<code>CAS</code>文件夹中创建 <code>CasClientConfig.php</code></h2>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
 </span><span class="lnt">5
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-php" data-lang="php"><span class="o">&lt;?</span><span class="nx">php</span>
+<pre tabindex="0" class="chroma"><code class="language-php" data-lang="php"><span class="o">&lt;?</span><span class="nx">php</span>
 <span class="nx">define</span> <span class="p">(</span> <span class="s1">&#39;CAS_SERVER_HOSTNAME&#39;</span><span class="p">,</span> <span class="s1">&#39;cas.com&#39;</span> <span class="p">);</span>
 <span class="nx">define</span> <span class="p">(</span> <span class="s1">&#39;CAS_SERVER_PORT&#39;</span><span class="p">,</span> <span class="mi">8080</span> <span class="p">);</span> 
 <span class="nx">define</span> <span class="p">(</span> <span class="s1">&#39;CAS_SERVER_APP_NAME&#39;</span><span class="p">,</span> <span class="s2">&#34;cas&#34;</span> <span class="p">);</span> 
@@ -3750,7 +3750,7 @@ session1: <span class="m">500</span>
 </div><h2 id="在cas文件夹中创建-casclientphp">在<code>CAS</code>文件夹中创建 <code>CasClient.php</code></h2>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -3769,7 +3769,7 @@ session1: <span class="m">500</span>
 </span><span class="lnt">17
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-php" data-lang="php"><span class="o">&lt;?</span><span class="nx">php</span>
+<pre tabindex="0" class="chroma"><code class="language-php" data-lang="php"><span class="o">&lt;?</span><span class="nx">php</span>
 <span class="k">require_once</span> <span class="nx">DISCUZ_ROOT</span><span class="o">.</span><span class="s1">&#39;./CAS/CasClientConfig.php&#39;</span><span class="p">;</span> <span class="c1">// 注意
 </span><span class="c1"></span><span class="k">require_once</span> <span class="nx">DISCUZ_ROOT</span><span class="o">.</span><span class="s1">&#39;./CAS/CAS.php&#39;</span><span class="p">;</span> <span class="c1">// 注意
 </span><span class="c1"></span>                                                  
@@ -3791,24 +3791,24 @@ session1: <span class="m">500</span>
 </div><h2 id="sourceclassclass_corephp第16行加入">source/class/class_core.php第16行加入</h2>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-php" data-lang="php"><span class="k">require_once</span> <span class="nx">DISCUZ_ROOT</span><span class="o">.</span><span class="s2">&#34;CAS/CasClient.php&#34;</span><span class="p">;</span>
+<pre tabindex="0" class="chroma"><code class="language-php" data-lang="php"><span class="k">require_once</span> <span class="nx">DISCUZ_ROOT</span><span class="o">.</span><span class="s2">&#34;CAS/CasClient.php&#34;</span><span class="p">;</span>
 </code></pre></td></tr></table>
 </div>
 </div><h2 id="uc_clientcontroluserphp">uc_client/control/user.php</h2>
 <p>134行注释</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
 </span><span class="lnt">5
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-php" data-lang="php"><span class="c1">// elseif($user[&#39;password&#39;] != md5($passwordmd5.$user[&#39;salt&#39;])) {
+<pre tabindex="0" class="chroma"><code class="language-php" data-lang="php"><span class="c1">// elseif($user[&#39;password&#39;] != md5($passwordmd5.$user[&#39;salt&#39;])) {
 </span><span class="c1">// $status = -2;
 </span><span class="c1">// } elseif($checkques &amp;&amp; $user[&#39;secques&#39;] != $_ENV[&#39;user&#39;]-&gt;quescrypt($questionid, $answer)) {
 </span><span class="c1">// $status = -3;
@@ -3819,7 +3819,7 @@ session1: <span class="m">500</span>
 <h2 id="sourcefunctionfunction_memberphp-加入">source/function/function_member.php 加入</h2>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -3858,7 +3858,7 @@ session1: <span class="m">500</span>
 </span><span class="lnt">37
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-php" data-lang="php"><span class="c1">// 新加的方法，用以支持CAS 登录
+<pre tabindex="0" class="chroma"><code class="language-php" data-lang="php"><span class="c1">// 新加的方法，用以支持CAS 登录
 </span><span class="c1"></span><span class="k">function</span> <span class="nf">userloginCas</span><span class="p">(</span><span class="nv">$username</span><span class="p">,</span> <span class="nv">$ip</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">)</span> <span class="p">{</span>
     <span class="nv">$return</span> <span class="o">=</span> <span class="k">array</span> <span class="p">();</span>
     
@@ -3901,18 +3901,18 @@ session1: <span class="m">500</span>
 <p>51行注释并改为</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-php" data-lang="php"><span class="c1">// if(!submitcheck(&#39;loginsubmit&#39;, 1, $seccodestatus)) {
+<pre tabindex="0" class="chroma"><code class="language-php" data-lang="php"><span class="c1">// if(!submitcheck(&#39;loginsubmit&#39;, 1, $seccodestatus)) {
 </span><span class="c1"></span><span class="k">if</span> <span class="p">(</span><span class="mi">1</span> <span class="o">==</span> <span class="mi">2</span><span class="p">)</span> <span class="p">{</span>
 </code></pre></td></tr></table>
 </div>
 </div><p>92行 <code>$_G['username'] = $_G['member']['username'] = $_G['member']['password'] = ''</code> 后加入</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -3931,7 +3931,7 @@ session1: <span class="m">500</span>
 </span><span class="lnt">17
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-php" data-lang="php"><span class="nx">phpCAS</span><span class="o">::</span><span class="na">setNoClearTicketsFromUrl</span> <span class="p">();</span>
+<pre tabindex="0" class="chroma"><code class="language-php" data-lang="php"><span class="nx">phpCAS</span><span class="o">::</span><span class="na">setNoClearTicketsFromUrl</span> <span class="p">();</span>
 <span class="c1">// 这里会检测服务器端的退出的通知，就能实现php和其他语言平台间同步登出了  
 </span><span class="c1"></span><span class="nx">phpCAS</span><span class="o">::</span><span class="na">handleLogoutRequests</span><span class="p">();</span>  
 <span class="nv">$username</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">;</span>
@@ -3953,7 +3953,7 @@ session1: <span class="m">500</span>
 </div><p>347行 <code>on_logout</code> 方法</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -3962,7 +3962,7 @@ session1: <span class="m">500</span>
 </span><span class="lnt">7
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-php" data-lang="php"><span class="k">if</span><span class="p">(</span><span class="nx">defined</span><span class="p">(</span><span class="s1">&#39;IN_MOBILE&#39;</span><span class="p">))</span> <span class="p">{</span>
+<pre tabindex="0" class="chroma"><code class="language-php" data-lang="php"><span class="k">if</span><span class="p">(</span><span class="nx">defined</span><span class="p">(</span><span class="s1">&#39;IN_MOBILE&#39;</span><span class="p">))</span> <span class="p">{</span>
     <span class="nx">showmessage</span><span class="p">(</span><span class="s1">&#39;location_logout_succeed_mobile&#39;</span><span class="p">,</span> <span class="nx">dreferer</span><span class="p">(),</span> <span class="k">array</span><span class="p">(</span><span class="s1">&#39;formhash&#39;</span> <span class="o">=&gt;</span> <span class="nx">FORMHASH</span><span class="p">,</span> <span class="s1">&#39;referer&#39;</span> <span class="o">=&gt;</span> <span class="nx">rawurlencode</span><span class="p">(</span><span class="nx">dreferer</span><span class="p">())));</span>
 <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
     <span class="nv">$service</span> <span class="o">=</span>  <span class="nv">$_SERVER</span><span class="p">[</span><span class="s1">&#39;HTTP_REFERER&#39;</span><span class="p">];</span>
@@ -3974,14 +3974,14 @@ session1: <span class="m">500</span>
 </div><p>386行 <code>on_register</code>方法中</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
 </span><span class="lnt">5
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-php" data-lang="php"><span class="k">if</span><span class="p">(</span><span class="nx">strpos</span><span class="p">(</span><span class="nv">$url_forward</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">setting</span><span class="p">[</span><span class="s1">&#39;regname&#39;</span><span class="p">])</span> <span class="o">!==</span> <span class="k">false</span><span class="p">)</span> <span class="p">{</span>
+<pre tabindex="0" class="chroma"><code class="language-php" data-lang="php"><span class="k">if</span><span class="p">(</span><span class="nx">strpos</span><span class="p">(</span><span class="nv">$url_forward</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">setting</span><span class="p">[</span><span class="s1">&#39;regname&#39;</span><span class="p">])</span> <span class="o">!==</span> <span class="k">false</span><span class="p">)</span> <span class="p">{</span>
     <span class="nv">$url_forward</span> <span class="o">=</span> <span class="s1">&#39;forum.php&#39;</span><span class="p">;</span>
 <span class="p">}</span>
 <span class="c1">// 修改掉防止当登录成功时无限跳转
@@ -3991,7 +3991,7 @@ session1: <span class="m">500</span>
 </div><p><code>logging_ctl</code>类中 添加异步登录验证方法</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -4034,7 +4034,7 @@ session1: <span class="m">500</span>
 </span><span class="lnt">41
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-php" data-lang="php"><span class="k">function</span> <span class="nf">on_loginCheck</span><span class="p">(){</span>
+<pre tabindex="0" class="chroma"><code class="language-php" data-lang="php"><span class="k">function</span> <span class="nf">on_loginCheck</span><span class="p">(){</span>
     <span class="k">global</span> <span class="nv">$_G</span><span class="p">;</span>
     <span class="nv">$username</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">;</span>
     <span class="k">if</span><span class="p">(</span><span class="nx">phpCAS</span><span class="o">::</span><span class="na">isAuthenticated</span><span class="p">()){</span>
@@ -4103,7 +4103,7 @@ session1: <span class="m">500</span>
 <p>github: <a href="https://github.com/jni4net/jni4net">https://github.com/jni4net/jni4net</a></p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -4125,7 +4125,7 @@ session1: <span class="m">500</span>
 </span><span class="lnt">20
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-java" data-lang="java"><span class="kn">import</span> <span class="nn">java.io.File</span><span class="o">;</span>
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kn">import</span> <span class="nn">java.io.File</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">java.io.IOException</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">testlib.Test</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">net.sf.jni4net.Bridge</span><span class="o">;</span>
@@ -4157,7 +4157,7 @@ session1: <span class="m">500</span>
 <p>按年收费</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -4165,7 +4165,7 @@ session1: <span class="m">500</span>
 </span><span class="lnt">6
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kt">void</span> <span class="nf">GenerateRandomNumber</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">JavonetException</span> <span class="o">{</span>
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kt">void</span> <span class="nf">GenerateRandomNumber</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">JavonetException</span> <span class="o">{</span>
     <span class="n">NObject</span> <span class="n">objRandom</span> <span class="o">=</span> <span class="n">Javonet</span><span class="o">.</span><span class="na">New</span><span class="o">(</span><span class="s">&#34;System.Random&#34;</span><span class="o">);</span>
     <span class="kt">int</span> <span class="n">value</span> <span class="o">=</span> <span class="n">objRandom</span><span class="o">.</span><span class="na">invoke</span><span class="o">(</span><span class="s">&#34;Next&#34;</span><span class="o">,</span><span class="n">10</span><span class="o">,</span><span class="n">20</span><span class="o">);</span>
 
@@ -4206,7 +4206,7 @@ session1: <span class="m">500</span>
 <p><code>AopService.java</code></p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -4223,7 +4223,7 @@ session1: <span class="m">500</span>
 </span><span class="lnt">15
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-java" data-lang="java"><span class="kn">package</span> <span class="nn">com.spring.aop</span><span class="o">;</span>
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kn">package</span> <span class="nn">com.spring.aop</span><span class="o">;</span>
 
 <span class="kn">import</span> <span class="nn">org.springframework.stereotype.Component</span><span class="o">;</span>
 
@@ -4243,7 +4243,7 @@ session1: <span class="m">500</span>
 </div><p><code>TestAspect.java</code></p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -4263,7 +4263,7 @@ session1: <span class="m">500</span>
 </span><span class="lnt">18
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-java" data-lang="java"><span class="kn">package</span> <span class="nn">com.spring.aop</span><span class="o">;</span>
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kn">package</span> <span class="nn">com.spring.aop</span><span class="o">;</span>
 
 <span class="kn">import</span> <span class="nn">org.aspectj.lang.ProceedingJoinPoint</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">org.aspectj.lang.annotation.Aspect</span><span class="o">;</span>
@@ -4286,7 +4286,7 @@ session1: <span class="m">500</span>
 </div><p><code>spring-config.xml</code></p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -4303,7 +4303,7 @@ session1: <span class="m">500</span>
 </span><span class="lnt">15
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-xml" data-lang="xml">
+<pre tabindex="0" class="chroma"><code class="language-xml" data-lang="xml">
 <span class="cp">&lt;?xml version=&#34;1.0&#34; encoding=&#34;UTF-8&#34;?&gt;</span>
 <span class="nt">&lt;beans</span> <span class="na">xmlns=</span><span class="s">&#34;http://www.springframework.org/schema/beans&#34;</span>
        <span class="na">xmlns:xsi=</span><span class="s">&#34;http://www.w3.org/2001/XMLSchema-instance&#34;</span>
@@ -4323,7 +4323,7 @@ session1: <span class="m">500</span>
 </div><p><code>SpringStart.java</code></p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -4338,7 +4338,7 @@ session1: <span class="m">500</span>
 </span><span class="lnt">13
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-java" data-lang="java"><span class="kn">package</span> <span class="nn">com.spring</span><span class="o">;</span>
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kn">package</span> <span class="nn">com.spring</span><span class="o">;</span>
 
 <span class="kn">import</span> <span class="nn">com.spring.aop.AopService</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">org.springframework.context.support.ClassPathXmlApplicationContext</span><span class="o">;</span>
@@ -4354,7 +4354,7 @@ session1: <span class="m">500</span>
 </code></pre></td></tr></table>
 </div>
 </div><p>我们创建了一个包含简单的只会打印一些输出来说明被调用过的方法和简单的 aspect 注入这个类中所有 public 方法并且打印信息来说明注入被执行了的 service 类。如果我们执行 <code>SpringStart</code> 类，我们会看到期望的输出 - 方法都被注入成功。</p>
-<pre><code>TestAspect.advice()
+<pre tabindex="0"><code>TestAspect.advice()
 AopService.service()
 TestAspect.advice()
 AopService.anotherService()
@@ -4362,7 +4362,7 @@ AopService.anotherService()
 <p><code>AopService.java</code></p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -4380,7 +4380,7 @@ AopService.anotherService()
 </span><span class="lnt">16
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-java" data-lang="java"><span class="kn">package</span> <span class="nn">com.spring.aop</span><span class="o">;</span>
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kn">package</span> <span class="nn">com.spring.aop</span><span class="o">;</span>
 
 <span class="kn">import</span> <span class="nn">org.springframework.stereotype.Component</span><span class="o">;</span>
 
@@ -4399,7 +4399,7 @@ AopService.anotherService()
 </code></pre></td></tr></table>
 </div>
 </div><p>我们期望 aspect 执行 3次 - <code>service()</code> 和 <code>anotherService()</code> 在 <code>SpringStart.main()</code> 中调用，<code>service()</code> 在 <code>AopService.anotherService()</code> 中调用。然而，如果我们运行这个例子我们发现 aspect 只执行了两次（从 <code>SpringStart.main()</code> 开始执行）i.e. <code>AopService.anotherService()</code> 中调用的 <code>service()</code> 没有被注入。</p>
-<pre><code>TestAspect.advice()
+<pre tabindex="0"><code>TestAspect.advice()
 AopService.service()
 TestAspect.advice()
 AopService.anotherService(). Calling AopService.service()...
@@ -4408,7 +4408,7 @@ AopService.service()
 <p>通常的解释是 spring AOP 是基于代理(proxy-based)的，i.e. 他假定当 bean 作为依赖被使用，他的方法应该用 aspect 代理包裹(be advised by particular aspect(s) the container injects aspect-aware bean proxy)而不是 bean 本身。例如，返回的代理使用和和下面代码近似的方法:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -4426,7 +4426,7 @@ AopService.service()
 </span><span class="lnt">16
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">AopServiceProxy</span> <span class="o">{</span>
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">AopServiceProxy</span> <span class="o">{</span>
 
     <span class="c1">// Assuming that corresponding setters are introduced and the fields are defined.
 </span><span class="c1"></span>    <span class="kd">private</span> <span class="n">TestAspect</span> <span class="n">aspect</span><span class="o">;</span>
@@ -4467,7 +4467,7 @@ AopService.service()
 <h2 id="掉落列模型">掉落列模型</h2>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -4504,7 +4504,7 @@ AopService.service()
 </span><span class="lnt">35
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-css" data-lang="css"><span class="o">&lt;</span><span class="nt">div</span> <span class="nt">class</span><span class="o">=</span><span class="s2">&#34;container&#34;</span><span class="o">&gt;</span>
+<pre tabindex="0" class="chroma"><code class="language-css" data-lang="css"><span class="o">&lt;</span><span class="nt">div</span> <span class="nt">class</span><span class="o">=</span><span class="s2">&#34;container&#34;</span><span class="o">&gt;</span>
   <span class="o">&lt;</span><span class="nt">div</span> <span class="nt">class</span><span class="o">=</span><span class="s2">&#34;box dark_blue&#34;</span><span class="o">&gt;&lt;/</span><span class="nt">div</span><span class="o">&gt;</span>
   <span class="o">&lt;</span><span class="nt">div</span> <span class="nt">class</span><span class="o">=</span><span class="s2">&#34;box light_blue&#34;</span><span class="o">&gt;&lt;/</span><span class="nt">div</span><span class="o">&gt;</span>
   <span class="o">&lt;</span><span class="nt">div</span> <span class="nt">class</span><span class="o">=</span><span class="s2">&#34;box green&#34;</span><span class="o">&gt;&lt;/</span><span class="nt">div</span><span class="o">&gt;</span>
@@ -4544,7 +4544,7 @@ AopService.service()
 </div><h2 id="大体流动模型">大体流动模型</h2>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -4590,7 +4590,7 @@ AopService.service()
 </span><span class="lnt">44
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-css" data-lang="css"><span class="o">&lt;</span><span class="nt">div</span> <span class="nt">class</span><span class="o">=</span><span class="s2">&#34;container&#34;</span><span class="o">&gt;</span>
+<pre tabindex="0" class="chroma"><code class="language-css" data-lang="css"><span class="o">&lt;</span><span class="nt">div</span> <span class="nt">class</span><span class="o">=</span><span class="s2">&#34;container&#34;</span><span class="o">&gt;</span>
   <span class="o">&lt;</span><span class="nt">div</span> <span class="nt">class</span><span class="o">=</span><span class="s2">&#34;box dark_blue&#34;</span><span class="o">&gt;&lt;/</span><span class="nt">div</span><span class="o">&gt;</span>
   <span class="o">&lt;</span><span class="nt">div</span> <span class="nt">class</span><span class="o">=</span><span class="s2">&#34;box light_blue&#34;</span><span class="o">&gt;&lt;/</span><span class="nt">div</span><span class="o">&gt;</span>
   <span class="o">&lt;</span><span class="nt">div</span> <span class="nt">class</span><span class="o">=</span><span class="s2">&#34;box green&#34;</span><span class="o">&gt;&lt;/</span><span class="nt">div</span><span class="o">&gt;</span>
@@ -4639,7 +4639,7 @@ AopService.service()
 </div><h2 id="活动布局模型">活动布局模型</h2>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -4682,7 +4682,7 @@ AopService.service()
 </span><span class="lnt">41
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-css" data-lang="css"><span class="o">&lt;</span><span class="nt">div</span> <span class="nt">class</span><span class="o">=</span><span class="s2">&#34;container&#34;</span><span class="o">&gt;</span>
+<pre tabindex="0" class="chroma"><code class="language-css" data-lang="css"><span class="o">&lt;</span><span class="nt">div</span> <span class="nt">class</span><span class="o">=</span><span class="s2">&#34;container&#34;</span><span class="o">&gt;</span>
   <span class="o">&lt;</span><span class="nt">div</span> <span class="nt">class</span><span class="o">=</span><span class="s2">&#34;box dark_blue&#34;</span><span class="o">&gt;&lt;/</span><span class="nt">div</span><span class="o">&gt;</span>
   <span class="o">&lt;</span><span class="nt">div</span> <span class="nt">class</span><span class="o">=</span><span class="s2">&#34;container&#34;</span> <span class="nt">id</span><span class="o">=</span><span class="s2">&#34;container2&#34;</span><span class="o">&gt;</span>
     <span class="o">&lt;</span><span class="nt">div</span> <span class="nt">class</span><span class="o">=</span><span class="s2">&#34;box light_blue&#34;</span><span class="o">&gt;&lt;/</span><span class="nt">div</span><span class="o">&gt;</span>
@@ -4728,7 +4728,7 @@ AopService.service()
 </div><h2 id="画布溢出模型">画布溢出模型</h2>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">  1
+<pre tabindex="0" class="chroma"><code><span class="lnt">  1
 </span><span class="lnt">  2
 </span><span class="lnt">  3
 </span><span class="lnt">  4
@@ -4846,7 +4846,7 @@ AopService.service()
 </span><span class="lnt">116
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-html" data-lang="html"><span class="cp">&lt;!DOCTYPE html&gt;</span>
+<pre tabindex="0" class="chroma"><code class="language-html" data-lang="html"><span class="cp">&lt;!DOCTYPE html&gt;</span>
 <span class="c">&lt;!-- saved from url=(0070)http://udacity.github.io/RWDF-samples/Lesson4/patterns/off-canvas.html --&gt;</span>
 <span class="p">&lt;</span><span class="nt">html</span> <span class="na">lang</span><span class="o">=</span><span class="s">&#34;en&#34;</span><span class="p">&gt;&lt;</span><span class="nt">head</span><span class="p">&gt;&lt;</span><span class="nt">meta</span> <span class="na">http-equiv</span><span class="o">=</span><span class="s">&#34;Content-Type&#34;</span> <span class="na">content</span><span class="o">=</span><span class="s">&#34;text/html; charset=UTF-8&#34;</span><span class="p">&gt;</span>
 
@@ -4966,7 +4966,7 @@ AopService.service()
 </div>
 </div><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -5016,7 +5016,7 @@ AopService.service()
 </span><span class="lnt">48
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-css" data-lang="css"><span class="p">@</span><span class="k">import</span> <span class="nt">url</span><span class="o">(</span><span class="nt">https</span><span class="o">://</span><span class="nt">fonts</span><span class="p">.</span><span class="nc">googleapis</span><span class="p">.</span><span class="nc">com</span><span class="o">/</span><span class="nt">css</span><span class="o">?</span><span class="nt">family</span><span class="o">=</span><span class="nt">Roboto</span><span class="o">)</span><span class="p">;</span>
+<pre tabindex="0" class="chroma"><code class="language-css" data-lang="css"><span class="p">@</span><span class="k">import</span> <span class="nt">url</span><span class="o">(</span><span class="nt">https</span><span class="o">://</span><span class="nt">fonts</span><span class="p">.</span><span class="nc">googleapis</span><span class="p">.</span><span class="nc">com</span><span class="o">/</span><span class="nt">css</span><span class="o">?</span><span class="nt">family</span><span class="o">=</span><span class="nt">Roboto</span><span class="o">)</span><span class="p">;</span>
 
 <span class="nt">html</span><span class="o">,</span> <span class="nt">body</span> <span class="p">{</span>
   <span class="k">margin</span><span class="p">:</span> <span class="mi">0</span><span class="p">;</span>
@@ -5116,7 +5116,7 @@ AopService.service()
 <h2 id="安装过程">安装过程</h2>
 <p>将项目 clone 下来，解压放入 github-pages 项目路径。</p>
 <p>用以下代码替换 Gemfile 里的内容：</p>
-<pre><code>source &quot;https://rubygems.org&quot;
+<pre tabindex="0"><code>source &quot;https://rubygems.org&quot;
 
 gem &quot;github-pages&quot;, group: :jekyll_plugins
 
@@ -5145,7 +5145,7 @@ end
 <h2 id="碰到的坑安装的时候会碰到以下错误">碰到的坑，安装的时候会碰到以下错误</h2>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">  1
+<pre tabindex="0" class="chroma"><code><span class="lnt">  1
 </span><span class="lnt">  2
 </span><span class="lnt">  3
 </span><span class="lnt">  4
@@ -5262,7 +5262,7 @@ end
 </span><span class="lnt">115
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-bash" data-lang="bash">Gem::Ext::BuildError: ERROR: Failed to build gem native extension.
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash">Gem::Ext::BuildError: ERROR: Failed to build gem native extension.
 
 current directory: /Library/Ruby/Gems/2.0.0/gems/nokogiri-1.6.8.1/ext/nokogiri
 /System/Library/Frameworks/Ruby.framework/Versions/2.0/usr/bin/ruby -r ./siteconf20161208-38005-ye53g2.rb extconf.rb
@@ -5382,12 +5382,12 @@ Provided configuration options:
 </div><p>运行以下命令解决：</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-bash" data-lang="bash">brew uninstall --ignore-dependencies xz
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash">brew uninstall --ignore-dependencies xz
 
 bundle update
 </code></pre></td></tr></table>
@@ -5399,7 +5399,7 @@ bundle update
 <p>通常做法，遍历前先判断：</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -5407,7 +5407,7 @@ bundle update
 </span><span class="lnt">6
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-java" data-lang="java"><span class="k">if</span> <span class="o">(</span><span class="n">list</span> <span class="n">instance</span> <span class="n">of</span> <span class="n">RandomAccess</span><span class="o">)</span> <span class="o">{</span>       
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="k">if</span> <span class="o">(</span><span class="n">list</span> <span class="n">instance</span> <span class="n">of</span> <span class="n">RandomAccess</span><span class="o">)</span> <span class="o">{</span>       
   <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">m</span> <span class="o">=</span> <span class="n">0</span><span class="o">;</span> <span class="n">m</span> <span class="o">&lt;</span> <span class="n">list</span><span class="o">.</span><span class="na">size</span><span class="o">();</span> <span class="n">m</span><span class="o">++){}</span>   
 <span class="o">}</span><span class="k">else</span><span class="o">{</span>       
   <span class="n">Iterator</span> <span class="n">iter</span> <span class="o">=</span> <span class="n">list</span><span class="o">.</span><span class="na">iterator</span><span class="o">();</span>       
@@ -5422,22 +5422,22 @@ bundle update
 <p>公认的是随机和顺序访问的区别通常是模糊的。例如，当一些 <code>List</code> 实现很大时会提供渐进的线性访问时间，但实际是固定的访问时间。这样的 <code>List</code> 实现通常应该实现此接口。通常来说，一个 <code>List</code> 的实现类应该实现这个接口如果</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-java" data-lang="java"><span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="n">0</span><span class="o">,</span> <span class="n">n</span><span class="o">=</span><span class="n">list</span><span class="o">.</span><span class="na">size</span><span class="o">();</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span>
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="n">0</span><span class="o">,</span> <span class="n">n</span><span class="o">=</span><span class="n">list</span><span class="o">.</span><span class="na">size</span><span class="o">();</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span>
         <span class="n">list</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">i</span><span class="o">);</span>
 </code></pre></td></tr></table>
 </div>
 </div><p>比</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-java" data-lang="java"> <span class="k">for</span> <span class="o">(</span><span class="n">Iterator</span> <span class="n">i</span><span class="o">=</span><span class="n">list</span><span class="o">.</span><span class="na">iterator</span><span class="o">();</span> <span class="n">i</span><span class="o">.</span><span class="na">hasNext</span><span class="o">();</span> <span class="o">)</span>
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"> <span class="k">for</span> <span class="o">(</span><span class="n">Iterator</span> <span class="n">i</span><span class="o">=</span><span class="n">list</span><span class="o">.</span><span class="na">iterator</span><span class="o">();</span> <span class="n">i</span><span class="o">.</span><span class="na">hasNext</span><span class="o">();</span> <span class="o">)</span>
           <span class="n">i</span><span class="o">.</span><span class="na">next</span><span class="o">();</span>
 </code></pre></td></tr></table>
 </div>
@@ -5445,7 +5445,7 @@ bundle update
 <p>##验证事例</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">  1
+<pre tabindex="0" class="chroma"><code><span class="lnt">  1
 </span><span class="lnt">  2
 </span><span class="lnt">  3
 </span><span class="lnt">  4
@@ -5556,7 +5556,7 @@ bundle update
 </span><span class="lnt">109
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-java" data-lang="java"><span class="kn">package</span> <span class="nn">com.ld.practice.arraylist</span><span class="o">;</span>
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kn">package</span> <span class="nn">com.ld.practice.arraylist</span><span class="o">;</span>
 
 <span class="kn">import</span> <span class="nn">java.util.ArrayList</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">java.util.Iterator</span><span class="o">;</span>
