@@ -1,4 +1,45 @@
-<?xml version="1.0" encoding="utf-8"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>Voiddd</title><link>https://ld000.space/</link><description>MemE 是一个强大且可高度定制的 GoHugo 博客主题，专为个人博客设计。</description><generator>Hugo 0.101.0 https://gohugo.io/</generator><language>zh-CN</language><managingEditor>voidd247@outlook.com (Voiddd)</managingEditor><webMaster>voidd247@outlook.com (Voiddd)</webMaster><copyright>[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh)</copyright><lastBuildDate>Thu, 30 Jun 2022 09:28:57 +0000</lastBuildDate><atom:link rel="self" type="application/rss+xml" href="https://ld000.space/rss.xml"/><item><title>为 Traefik 添加从 nacos 读取服务地址功能</title><link>https://ld000.space/post/traefik_nacos_naming/</link><guid isPermaLink="true">https://ld000.space/post/traefik_nacos_naming/</guid><pubDate>Sat, 12 Jun 2021 00:00:00 +0000</pubDate><author>voidd247@outlook.com (Voiddd)</author><copyright>[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh)</copyright><description><![CDATA[<h2 id="软件版本">软件版本</h2>
+<?xml version="1.0" encoding="utf-8"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>Voiddd</title><link>https://ld000.space/</link><description>MemE 是一个强大且可高度定制的 GoHugo 博客主题，专为个人博客设计。</description><generator>Hugo 0.101.0 https://gohugo.io/</generator><language>zh-CN</language><managingEditor>voidd247@outlook.com (Voiddd)</managingEditor><webMaster>voidd247@outlook.com (Voiddd)</webMaster><copyright>[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh)</copyright><lastBuildDate>Thu, 30 Jun 2022 09:33:35 +0000</lastBuildDate><atom:link rel="self" type="application/rss+xml" href="https://ld000.space/rss.xml"/><item><title>Spring周报 - 2022.6.28</title><link>https://ld000.space/post/this_week_in_spring_20220628/</link><guid isPermaLink="true">https://ld000.space/post/this_week_in_spring_20220628/</guid><pubDate>Tue, 28 Jun 2022 00:00:00 +0000</pubDate><author>voidd247@outlook.com (Voiddd)</author><copyright>[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh)</copyright><description><![CDATA[<h3 id="engineeringhttpsspringioblogcategoryengineeringjosh-longhttpsspringioteamjoshlongjune-28-20220-commenthttpsspringioblog20220628this-week-in-spring-june-28th-2022disqus_thread"><strong><a href="https://spring.io/blog/category/engineering">ENGINEERING</a></strong>  <strong><a href="https://spring.io/team/joshlong">JOSH LONG</a></strong>  <strong>June 28, 2022</strong> <strong><a href="https://spring.io/blog/2022/06/28/this-week-in-spring-june-28th-2022#disqus_thread">0 COMMENT</a></strong></h3>
+<p>Hi，Spring粉丝们，欢迎来到新一期的Spring周报！我在大苹果(纽约别称)纽约写的这个！我来这里参加 SpringOne Tour 2022 NYC。这是我疫情后第一次回纽约，这真是太有趣了。我见到了很多多年没见的朋友。我甚至碰到了一些我不知道会和我同时在城里的人。纽约就像一块有趣的磁铁，吸引着有趣的人。总之，我们有很多东西要写在这里，所以让我们开始吧。</p>
+<p>Hi, Spring fans! Welcome to another installment of <em>This Week in Spring</em>! I’m writing this from the Big Apple, New York City! I’m here for the SpringOne Tour 2022 NYC event. This is my first time back in New York City since before the pandemic and it has been <em>so</em> much fun. I’ve been catching up with people I’ve not seen in <em>years</em>. I even accidentally bumped into people I had no idea was going to also be in town at the same time as I was. New York City is like a magnet for fun, and for fun people. Anyway, we’ve got a lot of stuff to get to this roundup, so let’s dive right into it.</p>
+<p>同时：如果你正在看这个，今天 - 6月28号 - 申请参加 SpringOne 2022 的最后一天，今年12月在我的家乡加州旧金山举办！</p>
+<p>Also: if you’re just reading this, today - the 28th of June - is the <em>last</em> day to submit to SpringOne 2022, being held in my hometown of San Francisco, California, in December of this year!</p>
+<ul>
+<li>
+<p><a href="https://spring.io/blog/2022/06/23/a-bootiful-podcast-jvm-and-net-legend-ted-neward-on-just-about-everything">A Bootiful Podcast(播客名): JVM 和 .NET 传奇 Ted Neward 做客…</a> 几乎所有事</p>
+</li>
+<li>
+<p><a href="https://feeds.feedblitz.com/~/700501234/0/baeldung~JavaScript-Function-Call-with-Thymeleaf">用 Thymeleaf 调用 JavaScript 方法</a></p>
+</li>
+<li>
+<p><a href="https://spring.io/blog/2022/06/23/spring-boot-2-6-9-available-now">Spring Boot 2.6.9 发布</a></p>
+</li>
+<li>
+<p><a href="https://spring.io/blog/2022/06/23/spring-boot-2-7-1-available-now">Spring Boot 2.7.1 发布</a></p>
+</li>
+<li>
+<p><a href="https://spring.io/blog/2022/06/23/spring-tips-learn-spring-for-graphql-the-last-two-episodes-parts-7-and-8">Spring Tips: 学习 Spring 结合 GraphQL (最后两章: 第 7 章和第 8 章)</a></p>
+</li>
+<li>
+<p><a href="https://feeds.feedblitz.com/~/700699868/0/baeldung~Unique-Field-in-MongoDB-Document-in-Spring-Data">Spring Data 中 MongoDB 文档的唯一字段</a></p>
+</li>
+<li>
+<p><a href="https://github.com/openjdk/jdk/releases/tag/jdk-19%2B27">Java 19 Build 27, 早期版本, 已发布</a></p>
+</li>
+<li>
+<p>关于这一点, Java 20 Build 2 - 是的, Java 20! - <a href="https://github.com/openjdk/jdk/releases/tag/jdk-20%2B2">也已经发布!</a></p>
+</li>
+<li>
+<p>Apache 软件基金会发布了 <a href="https://www.mail-archive.com/announce@apache.org/msg07380.html">Apache Tomcat 8.5.81</a></p>
+</li>
+<li>
+<p>这是一篇关于 <a href="https://dzone.com/articles/spring-ioc-containers-and-static-code-design-princ">Spring 和 <code>static</code> 代码</a>的第一原则(first principles)的有趣文章</p>
+<p>主要讨论了在 IoC 容器里的静态代码和工具类静态代码放在 IoC 容器里的问题</p>
+</li>
+<li>
+<p>我喜欢这篇文章, <em><a href="https://dzone.com/articles/exhaustive-junit5-testing-with-combinations-permut">使用组合、排列和乘积进行详尽的 JUnit 5 测试</a></em></p>
+</li>
+</ul>
+]]></description></item><item><title>为 Traefik 添加从 nacos 读取服务地址功能</title><link>https://ld000.space/post/traefik_nacos_naming/</link><guid isPermaLink="true">https://ld000.space/post/traefik_nacos_naming/</guid><pubDate>Sat, 12 Jun 2021 00:00:00 +0000</pubDate><author>voidd247@outlook.com (Voiddd)</author><copyright>[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh)</copyright><description><![CDATA[<h2 id="软件版本">软件版本</h2>
 <p>Traefik 版本：2.4.0</p>
 <h2 id="背景">背景</h2>
 <p>Traefik 是一个 go 实现的高性能 API 网关，本身支持多种配置加载方式，包括 file, k8s, consul 等。</p>
