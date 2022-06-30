@@ -1,3 +1,9 @@
+---
+title: Spring周报 - 2022.6.28
+date: 2022-06-28
+tags: []
+---
+
 ### **[ENGINEERING](https://spring.io/blog/category/engineering)**  **[JOSH LONG](https://spring.io/team/joshlong)**  **June 28, 2022** **[0 COMMENT](https://spring.io/blog/2022/06/28/this-week-in-spring-june-28th-2022#disqus_thread)**
 
 Hi，Spring粉丝们，欢迎来到新一期的Spring周报！我在大苹果(纽约别称)纽约写的这个！我来这里参加 SpringOne Tour 2022 NYC。这是我疫情后第一次回纽约，这真是太有趣了。我见到了很多多年没见的朋友。我甚至碰到了一些我不知道会和我同时在城里的人。纽约就像一块有趣的磁铁，吸引着有趣的人。总之，我们有很多东西要写在这里，所以让我们开始吧。
