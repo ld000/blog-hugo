@@ -1,4 +1,38 @@
-<?xml version="1.0" encoding="utf-8"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>Voiddd</title><link>https://ld000.space/</link><description>MemE 是一个强大且可高度定制的 GoHugo 博客主题，专为个人博客设计。</description><generator>Hugo 0.101.0 https://gohugo.io/</generator><language>zh-CN</language><managingEditor>voidd247@outlook.com (Voiddd)</managingEditor><webMaster>voidd247@outlook.com (Voiddd)</webMaster><copyright>[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh)</copyright><lastBuildDate>Mon, 04 Jul 2022 16:43:23 +0000</lastBuildDate><atom:link rel="self" type="application/rss+xml" href="https://ld000.space/rss.xml"/><item><title>Spring周报 - 2022.6.28</title><link>https://ld000.space/posts/this_week_in_spring_20220628/</link><guid isPermaLink="true">https://ld000.space/posts/this_week_in_spring_20220628/</guid><pubDate>Tue, 28 Jun 2022 00:00:00 +0000</pubDate><author>voidd247@outlook.com (Voiddd)</author><copyright>[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh)</copyright><description>&lt;p>Hi，Spring粉丝们，欢迎来到新一期的Spring周报！我在大苹果(纽约别称)纽约写的这个！我来这里参加 SpringOne Tour 2022 NYC。这是我疫情后第一次回纽约，这真是太有趣了。我见到了很多多年没见的朋友。我甚至碰到了一些我不知道会和我同时在城里的人。纽约就像一块有趣的磁铁，吸引着有趣的人。总之，我们有很多东西要写在这里，所以让我们开始吧。&lt;/p>
+<?xml version="1.0" encoding="utf-8"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>Voiddd</title><link>https://ld000.space/</link><description>MemE 是一个强大且可高度定制的 GoHugo 博客主题，专为个人博客设计。</description><generator>Hugo 0.101.0 https://gohugo.io/</generator><language>zh-CN</language><managingEditor>voidd247@outlook.com (Voiddd)</managingEditor><webMaster>voidd247@outlook.com (Voiddd)</webMaster><copyright>[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh)</copyright><lastBuildDate>Tue, 12 Jul 2022 16:27:05 +0000</lastBuildDate><atom:link rel="self" type="application/rss+xml" href="https://ld000.space/rss.xml"/><item><title>Spring周报 - 2022.7.5</title><link>https://ld000.space/posts/this_week_in_spring_20220705/</link><guid isPermaLink="true">https://ld000.space/posts/this_week_in_spring_20220705/</guid><pubDate>Tue, 05 Jul 2022 00:00:00 +0000</pubDate><author>voidd247@outlook.com (Voiddd)</author><copyright>[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh)</copyright><description>&lt;p>Hi, Spring 粉丝们! 欢迎收看新一期 Spring 周报！这周对我来说很奇怪。今天是星期二！但在美国，我们刚刚庆祝了 7 月 4 日美国独立日，我和许多美国人一样，度过了一个长周末。花了一些时间和家人一起去北部进行了一次小公路旅行，参观了沙斯塔山、火山口湖、拉森国家公园等。这很有趣，而且开了很久车！无论如何，这一切有点模糊，感觉就像一个周末，而今天感觉就像星期一。我才意识到今天是星期二！你知道那是什么意思吗？现在是我们每周进入 Springdom 狂野而美妙的世界的时候了！&lt;/p>
+&lt;p>Hi, Spring fans! Welcome to another installment of &lt;em>This Week in Spring&lt;/em>! This week’s all sorts of weird for me. It’s &lt;em>Tuesday&lt;/em>! But here in the US we just celebrated the 4th of July, and I, like many Americans, took a long weekend. Took some time with the family to do a little road trip up north to visit Mt. Shasta, Crater Lake, Lassen National Park, etc. It was a ton of fun, and a &lt;em>lot&lt;/em> of driving! Anyway, it all kinda blurs together and felt like just one weekend, and today feels like Monday. I only just realized it was Tuesday! And you know what that means? It’s time for our weekly dive into the wild and wonderful world of Springdom!&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>八篇的最后一篇 &lt;a href="https://spring.io/blog/2022/06/23/spring-tips-learn-spring-for-graphql-the-last-two-episodes-parts-7-and-8">用 Spring for GraphQL 构建 GraphQL 应用&lt;/a>! 查看该页面并找到所有八个视频的链接，每个视频都介绍了强大而新颖的 Spring for GraphQL 项目的一个有趣维度。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>（播客）In last week’s installment of &lt;em>A Bootiful Podcast&lt;/em>, I talk to &lt;a href="https://spring.io/blog/2022/06/30/a-bootiful-podcast-spring-developer-advocate-dan-vega">Spring Developer Advocate Dan Vega&lt;/a>&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;a href="https://feeds.feedblitz.com/~/700971812/0/baeldung~Processing-the-Response-Body-in-Spring-Cloud-Gateway">在 Spring Cloud Gateway 中处理 http 返回体&lt;/a>&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;a href="https://spring.io/blog/2022/06/30/spring-cloud-2020-0-6-is-available">Spring Cloud 2020.0.6 发布&lt;/a>&lt;/p>
+&lt;p>bug 修复和依赖升级&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;a href="https://feeds.feedblitz.com/~/701498588/0/baeldung~UUID-as-Entity-ID-in-MongoDB">在 MongoDB 里用 UUID 当实体 ID&lt;/a>&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>我喜欢 Dzone 上的这篇文章: &lt;em>&lt;a href="https://dzone.com/articles/are-all-kubernetes-ingresses-the-same">所有 Kubernetes Ingresses 都一样么?&lt;/a>&lt;/em>&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>想了解更多如何在 Spring Boot 2.x 里构建 GraalVM native images 么? 看看我写的这篇文章 &lt;a href="https://www.infoq.com/articles/native-java-spring-boot/">InfoQ on Spring Native and GraalVM&lt;/a>&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Vaadin 的好人们整理了一个很好的教程，介绍如何使用他们的 &lt;a href="https://www.youtube.com/watch?v=WqTE94FmPu0">Java Web 框架 Hilla&lt;/a> 构建全栈 Spring Boot 应用程序&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Sivalabs 的朋友整理了一个有趣的教程，&lt;a href="https://www.youtube.com/watch?v=pGbBuwzyiV4">介绍如何一起使用 Spring Boot 和 Kubernetes&lt;/a>&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Spring Boot 团队成员 Stéphane Nicoll 最近为 DevFest Lille 做了一个法语演讲，&lt;a href="https://www.youtube.com/watch?v=-PuhIdo09FA">介绍了 Spring AOT&lt;/a>&lt;/p>
+&lt;/li>
+&lt;/ul></description></item><item><title>Spring周报 - 2022.6.28</title><link>https://ld000.space/posts/this_week_in_spring_20220628/</link><guid isPermaLink="true">https://ld000.space/posts/this_week_in_spring_20220628/</guid><pubDate>Tue, 28 Jun 2022 00:00:00 +0000</pubDate><author>voidd247@outlook.com (Voiddd)</author><copyright>[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh)</copyright><description>&lt;p>Hi，Spring粉丝们，欢迎来到新一期的Spring周报！我在大苹果(纽约别称)纽约写的这个！我来这里参加 SpringOne Tour 2022 NYC。这是我疫情后第一次回纽约，这真是太有趣了。我见到了很多多年没见的朋友。我甚至碰到了一些我不知道会和我同时在城里的人。纽约就像一块有趣的磁铁，吸引着有趣的人。总之，我们有很多东西要写在这里，所以让我们开始吧。&lt;/p>
 &lt;p>Hi, Spring fans! Welcome to another installment of &lt;em>This Week in Spring&lt;/em>! I’m writing this from the Big Apple, New York City! I’m here for the SpringOne Tour 2022 NYC event. This is my first time back in New York City since before the pandemic and it has been &lt;em>so&lt;/em> much fun. I’ve been catching up with people I’ve not seen in &lt;em>years&lt;/em>. I even accidentally bumped into people I had no idea was going to also be in town at the same time as I was. New York City is like a magnet for fun, and for fun people. Anyway, we’ve got a lot of stuff to get to this roundup, so let’s dive right into it.&lt;/p>
 &lt;p>同时：如果你正在看这个，今天 - 6月28号 - 申请参加 SpringOne 2022 的最后一天，今年12月在我的家乡加州旧金山举办！&lt;/p>
 &lt;p>Also: if you’re just reading this, today - the 28th of June - is the &lt;em>last&lt;/em> day to submit to SpringOne 2022, being held in my hometown of San Francisco, California, in December of this year!&lt;/p>
