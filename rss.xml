@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>Voiddd</title><link>https://ld000.space/</link><description>MemE 是一个强大且可高度定制的 GoHugo 博客主题，专为个人博客设计。</description><generator>Hugo 0.101.0 https://gohugo.io/</generator><language>zh-CN</language><managingEditor>voidd247@outlook.com (Voiddd)</managingEditor><webMaster>voidd247@outlook.com (Voiddd)</webMaster><copyright>[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh)</copyright><lastBuildDate>Wed, 27 Jul 2022 16:32:52 +0000</lastBuildDate><atom:link rel="self" type="application/rss+xml" href="https://ld000.space/rss.xml"/><item><title>(翻译)Tumblr 如何存储帖子内容</title><link>https://ld000.space/posts/how_post_content_is_stored_on_tumblr/</link><guid isPermaLink="true">https://ld000.space/posts/how_post_content_is_stored_on_tumblr/</guid><pubDate>Wed, 27 Jul 2022 00:00:00 +0000</pubDate><author>voidd247@outlook.com (Voiddd)</author><copyright>[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh)</copyright><description>&lt;blockquote>
+<?xml version="1.0" encoding="utf-8"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>Voiddd</title><link>https://ld000.space/</link><description>MemE 是一个强大且可高度定制的 GoHugo 博客主题，专为个人博客设计。</description><generator>Hugo 0.101.0 https://gohugo.io/</generator><language>zh-CN</language><managingEditor>voidd247@outlook.com (Voiddd)</managingEditor><webMaster>voidd247@outlook.com (Voiddd)</webMaster><copyright>[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh)</copyright><lastBuildDate>Wed, 27 Jul 2022 17:08:24 +0000</lastBuildDate><atom:link rel="self" type="application/rss+xml" href="https://ld000.space/rss.xml"/><item><title>(翻译)Tumblr 如何存储帖子内容</title><link>https://ld000.space/posts/how_post_content_is_stored_on_tumblr/</link><guid isPermaLink="true">https://ld000.space/posts/how_post_content_is_stored_on_tumblr/</guid><pubDate>Wed, 27 Jul 2022 00:00:00 +0000</pubDate><author>voidd247@outlook.com (Voiddd)</author><copyright>[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh)</copyright><description>&lt;blockquote>
 &lt;p>原文：&lt;a href="https://engineering.tumblr.com/post/644763186513444864/how-post-content-is-stored-on-tumblr">https://engineering.tumblr.com/post/644763186513444864/how-post-content-is-stored-on-tumblr&lt;/a>&lt;/p>
 &lt;/blockquote>
 &lt;p>我们目前推出了一个可选测试版的使用 Neue 帖子格式的新帖子编辑器。已经有很长一段时间了 - Neue 帖子格式的工作始于 2015 年，最初的代号为“Poster Child”，它源于我们从以前发布的帖子编辑器上学到的很多东西。多年来，人们在互联网上不同平台上发帖的方式发生了巨大变化。但在 Tumblr 上，我们仍然希望忠于我们的博客根源，同时提供广阔的创意空间，而 Neue 帖子格式让它成为可能。&lt;/p>
@@ -21,7 +21,57 @@
 &lt;p>更复杂的是，大多数（但不是全部）帖子内容字段都利用 HTML 或 PHP 的内置序列化逻辑作为文字数据格式。在 PHP 7 之前，PHP 中的 HTML 解析（Tumblr 在使用的）非常慢，因此随着帖子的转发路径增加或帖子内容复杂性的增加，渲染帖子变得更加困难。 HTML 和 PHP 的序列化逻辑不容易移植到其他语言，如 Go、Scala、Objective-C、Swift 或 Java，这些我们在其他后端服务和移动应用程序中使用这些语言。&lt;/p>
 &lt;p>考虑到这一切，在 2015 年，两个需求融合在一起：需要从数据库一直到应用程序共享更易于理解和可移植的数据格式，以及需要支持更多类型的帖子内容，与帖子类型解耦。 Neue 帖子格式诞生了：一种基于 JSON 的数据模式，用于内容块及其布局。这为我们提供了更快地提供新类型内容的灵活性，而不必担心我们将如何以 HTML 格式存储它，并且使帖子内容格式可以从数据库适应到 Android 应用程序、iOS 应用程序，以及新的基于 React 的 Web 客户端。&lt;/p>
 &lt;p>&lt;img src="https://void.oss-cn-beijing.aliyuncs.com/img/202207280029885.png" alt="https://void.oss-cn-beijing.aliyuncs.com/img/202207280029885.png">&lt;/p>
-&lt;p>回到帖子的标准规范化数据库表模式，我们现在已经通过“帖子内容”列中的灵活 JSON 结构实现了存储的简单性。存储帖子时，我们根本不再需要帖子类型。帖子可以包含任何和所有内容类型，而不是根据帖子类型单独使用无数令人困惑的选项。现在帖子可以同时是视频和照片帖子！当网络上的新编辑器完全发布时，我们终于可以说这种格式是推动 Tumblr 内容引擎的燃料。它将使我们能够更快地构建以前无法构建的块类型和布局，例如投票、博客卡片块和重叠的图像/视频/文本。完全没有限制。&lt;/p></description></item><item><title>Spring周报 - 2022.7.12</title><link>https://ld000.space/posts/this_week_in_spring_20220712/</link><guid isPermaLink="true">https://ld000.space/posts/this_week_in_spring_20220712/</guid><pubDate>Tue, 12 Jul 2022 00:00:00 +0000</pubDate><author>voidd247@outlook.com (Voiddd)</author><copyright>[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh)</copyright><description>&lt;p>Hi，Spring 粉丝们！欢迎收看另一期的 Spring 周报！你好吗？本周，我在阳光明媚的华盛顿州西雅图给您写这个，我们将在那里进行 SpringOne Tour 系列的下一部分。再次看到所有这些有趣和友好的面孔并见到人们真是太有趣了，其中许多人在疫情之前我就再也没有见过！在这里见到一些来自微软和 AWS 等大型云公司的朋友，我也很开心。了解人们如何使用 Spring 的最新和最强大的技术来构建针对这些云平台的惊人系统和软件总是很有趣的。&lt;/p>
+&lt;p>回到帖子的标准规范化数据库表模式，我们现在已经通过“帖子内容”列中的灵活 JSON 结构实现了存储的简单性。存储帖子时，我们根本不再需要帖子类型。帖子可以包含任何和所有内容类型，而不是根据帖子类型单独使用无数令人困惑的选项。现在帖子可以同时是视频和照片帖子！当网络上的新编辑器完全发布时，我们终于可以说这种格式是推动 Tumblr 内容引擎的燃料。它将使我们能够更快地构建以前无法构建的块类型和布局，例如投票、博客卡片块和重叠的图像/视频/文本。完全没有限制。&lt;/p></description></item><item><title>Spring周报 - 2022.7.19</title><link>https://ld000.space/posts/this_week_in_spring_20220719/</link><guid isPermaLink="true">https://ld000.space/posts/this_week_in_spring_20220719/</guid><pubDate>Tue, 19 Jul 2022 00:00:00 +0000</pubDate><author>voidd247@outlook.com (Voiddd)</author><copyright>[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh)</copyright><description>&lt;p>Hi, Spring 粉丝们! 欢迎收看另一期的 Spring 周报! 这周我正试着结束一些事情，然后和我的家人一起去度假。这将是一个了不起的时刻，真的！但这并不能阻止 Springdom 广阔世界中的新奇事物和新闻泛滥，所以本周我们有很多内容要介绍。让我们开始吧！&lt;/p>
+&lt;p>Hi, Spring fans! Welcome to another installment of &lt;em>This Week in Spring&lt;/em>! This week I’m trying to wind down some threads and take some vacation with my family. It’s going to be an amazing time, indeed! But that doesn’t stop the deluge of novelties and news in the wide world of Springdom, so we’ve got a lot to cover this week. Let’s get to it!&lt;/p>
+&lt;p>不过，在开始之前，我有一个新的“Spring 小贴士”剧集将在周三早上午夜播出，所以请注意 :)&lt;/p>
+&lt;p>Before I go, though, I have a &lt;a href="https://twitter.com/SpringTipsLive">new “Spring Tips”&lt;/a> episode &lt;a href="https://bit.ly/spring-tips-playlist">dropping Wednesday&lt;/a> morning, at midnight, so be on the look out :)&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>(播客)&lt;a href="https://spring.io/blog/2022/07/14/a-bootiful-podcast-nate-schutta-the-thinking-person-s-architect-my-friend-and-teammate">A Bootiful Podcast: Nate Schutta: The Thinking Person’s Architect, My Friend, and Teammate&lt;/a>&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;a href="https://kubernetes.io/blog/2022/07/13/gateway-api-graduates-to-beta/">Kubernetes Gateway API 发布 Beta&lt;/a>&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;a href="https://medium.com/geekculture/jwt-authentication-with-oauth2-resource-server-and-an-external-authorization-server-2b8fd1524fc8">使用 OAuth2 资源服务器和外部授权服务器进行 JWT 身份验证&lt;/a>&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;a href="https://proandroiddev.com/kotlin-spring-boot-building-a-rest-api-29598d39a392?gi=4051b9bdb8a6">用 Kotlin 和 Spring Boot 构建 Rest API&lt;/a>&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;a href="https://github.com/toedter/spring-hateoas-jsonapi/releases/tag/v1.5.1">toedter/spring-hateoas-jsonapi v1.5.1 发布&lt;/a>&lt;/p>
+&lt;p>bug 修改和依赖升级&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;a href="https://feeds.feedblitz.com/~/702999536/0/baeldung~Spring-Boot-Keycloak-Integration-Testing-with-Testcontainers">Spring Boot – 使用 Testcontainers 进行 Keycloak 集成测试&lt;/a>&lt;/p>
+&lt;p>testcontainers 能够让你实现通过编程语言去启动Docker容器，并在程序测试结束后，自动关闭容器&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;a href="https://feeds.feedblitz.com/~/702736446/0/baeldung~Spring-Boot-Testing-Redis-With-Testcontainers">Spring Boot – 用 Testcontainers 测试 Redis&lt;/a>&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;a href="https://spring.io/blog/2022/07/15/spring-data-2022-0-0-m5-2021-2-2-and-2021-1-6-released">Spring Data 2022.0.0-M5 2021.2.2 和 2021.1.6 发布&lt;/a>&lt;/p>
+&lt;p>依赖升级&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;a href="https://feeds.feedblitz.com/~/702999532/0/baeldung~Spring-Data-Rest-Serializing-the-Entity-ID">Spring Data Rest – 序列化实体 ID&lt;/a>&lt;/p>
+&lt;p>解释为什么 Spring Data Rest 默认不序列化实体 ID。此外，讨论改变这种行为的各种解决方案。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;a href="https://spring.io/blog/2022/07/14/spring-framework-6-0-0-m5-and-5-3-22-available-now">Spring Framework 6.0.0-M5 和 5.3.22 发布&lt;/a>&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;a href="https://spring.io/blog/2022/07/13/spring-native-0-12-1-available-now">Spring Native 0.12.1 发布&lt;/a>&lt;/p>
+&lt;p>bug 修改和依赖升级&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;a href="https://spring.io/blog/2022/07/18/spring-security-5-8-0-m1-and-6-0-0-m6-are-released">Spring Security 5.8.0-M1 和 6.0.0-M6 发布&lt;/a>&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;a href="https://spring.io/blog/2022/07/17/spring-tips-kubernetes-native-java-redux-2022">Spring Tips: Kubernetes Native Java (Redux, 2022)&lt;/a>&lt;/p>
+&lt;p>Spring Boot 和 Spring Cloud 支持 Kubernetes 的一些 feature&lt;/p>
+&lt;/li>
+&lt;/ul></description></item><item><title>Spring周报 - 2022.7.12</title><link>https://ld000.space/posts/this_week_in_spring_20220712/</link><guid isPermaLink="true">https://ld000.space/posts/this_week_in_spring_20220712/</guid><pubDate>Tue, 12 Jul 2022 00:00:00 +0000</pubDate><author>voidd247@outlook.com (Voiddd)</author><copyright>[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh)</copyright><description>&lt;p>Hi，Spring 粉丝们！欢迎收看另一期的 Spring 周报！你好吗？本周，我在阳光明媚的华盛顿州西雅图给您写这个，我们将在那里进行 SpringOne Tour 系列的下一部分。再次看到所有这些有趣和友好的面孔并见到人们真是太有趣了，其中许多人在疫情之前我就再也没有见过！在这里见到一些来自微软和 AWS 等大型云公司的朋友，我也很开心。了解人们如何使用 Spring 的最新和最强大的技术来构建针对这些云平台的惊人系统和软件总是很有趣的。&lt;/p>
 &lt;p>Hi, Spring fans! Welcome to another installment of &lt;em>This Week in Spring&lt;/em>! How are you? This week I’m writing you from sunny Seattle, Washington, where we’re having our next installment of the SpringOne Tour series. It’s been a ton of fun seeing all these fun and friendly faces again and getting to see people, many of whom I haven’t seen since before the pandemic! I’ve also had a lot of fun seeing some friends from some of the big cloud companies here, Microsoft and AWS. It’s always interesting to learn how people are using the latest and greatest from Spring to build amazing systems and software targeting these cloud platforms.&lt;/p>
 &lt;p>本周我们有很多内容要介绍，所以让我们开始吧！&lt;/p>
 &lt;p>We’ve got a lot to cover this week so let’s dive right into it!&lt;/p>
