@@ -202,28 +202,34 @@ uglyURLs = false
         pre = "internal"
         post = "archive"
     [[menu.main]]
+        pageref = "/springweek/"
+        name = "Spring 周报"
+        weight = 3
+        pre = "internal"
+        post = "archive"
+    [[menu.main]]
         pageref = "/categories/"
         name = "分类"
-        weight = 3
+        weight = 4
         pre = "internal"
         post = "th"
     [[menu.main]]
         pageref = "/tags/"
         name = "标签"
-        weight = 4
+        weight = 5
         pre = "internal"
         post = "tags"
     [[menu.main]]
         pageref = "/about"
         name = "关于"
-        weight = 5
+        weight = 6
         pre = "internal"
         post = "user-circle"
     [[menu.main]]
-        weight = 6
+        weight = 7
         identifier = "theme-switcher"
     [[menu.main]]
-        weight = 7
+        weight = 8
         identifier = "lang-switcher"
     # [[menu.main]]
     #     weight = 8
