@@ -196,14 +196,14 @@ uglyURLs = false
     #     pre = "internal"
     #     post = "home"
     [[menu.main]]
-        pageref = "/posts/"
-        name = "文章"
+        pageref = "/springweek/"
+        name = "Spring 周报"
         weight = 2
         pre = "internal"
         post = "archive"
     [[menu.main]]
-        pageref = "/springweek/"
-        name = "Spring 周报"
+        pageref = "/posts/"
+        name = "文章"
         weight = 3
         pre = "internal"
         post = "archive"
