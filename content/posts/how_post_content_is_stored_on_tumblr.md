@@ -1,5 +1,5 @@
 ---
-title: (翻译)Tumblr 如何存储帖子内容
+title: "[翻译]Tumblr 如何存储帖子内容"
 date: 2022-07-27
 tags: []
 ---

@@ -16,7 +16,7 @@ weight: 50
 
 * [GitHub](https://github.com/ld000)
 * [掘金](https://juejin.im/user/58e1fbfeac502e006c0efc5f/posts)
-<!-- * 公众号
+* 公众号
 
-![](/公众号.jpg) -->
+![](/qrcode.jpg)
 
