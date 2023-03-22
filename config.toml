@@ -714,7 +714,7 @@ uglyURLs = false
 
     # 说明：仅在生产环境（production）下渲染
 
-    googleAdClient = "ca-pub-8955832414783714"
+    googleAdClient = "pub-8955832414783714"
 
     ## 自动广告
     enableGoogleAutoAds = true
