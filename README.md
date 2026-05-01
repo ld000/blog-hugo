@@ -1,14 +1,26 @@
 # Blog Hugo
 
 [![Deploy Status](https://github.com/ld000/blog-hugo/actions/workflows/deploy.yml/badge.svg)](https://github.com/ld000/blog-hugo/actions/workflows/deploy.yml)
+[![Hugo Version](https://img.shields.io/badge/Hugo-0.161.1-blue.svg)](https://gohugo.io)
+[![License](https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh)
 
-个人博客，使用 Hugo 静态站点生成器构建。
+个人博客，使用 Hugo 静态站点生成器构建。访问地址：[https://ld000.space](https://ld000.space)
+
+## ✨ 特性
+
+- 🚀 使用 GitHub Actions 自动部署
+- 🎨 基于 MemE 主题的优雅设计
+- 📱 响应式布局，支持移动端
+- 🌓 深色/浅色模式切换
+- 💬 Gitalk 评论系统
+- 📊 Google Analytics 统计
+- ⚡ 构建优化（minify + gc）
 
 ## 🚀 部署
 
 本项目使用 GitHub Actions 自动部署到 GitHub Pages。
 
-每次推送到 `master` 分支时，会自动触发构建和部署流程。
+每次推送到 `master` 分支时，会自动触发构建和部署流程（约 1-2 分钟完成）。
 
 详细配置步骤请查看 [DEPLOY_GUIDE.md](DEPLOY_GUIDE.md)。
 
