@@ -1,0 +1,23 @@
+disabled = false
+locale = "en"
+label = "English"
+weight = 1
+title = "Voiddd"
+
+[params]
+displayName = "EN"
+isoCode = "en"
+rtl = false
+dateFormat = "2 January 2006"
+
+[[params.author.links]]
+email = "blank247d@outlook.com"
+
+[[params.author.links]]
+github = "https://github.com/ld000"
+
+["params.author"]
+name = "voidd"
+email = "blank247d@outlook.com"
+image = "5A10FCD3-DC69-4973-AC3B-5D29F91D8463.jpeg"
+headline = "May the code be with you."
