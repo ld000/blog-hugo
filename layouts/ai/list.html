@@ -8,10 +8,10 @@
     {{ $latest = index $pages 0 }}
   {{ end }}
 
-  <section class="ai-series-page">
-    <header class="ai-hero" aria-labelledby="ai-series-title">
-      <div class="ai-hero-copy">
-        <p class="ai-kicker">AI Series</p>
+  <section class="ai-series-page ai-index-page">
+    <header class="ai-index-header" aria-labelledby="ai-series-title">
+      <div class="ai-index-copy">
+        <p class="linear-eyebrow">AI Series</p>
         <h1 id="ai-series-title">{{ .Title }}</h1>
         {{ with .Description }}
           <p class="ai-description">{{ . }}</p>
@@ -21,28 +21,20 @@
         {{ end }}
       </div>
 
-      <div class="ai-hero-visual" aria-hidden="true">
-        <div class="ai-signal-row">
-          <span>context</span>
-          <i></i>
-          <span>prompt</span>
+      <dl class="ai-index-stats" aria-label="AI section status">
+        <div>
+          <dt>Status</dt>
+          <dd>{{ cond (gt (len $pages) 0) "active" "empty" }}</dd>
         </div>
-        <div class="ai-signal-row">
-          <span>tool</span>
-          <i></i>
-          <span>review</span>
+        <div>
+          <dt>Notes</dt>
+          <dd>{{ len $pages }}</dd>
         </div>
-        <div class="ai-metrics">
-          <div>
-            <strong>{{ len $pages }}</strong>
-            <span>notes</span>
-          </div>
-          <div>
-            <strong>{{ cond $latest ($latest.Date.Format "2006.01") "soon" }}</strong>
-            <span>latest</span>
-          </div>
+        <div>
+          <dt>Latest</dt>
+          <dd>{{ cond $latest ($latest.Date.Format "2006.01.02") "soon" }}</dd>
         </div>
-      </div>
+      </dl>
     </header>
 
     <div class="ai-stream-head">

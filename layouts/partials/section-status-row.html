@@ -1,0 +1,13 @@
+<a class="section-status-row" href="{{ .href }}">
+  <span class="section-status-label">{{ .label }}</span>
+  <span class="section-status-state">{{ .state }}</span>
+  <span class="section-status-count">{{ .count }} items</span>
+  <span class="section-status-latest">
+    {{ if .latest }}
+      {{ .latest.Date.Format "2006.01.02" }}
+    {{ else }}
+      no entries
+    {{ end }}
+  </span>
+  <span class="section-status-arrow" aria-hidden="true">&#8594;</span>
+</a>
