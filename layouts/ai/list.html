@@ -1,0 +1,87 @@
+{{ define "main" }}
+  {{ .Scratch.Set "scope" "list" }}
+  {{ $pages := where site.RegularPages "Section" "ai" }}
+  {{ $pages = $pages.ByDate.Reverse }}
+  {{ $paginator := .Paginate $pages }}
+  {{ $latest := false }}
+  {{ if gt (len $pages) 0 }}
+    {{ $latest = index $pages 0 }}
+  {{ end }}
+
+  <section class="ai-series-page">
+    <header class="ai-hero" aria-labelledby="ai-series-title">
+      <div class="ai-hero-copy">
+        <p class="ai-kicker">AI Series</p>
+        <h1 id="ai-series-title">{{ .Title }}</h1>
+        {{ with .Description }}
+          <p class="ai-description">{{ . }}</p>
+        {{ end }}
+        {{ with .Content }}
+          <div class="ai-intro">{{ . }}</div>
+        {{ end }}
+      </div>
+
+      <div class="ai-hero-visual" aria-hidden="true">
+        <div class="ai-signal-row">
+          <span>context</span>
+          <i></i>
+          <span>prompt</span>
+        </div>
+        <div class="ai-signal-row">
+          <span>tool</span>
+          <i></i>
+          <span>review</span>
+        </div>
+        <div class="ai-metrics">
+          <div>
+            <strong>{{ len $pages }}</strong>
+            <span>notes</span>
+          </div>
+          <div>
+            <strong>{{ cond $latest ($latest.Date.Format "2006.01") "soon" }}</strong>
+            <span>latest</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="ai-stream-head">
+      <div>
+        <p>Notebook</p>
+        <h2>最新文章</h2>
+      </div>
+      <span>{{ len $pages }} 篇</span>
+    </div>
+
+    {{ if gt (len $pages) 0 }}
+      <section class="ai-entry-list" aria-label="AI articles">
+        {{ range $index, $page := $paginator.Pages }}
+          <article class="ai-entry">
+            <a href="{{ $page.RelPermalink }}" class="ai-entry-link">
+              <span class="ai-entry-number">{{ printf "%02d" (add $index 1) }}</span>
+              <div class="ai-entry-body">
+                <h3>{{ $page.Title | emojify }}</h3>
+                <p class="ai-entry-meta">{{ $page.Date.Format "2006-01-02" }}</p>
+                {{ $summary := $page.Description | default ($page.Summary | plainify) }}
+                {{ with $summary }}
+                  <p class="ai-entry-summary">{{ . | truncate 150 }}</p>
+                {{ end }}
+                {{ with $page.Params.tags }}
+                  <div class="ai-entry-tags">
+                    {{ range first 4 . }}
+                      <span>{{ . }}</span>
+                    {{ end }}
+                  </div>
+                {{ end }}
+              </div>
+            </a>
+          </article>
+        {{ end }}
+      </section>
+    {{ else }}
+      <p class="ai-empty">这里很快会有第一篇 AI 笔记。</p>
+    {{ end }}
+
+    {{ partial "pagination.html" . }}
+  </section>
+{{ end }}

@@ -7,5 +7,12 @@ pageRef = "posts"
 identifier = "n1FZn6EJoH"
 weight = 1
 
+[[main]]
+name = "AI"
+pageRef = "ai"
+identifier = "ai-series"
+pre = "wand-magic-sparkles"
+weight = 2
+
 [[footer]]
 none = "none"
