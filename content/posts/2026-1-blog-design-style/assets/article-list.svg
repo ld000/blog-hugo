@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="860" viewBox="0 0 1440 860" role="img" aria-labelledby="title desc">
+  <title id="title">文章列表用细线而不是卡片组织</title>
+  <desc id="desc">展示文章列表像任务列表一样，用标题、摘要、日期和箭头组成一行，以底部分割线区分条目。</desc>
+  <defs><style>
+    .bg{fill:#0f0f0f}.line{stroke:#303030;stroke-width:1}.strong{stroke:#444;stroke-width:1.2}.title{fill:#fff;font:650 42px "Instrument Sans","Inter","PingFang SC",sans-serif}.h{fill:#fff;font:650 25px "Instrument Sans","Inter","PingFang SC",sans-serif}.body{fill:#cfcfcf;font:400 21px "Instrument Sans","Inter","PingFang SC",sans-serif}.muted{fill:#9b9b9b;font:400 20px "Instrument Sans","Inter","PingFang SC",sans-serif}.sub{fill:#9b9b9b;font:400 18px "Instrument Sans","Inter","PingFang SC",sans-serif}.mono{fill:#b8b8b8;font:500 18px "JetBrains Mono","SFMono-Regular",monospace}
+  </style></defs>
+  <rect class="bg" width="1440" height="860"/>
+  <path class="line" d="M120 120h1200M120 728h1200"/>
+  <text class="muted" x="120" y="84">Article list</text>
+  <text class="title" x="120" y="146">列表更像 issue list，而不是卡片墙</text>
+  <text class="body" x="120" y="188">标题和摘要是主信息，日期和箭头只辅助扫描。</text>
+  <g transform="translate(180 290)">
+    <path class="strong" d="M0 0h1080"/>
+    <g>
+      <text class="h" x="0" y="58">LangChain, LangGraph, LangSmith 是什么</text>
+      <text class="sub" x="0" y="96">梳理三个工具分别解决什么问题，以及什么时候真的需要这套栈</text>
+      <text class="mono" x="885" y="70">[2026.05.09]</text><text class="mono" x="1035" y="70">→</text>
+      <path class="line" d="M0 130h1080"/>
+    </g>
+    <g transform="translate(0 145)">
+      <text class="h" x="0" y="58">这个网站的设计风格</text>
+      <text class="sub" x="0" y="96">记录当前博客从传统文章流改成内容索引界面的取舍</text>
+      <text class="mono" x="885" y="70">[2026.05.09]</text><text class="mono" x="1035" y="70">→</text>
+      <path class="line" d="M0 130h1080"/>
+    </g>
+    <g transform="translate(0 290)">
+      <text class="h" x="0" y="58">AI 工具链的第一原则：把上下文当成产品</text>
+      <text class="sub" x="0" y="96">讨论 AI 协作中上下文质量的重要性</text>
+      <text class="mono" x="885" y="70">[2026.05.09]</text><text class="mono" x="1035" y="70">→</text>
+      <path class="line" d="M0 130h1080"/>
+    </g>
+  </g>
+</svg>

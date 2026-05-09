@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="860" viewBox="0 0 1440 860" role="img" aria-labelledby="title desc">
+  <title id="title">设计中刻意避免的视觉方向</title>
+  <desc id="desc">列出当前网站避免的大面积渐变、厚重卡片、封面墙、拥挤 footer、过度发光等设计方向。</desc>
+  <defs><style>
+    .bg{fill:#0f0f0f}.line{stroke:#303030;stroke-width:1}.card{fill:#151515;stroke:#343434;stroke-width:1.3}.bad{fill:#211719;stroke:#5c2f37;stroke-width:1.2}.title{fill:#fff;font:650 42px "Instrument Sans","Inter","PingFang SC",sans-serif}.h{fill:#fff;font:650 24px "Instrument Sans","Inter","PingFang SC",sans-serif}.body{fill:#cfcfcf;font:400 20px "Instrument Sans","Inter","PingFang SC",sans-serif}.muted{fill:#9b9b9b;font:400 20px "Instrument Sans","Inter","PingFang SC",sans-serif}.mono{fill:#b8b8b8;font:500 18px "JetBrains Mono","SFMono-Regular",monospace}
+  </style></defs>
+  <rect class="bg" width="1440" height="860"/>
+  <path class="line" d="M120 120h1200M120 724h1200"/>
+  <text class="muted" x="120" y="84">Avoid list</text>
+  <text class="title" x="120" y="146">有些东西是主动不加的</text>
+  <text class="body" x="120" y="188">不是因为做不了，而是它们会把站点带到别的方向。</text>
+  <g transform="translate(160 285)">
+    <rect class="bad" width="320" height="110" rx="8"/><text class="h" x="32" y="48">大面积渐变</text><text class="body" x="32" y="80">容易变成 landing page</text>
+    <rect class="bad" x="400" width="320" height="110" rx="8"/><text class="h" x="432" y="48">厚重卡片墙</text><text class="body" x="432" y="80">会切碎文章列表</text>
+    <rect class="bad" x="800" width="320" height="110" rx="8"/><text class="h" x="832" y="48">每篇文章封面</text><text class="body" x="832" y="80">对技术列表帮助不大</text>
+    <rect class="bad" y="160" width="320" height="110" rx="8"/><text class="h" x="32" y="208">拥挤 footer</text><text class="body" x="32" y="240">底部不再重复导航</text>
+    <rect class="bad" x="400" y="160" width="320" height="110" rx="8"/><text class="h" x="432" y="208">过度发光</text><text class="body" x="432" y="240">深色页很容易失控</text>
+    <rect class="bad" x="800" y="160" width="320" height="110" rx="8"/><text class="h" x="832" y="208">装饰性状态点</text><text class="body" x="832" y="240">状态要服务信息</text>
+  </g>
+  <text class="mono" x="160" y="690">判断标准：它是否帮助读者更快找到内容？</text>
+</svg>

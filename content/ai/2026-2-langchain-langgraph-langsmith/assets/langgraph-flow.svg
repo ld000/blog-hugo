@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="860" viewBox="0 0 1440 860" role="img" aria-labelledby="title desc">
+  <title id="title">LangGraph 用节点、条件边和共享状态组织 agent 流程</title>
+  <desc id="desc">一张深色流程图，展示用户问题进入分析节点，然后搜索、判断是否足够、循环或输出答案，共享状态贯穿整个流程。</desc>
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M2 2l8 4-8 4z" fill="#8a8a8a"/>
+    </marker>
+    <style>
+      .bg { fill: #0f0f0f; }
+      .line { stroke: #383838; stroke-width: 1; }
+      .edge { fill: none; stroke: #8a8a8a; stroke-width: 2; marker-end: url(#arrow); }
+      .loop { fill: none; stroke: #d7c4ff; stroke-width: 2.4; marker-end: url(#arrow); }
+      .node { fill: #171717; stroke: #343434; stroke-width: 1.4; }
+      .state { fill: #141414; stroke: #4a4a4a; stroke-width: 1.4; stroke-dasharray: 8 8; }
+      .title { fill: #ffffff; font: 650 42px "Instrument Sans", "Inter", "PingFang SC", sans-serif; }
+      .label { fill: #ffffff; font: 650 28px "Instrument Sans", "Inter", "PingFang SC", sans-serif; }
+      .body { fill: #cfcfcf; font: 400 22px "Instrument Sans", "Inter", "PingFang SC", sans-serif; }
+      .muted { fill: #9b9b9b; font: 400 22px "Instrument Sans", "Inter", "PingFang SC", sans-serif; }
+      .mono { fill: #b8b8b8; font: 500 20px "JetBrains Mono", "SFMono-Regular", monospace; }
+    </style>
+  </defs>
+
+  <rect class="bg" width="1440" height="860"/>
+  <path class="line" d="M120 120h1200M120 720h1200"/>
+  <text class="muted" x="120" y="84">LangGraph</text>
+  <text class="title" x="120" y="146">把 agent 流程显式画成图</text>
+  <text class="body" x="120" y="188">节点做事，边决定下一步，状态记录整个过程。</text>
+
+  <rect class="state" x="170" y="590" width="1100" height="88" rx="8"/>
+  <text class="mono" x="210" y="645">State: question, search_results, notes, tool_outputs, final_answer</text>
+
+  <g>
+    <rect class="node" x="120" y="310" width="210" height="116" rx="8"/>
+    <text class="label" x="158" y="360">用户问题</text>
+    <text class="body" x="158" y="394">输入任务</text>
+  </g>
+
+  <g>
+    <rect class="node" x="410" y="310" width="210" height="116" rx="8"/>
+    <text class="label" x="448" y="360">分析节点</text>
+    <text class="body" x="448" y="394">决定要查什么</text>
+  </g>
+
+  <g>
+    <rect class="node" x="700" y="310" width="210" height="116" rx="8"/>
+    <text class="label" x="738" y="360">搜索工具</text>
+    <text class="body" x="738" y="394">写入结果</text>
+  </g>
+
+  <g>
+    <rect class="node" x="990" y="310" width="210" height="116" rx="8"/>
+    <text class="label" x="1028" y="360">判断节点</text>
+    <text class="body" x="1028" y="394">信息够不够</text>
+  </g>
+
+  <g>
+    <rect class="node" x="990" y="470" width="210" height="82" rx="8"/>
+    <text class="label" x="1028" y="522">输出答案</text>
+  </g>
+
+  <path class="edge" d="M330 368h68"/>
+  <path class="edge" d="M620 368h68"/>
+  <path class="edge" d="M910 368h68"/>
+  <path class="edge" d="M1095 426v32"/>
+  <path class="loop" d="M990 348C900 230 640 230 550 304"/>
+
+  <text class="muted" x="748" y="252">不够，回到分析节点</text>
+  <text class="muted" x="1118" y="455">够了</text>
+
+  <g stroke="#4a4a4a" stroke-width="1.4" stroke-dasharray="6 8">
+    <path d="M225 426v164"/>
+    <path d="M515 426v164"/>
+    <path d="M805 426v164"/>
+    <path d="M1095 552v38"/>
+  </g>
+</svg>

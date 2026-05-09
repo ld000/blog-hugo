@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="820" viewBox="0 0 1440 820" role="img" aria-labelledby="title desc">
+  <title id="title">细线和留白承担布局结构</title>
+  <desc id="desc">展示页面用淡分割线和留白区分内容区块，而不是厚重背景卡片。</desc>
+  <defs><style>
+    .bg{fill:#0f0f0f}.line{stroke:#303030;stroke-width:1}.guide{stroke:#9ad6ff;stroke-width:1.5;stroke-dasharray:8 8}.title{fill:#fff;font:650 42px "Instrument Sans","Inter","PingFang SC",sans-serif}.h{fill:#fff;font:650 28px "Instrument Sans","Inter","PingFang SC",sans-serif}.body{fill:#cfcfcf;font:400 21px "Instrument Sans","Inter","PingFang SC",sans-serif}.muted{fill:#9b9b9b;font:400 20px "Instrument Sans","Inter","PingFang SC",sans-serif}.mono{fill:#b8b8b8;font:500 18px "JetBrains Mono","SFMono-Regular",monospace}
+  </style></defs>
+  <rect class="bg" width="1440" height="820"/>
+  <path class="line" d="M120 120h1200M120 690h1200"/>
+  <text class="muted" x="120" y="84">Spacing and lines</text>
+  <text class="title" x="120" y="146">结构主要靠留白和细线建立</text>
+  <text class="body" x="120" y="188">边界存在，但尽量不打断阅读。</text>
+  <g transform="translate(220 290)">
+    <path class="line" d="M0 0h1000"/>
+    <text class="mono" x="0" y="44">SECTION</text>
+    <text class="h" x="0" y="92">AI notes</text>
+    <path class="line" d="M0 138h1000"/>
+    <text class="h" x="0" y="200">Other articles</text>
+    <path class="line" d="M0 246h1000"/>
+    <text class="h" x="0" y="308">Latest</text>
+    <path class="line" d="M0 354h1000"/>
+    <path class="guide" d="M-45 0v354"/>
+    <path class="guide" d="M1045 0v354"/>
+    <text class="muted" x="0" y="420">淡分割线负责边界，大块留白负责节奏。</text>
+  </g>
+</svg>

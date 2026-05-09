@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="860" viewBox="0 0 1440 860" role="img" aria-labelledby="title desc">
+  <title id="title">三者组合后的端到端 AI 应用架构</title>
+  <desc id="desc">展示用户请求进入 LangGraph，LangChain 组件完成模型、检索和工具调用，LangSmith 记录 trace 和评估。</desc>
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto"><path d="M2 2l8 4-8 4z" fill="#8a8a8a"/></marker>
+    <style>
+      .bg{fill:#0f0f0f}.panel{fill:#151515;stroke:#343434;stroke-width:1.3}.box{fill:#1a1a1a;stroke:#3b3b3b;stroke-width:1.2}.edge{fill:none;stroke:#8a8a8a;stroke-width:2;marker-end:url(#arrow)}.line{stroke:#303030;stroke-width:1}.title{fill:#fff;font:650 42px "Instrument Sans","Inter","PingFang SC",sans-serif}.label{fill:#fff;font:650 27px "Instrument Sans","Inter","PingFang SC",sans-serif}.body{fill:#cfcfcf;font:400 22px "Instrument Sans","Inter","PingFang SC",sans-serif}.muted{fill:#9b9b9b;font:400 21px "Instrument Sans","Inter","PingFang SC",sans-serif}.mono{fill:#b8b8b8;font:500 18px "JetBrains Mono","SFMono-Regular",monospace}.blue{stroke:#9ad6ff}.purple{stroke:#d7c4ff}.gold{stroke:#ffd59a}
+    </style>
+  </defs>
+  <rect class="bg" width="1440" height="860"/>
+  <path class="line" d="M120 120h1200M120 728h1200"/>
+  <text class="muted" x="120" y="84">End-to-end architecture</text>
+  <text class="title" x="120" y="146">三者一起用时，各自站在不同位置</text>
+  <text class="body" x="120" y="188">LangGraph 决定路径，LangChain 执行组件能力，LangSmith 记录和评估运行过程。</text>
+
+  <rect class="box" x="120" y="390" width="150" height="86" rx="8"/>
+  <text class="label" x="165" y="442">用户</text>
+  <rect class="panel" x="350" y="260" width="270" height="345" rx="8"/>
+  <line class="purple" x1="390" y1="310" x2="500" y2="310" stroke-width="3"/>
+  <text class="label" x="390" y="360">LangGraph</text>
+  <text class="body" x="390" y="405">流程控制</text>
+  <text class="body" x="390" y="438">状态保存</text>
+  <text class="body" x="390" y="471">条件分支</text>
+
+  <rect class="panel" x="700" y="260" width="270" height="345" rx="8"/>
+  <line class="blue" x1="740" y1="310" x2="850" y2="310" stroke-width="3"/>
+  <text class="label" x="740" y="360">LangChain</text>
+  <text class="body" x="740" y="405">Prompt</text>
+  <text class="body" x="740" y="438">RAG</text>
+  <text class="body" x="740" y="471">Tools</text>
+
+  <rect class="panel" x="1050" y="260" width="270" height="345" rx="8"/>
+  <line class="gold" x1="1090" y1="310" x2="1200" y2="310" stroke-width="3"/>
+  <text class="label" x="1090" y="360">LangSmith</text>
+  <text class="body" x="1090" y="405">Trace</text>
+  <text class="body" x="1090" y="438">Evaluation</text>
+  <text class="body" x="1090" y="471">Monitoring</text>
+
+  <path class="edge" d="M270 433h68"/>
+  <path class="edge" d="M620 433h68"/>
+  <path class="edge" d="M970 433h68"/>
+  <path class="edge" d="M835 605c0 58 172 58 278 8"/>
+  <text class="mono" x="120" y="780">一句话：执行路径、组件能力、运行可见性，是三件事。</text>
+</svg>

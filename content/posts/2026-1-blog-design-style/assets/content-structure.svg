@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="860" viewBox="0 0 1440 860" role="img" aria-labelledby="title desc">
+  <title id="title">内容分区决定页面结构</title>
+  <desc id="desc">展示 ai、posts、springweek 三个内容分区如何影响首页入口和文章列表设计。</desc>
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto"><path d="M2 2l8 4-8 4z" fill="#8a8a8a"/></marker>
+    <style>
+      .bg{fill:#0f0f0f}.panel{fill:#151515;stroke:#343434;stroke-width:1.3}.box{fill:#1a1a1a;stroke:#3a3a3a;stroke-width:1.2}.edge{fill:none;stroke:#8a8a8a;stroke-width:2;marker-end:url(#arrow)}.line{stroke:#303030;stroke-width:1}.title{fill:#fff;font:650 42px "Instrument Sans","Inter","PingFang SC",sans-serif}.h{fill:#fff;font:650 27px "Instrument Sans","Inter","PingFang SC",sans-serif}.body{fill:#cfcfcf;font:400 21px "Instrument Sans","Inter","PingFang SC",sans-serif}.muted{fill:#9b9b9b;font:400 20px "Instrument Sans","Inter","PingFang SC",sans-serif}.mono{fill:#b8b8b8;font:500 18px "JetBrains Mono","SFMono-Regular",monospace}
+    </style>
+  </defs>
+  <rect class="bg" width="1440" height="860"/>
+  <path class="line" d="M120 120h1200M120 724h1200"/>
+  <text class="muted" x="120" y="84">Content structure</text>
+  <text class="title" x="120" y="146">视觉结构跟内容分区一起设计</text>
+  <text class="body" x="120" y="188">内容不是一个混合流，而是几个明确入口。</text>
+  <rect class="panel" x="140" y="300" width="330" height="250" rx="8"/>
+  <text class="h" x="185" y="360">content/ai</text><text class="body" x="185" y="405">AI 笔记</text><text class="mono" x="185" y="445">models / tools / workflow</text>
+  <rect class="panel" x="555" y="300" width="330" height="250" rx="8"/>
+  <text class="h" x="600" y="360">content/posts</text><text class="body" x="600" y="405">普通文章</text><text class="mono" x="600" y="445">engineering / notes</text>
+  <rect class="panel" x="970" y="300" width="330" height="250" rx="8"/>
+  <text class="h" x="1015" y="360">content/springweek</text><text class="body" x="1015" y="405">归档内容</text><text class="mono" x="1015" y="445">archive</text>
+  <path class="edge" d="M305 550c170 110 660 110 830 0"/>
+  <text class="muted" x="505" y="655">首页入口、状态字段、文章列表都围绕这些分区展开。</text>
+</svg>

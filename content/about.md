@@ -10,7 +10,7 @@ weight: 50
 
 有空就会分享一些自己的开发总结和实用资源，欢迎关注~
 
-邮箱：voidd247@outlook.com
+邮箱：blank247d@outlook.com
 
 微信：tree_1111
 

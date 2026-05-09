@@ -1,0 +1,5 @@
+interface:
+  display_name: "Sync Hugo Articles to Notion"
+  short_description: "Sync Hugo posts into a Notion articles database"
+  default_prompt: "Use $sync-hugo-articles-to-notion to sync this Hugo blog's articles into my Notion articles database."
+

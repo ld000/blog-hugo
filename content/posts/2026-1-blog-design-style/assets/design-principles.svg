@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="820" viewBox="0 0 1440 820" role="img" aria-labelledby="title desc">
+  <title id="title">网站设计风格的核心原则</title>
+  <desc id="desc">展示这个网站的五个设计原则：深色系统界面、内容索引、细线分区、低对比元信息、轻量交互。</desc>
+  <defs>
+    <style>
+      .bg{fill:#0f0f0f}.line{stroke:#303030;stroke-width:1}.card{fill:#151515;stroke:#343434;stroke-width:1.3}.title{fill:#fff;font:650 42px "Instrument Sans","Inter","PingFang SC",sans-serif}.h{fill:#fff;font:650 26px "Instrument Sans","Inter","PingFang SC",sans-serif}.body{fill:#cfcfcf;font:400 21px "Instrument Sans","Inter","PingFang SC",sans-serif}.muted{fill:#9b9b9b;font:400 20px "Instrument Sans","Inter","PingFang SC",sans-serif}.mono{fill:#b8b8b8;font:500 18px "JetBrains Mono","SFMono-Regular",monospace}.cyan{stroke:#9ad6ff}.pink{stroke:#d7c4ff}.gold{stroke:#ffd59a}
+    </style>
+  </defs>
+  <rect class="bg" width="1440" height="820"/>
+  <path class="line" d="M120 120h1200M120 690h1200"/>
+  <text class="muted" x="120" y="84">Design direction</text>
+  <text class="title" x="120" y="146">不是展示型博客，而是个人内容索引界面</text>
+  <text class="body" x="120" y="188">视觉目标是让内容更容易被扫描、归类和进入。</text>
+  <g>
+    <rect class="card" x="120" y="285" width="220" height="230" rx="8"/>
+    <line class="cyan" x1="150" y1="325" x2="235" y2="325" stroke-width="3"/>
+    <text class="h" x="150" y="378">深色系统界面</text>
+    <text class="body" x="150" y="422">黑底白字</text>
+    <text class="body" x="150" y="454">少量强调色</text>
+  </g>
+  <g>
+    <rect class="card" x="370" y="285" width="220" height="230" rx="8"/>
+    <line class="pink" x1="400" y1="325" x2="485" y2="325" stroke-width="3"/>
+    <text class="h" x="400" y="378">内容索引</text>
+    <text class="body" x="400" y="422">先选方向</text>
+    <text class="body" x="400" y="454">再看更新</text>
+  </g>
+  <g>
+    <rect class="card" x="620" y="285" width="220" height="230" rx="8"/>
+    <line class="gold" x1="650" y1="325" x2="735" y2="325" stroke-width="3"/>
+    <text class="h" x="650" y="378">细线分区</text>
+    <text class="body" x="650" y="422">不用厚卡片</text>
+    <text class="body" x="650" y="454">让结构浮出来</text>
+  </g>
+  <g>
+    <rect class="card" x="870" y="285" width="220" height="230" rx="8"/>
+    <line class="cyan" x1="900" y1="325" x2="985" y2="325" stroke-width="3"/>
+    <text class="h" x="900" y="378">低对比信息</text>
+    <text class="body" x="900" y="422">日期、状态、数量</text>
+    <text class="body" x="900" y="454">不抢标题</text>
+  </g>
+  <g>
+    <rect class="card" x="1120" y="285" width="220" height="230" rx="8"/>
+    <line class="pink" x1="1150" y1="325" x2="1235" y2="325" stroke-width="3"/>
+    <text class="h" x="1150" y="378">轻量交互</text>
+    <text class="body" x="1150" y="422">hover 轻微反馈</text>
+    <text class="body" x="1150" y="454">不做表演</text>
+  </g>
+  <text class="mono" x="120" y="744">关键词：Linear / Craft / dark system / index first / no heavy cards</text>
+</svg>

@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="860" viewBox="0 0 1440 860" role="img" aria-labelledby="title desc">
+  <title id="title">首页从展示页变成内容入口</title>
+  <desc id="desc">对比传统博客首页和当前站点首页，说明当前设计先让用户选择内容方向。</desc>
+  <defs>
+    <style>
+      .bg{fill:#0f0f0f}.panel{fill:#151515;stroke:#343434;stroke-width:1.3}.box{fill:#1a1a1a;stroke:#3a3a3a;stroke-width:1.2}.line{stroke:#303030;stroke-width:1}.title{fill:#fff;font:650 42px "Instrument Sans","Inter","PingFang SC",sans-serif}.h{fill:#fff;font:650 28px "Instrument Sans","Inter","PingFang SC",sans-serif}.body{fill:#cfcfcf;font:400 21px "Instrument Sans","Inter","PingFang SC",sans-serif}.muted{fill:#9b9b9b;font:400 20px "Instrument Sans","Inter","PingFang SC",sans-serif}.mono{fill:#b8b8b8;font:500 18px "JetBrains Mono","SFMono-Regular",monospace}.cyan{stroke:#9ad6ff}.gold{stroke:#ffd59a}
+    </style>
+  </defs>
+  <rect class="bg" width="1440" height="860"/>
+  <path class="line" d="M120 120h1200M120 724h1200"/>
+  <text class="muted" x="120" y="84">Homepage</text>
+  <text class="title" x="120" y="146">首页先分流，而不是先展示</text>
+  <text class="body" x="120" y="188">读者第一次进入时，最重要的是知道内容方向。</text>
+  <rect class="panel" x="120" y="270" width="520" height="360" rx="8"/>
+  <line class="gold" x1="160" y1="318" x2="260" y2="318" stroke-width="3"/>
+  <text class="h" x="160" y="368">传统博客首页</text>
+  <rect class="box" x="160" y="410" width="420" height="64" rx="7"/><text class="body" x="195" y="451">大 Hero / Banner</text>
+  <rect class="box" x="160" y="492" width="190" height="88" rx="7"/><text class="body" x="200" y="543">文章卡片</text>
+  <rect class="box" x="390" y="492" width="190" height="88" rx="7"/><text class="body" x="430" y="543">文章卡片</text>
+  <text class="mono" x="160" y="612">focus: show everything</text>
+  <rect class="panel" x="800" y="270" width="520" height="360" rx="8"/>
+  <line class="cyan" x1="840" y1="318" x2="940" y2="318" stroke-width="3"/>
+  <text class="h" x="840" y="368">当前首页</text>
+  <rect class="box" x="840" y="410" width="420" height="64" rx="7"/><text class="body" x="875" y="451">站点说明</text>
+  <rect class="box" x="840" y="492" width="190" height="88" rx="7"/><text class="body" x="884" y="543">AI notes</text>
+  <rect class="box" x="1070" y="492" width="190" height="88" rx="7"/><text class="body" x="1102" y="543">Other articles</text>
+  <text class="mono" x="840" y="612">focus: choose a path</text>
+</svg>

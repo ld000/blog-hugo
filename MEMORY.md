@@ -2,12 +2,13 @@
 
 ## Voice
 
-- 暂无固定偏好。
-
 ## Process
 
 - 做 Hugo 内容或配置变更时，尽量运行 `hugo --gc --minify` 验证构建。
 - 不编辑 `themes/`、`public/`、`resources/`，除非明确要求。
+- 博客写作语气和方法已整理到 `context/blog-writing.md`；写新文章或改旧文章前先读该文件。
+- 为本项目创建或更新 Codex skill 时，放在仓库内 `.codex/skills/`，不要默认放到全局 `~/.codex/skills/`。
+- 同步博客文章到 Notion 时，本地图片要上传为 Notion 文件，不要改成站点外链。
 
 ## People
 

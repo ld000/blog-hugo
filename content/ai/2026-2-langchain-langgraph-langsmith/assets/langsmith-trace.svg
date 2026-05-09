@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="860" viewBox="0 0 1440 860" role="img" aria-labelledby="title desc">
+  <title id="title">LangSmith 把一次请求拆成可追踪的运行轨迹</title>
+  <desc id="desc">一张深色 trace 图，展示用户请求、RAG 检索、模型调用、工具调用、最终答案，以及旁边的调试和评估指标。</desc>
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M2 2l8 4-8 4z" fill="#777777"/>
+    </marker>
+    <style>
+      .bg { fill: #0f0f0f; }
+      .panel { fill: #151515; stroke: #343434; stroke-width: 1.3; }
+      .row { fill: #191919; stroke: #303030; stroke-width: 1.1; }
+      .line { stroke: #343434; stroke-width: 1; }
+      .edge { fill: none; stroke: #777777; stroke-width: 2; marker-end: url(#arrow); }
+      .title { fill: #ffffff; font: 650 42px "Instrument Sans", "Inter", "PingFang SC", sans-serif; }
+      .label { fill: #ffffff; font: 650 25px "Instrument Sans", "Inter", "PingFang SC", sans-serif; }
+      .body { fill: #cfcfcf; font: 400 22px "Instrument Sans", "Inter", "PingFang SC", sans-serif; }
+      .muted { fill: #9b9b9b; font: 400 22px "Instrument Sans", "Inter", "PingFang SC", sans-serif; }
+      .mono { fill: #b8b8b8; font: 500 19px "JetBrains Mono", "SFMono-Regular", monospace; }
+      .ok { fill: #9ad6ff; }
+      .warn { fill: #ffd59a; }
+      .pink { fill: #d7c4ff; }
+    </style>
+  </defs>
+
+  <rect class="bg" width="1440" height="860"/>
+  <path class="line" d="M120 120h1200M120 724h1200"/>
+  <text class="muted" x="120" y="84">LangSmith</text>
+  <text class="title" x="120" y="146">把“答案错了”拆成可定位的问题</text>
+  <text class="body" x="120" y="188">每次运行都保留输入、输出、工具调用、检索内容、耗时和 token。</text>
+
+  <rect class="panel" x="120" y="260" width="760" height="390" rx="8"/>
+  <text class="label" x="160" y="312">Trace timeline</text>
+
+  <g>
+    <rect class="row" x="160" y="348" width="650" height="54" rx="6"/>
+    <text class="mono" x="190" y="382">01</text>
+    <text class="body" x="250" y="382">用户问题：怎么处理退款？</text>
+  </g>
+  <g>
+    <rect class="row" x="160" y="418" width="650" height="54" rx="6"/>
+    <text class="mono" x="190" y="452">02</text>
+    <text class="body" x="250" y="452">RAG 检索：命中 3 篇政策文档</text>
+  </g>
+  <g>
+    <rect class="row" x="160" y="488" width="650" height="54" rx="6"/>
+    <text class="mono" x="190" y="522">03</text>
+    <text class="body" x="250" y="522">模型调用：生成处理步骤</text>
+  </g>
+  <g>
+    <rect class="row" x="160" y="558" width="650" height="54" rx="6"/>
+    <text class="mono" x="190" y="592">04</text>
+    <text class="body" x="250" y="592">工具调用：查询订单状态</text>
+  </g>
+
+  <path class="edge" d="M820 455h90"/>
+
+  <rect class="panel" x="940" y="260" width="380" height="390" rx="8"/>
+  <text class="label" x="980" y="312">Debug &amp; Eval</text>
+
+  <circle class="ok" cx="996" cy="372" r="6"/>
+  <text class="body" x="1020" y="380">检索文档是否正确</text>
+  <text class="mono" x="1020" y="414">relevance: 0.86</text>
+
+  <circle class="warn" cx="996" cy="470" r="6"/>
+  <text class="body" x="1020" y="478">答案是否引用来源</text>
+  <text class="mono" x="1020" y="512">groundedness: check</text>
+
+  <circle class="pink" cx="996" cy="568" r="6"/>
+  <text class="body" x="1020" y="576">线上成本和延迟</text>
+  <text class="mono" x="1020" y="610">2.3s / 4.8k tokens</text>
+
+  <text class="muted" x="120" y="768">没有 trace 时，只能看最终答案。有 trace 后，才能知道问题出在 prompt、检索、工具还是模型。</text>
+</svg>

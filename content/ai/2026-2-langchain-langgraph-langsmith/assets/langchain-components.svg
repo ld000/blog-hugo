@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="860" viewBox="0 0 1440 860" role="img" aria-labelledby="title desc">
+  <title id="title">LangChain 的常用组件</title>
+  <desc id="desc">展示 LangChain 如何把模型、提示词、检索、工具、输出解析和 agent 组织成组件。</desc>
+  <defs>
+    <style>
+      .bg{fill:#0f0f0f}.panel{fill:#151515;stroke:#343434;stroke-width:1.3}.chip{fill:#1b1b1b;stroke:#3d3d3d;stroke-width:1.2}.line{stroke:#303030;stroke-width:1}.title{fill:#fff;font:650 42px "Instrument Sans","Inter","PingFang SC",sans-serif}.label{fill:#fff;font:650 27px "Instrument Sans","Inter","PingFang SC",sans-serif}.body{fill:#cfcfcf;font:400 22px "Instrument Sans","Inter","PingFang SC",sans-serif}.muted{fill:#9b9b9b;font:400 21px "Instrument Sans","Inter","PingFang SC",sans-serif}.mono{fill:#b8b8b8;font:500 18px "JetBrains Mono","SFMono-Regular",monospace}.blue{stroke:#9ad6ff}.purple{stroke:#d7c4ff}.gold{stroke:#ffd59a}
+    </style>
+  </defs>
+  <rect class="bg" width="1440" height="860"/>
+  <path class="line" d="M120 120h1200M120 728h1200"/>
+  <text class="muted" x="120" y="84">LangChain components</text>
+  <text class="title" x="120" y="146">LangChain 不是模型，而是模型周围的组件库</text>
+  <text class="body" x="120" y="188">它把 LLM 应用里反复出现的能力拆成可组合的积木。</text>
+
+  <rect class="panel" x="120" y="260" width="1200" height="390" rx="8"/>
+  <line class="blue" x1="170" y1="316" x2="300" y2="316" stroke-width="3"/>
+  <line class="purple" x1="650" y1="316" x2="780" y2="316" stroke-width="3"/>
+  <line class="gold" x1="1050" y1="316" x2="1180" y2="316" stroke-width="3"/>
+
+  <rect class="chip" x="170" y="360" width="220" height="105" rx="8"/>
+  <text class="label" x="210" y="407">Prompt</text>
+  <text class="body" x="210" y="440">模板化上下文</text>
+
+  <rect class="chip" x="430" y="360" width="220" height="105" rx="8"/>
+  <text class="label" x="470" y="407">Model</text>
+  <text class="body" x="470" y="440">统一模型接口</text>
+
+  <rect class="chip" x="690" y="360" width="220" height="105" rx="8"/>
+  <text class="label" x="730" y="407">Retrieval</text>
+  <text class="body" x="730" y="440">从外部知识取上下文</text>
+
+  <rect class="chip" x="950" y="360" width="220" height="105" rx="8"/>
+  <text class="label" x="990" y="407">Tools</text>
+  <text class="body" x="990" y="440">把函数交给模型调用</text>
+
+  <rect class="chip" x="300" y="510" width="260" height="88" rx="8"/>
+  <text class="label" x="340" y="562">Output Parser</text>
+  <rect class="chip" x="620" y="510" width="260" height="88" rx="8"/>
+  <text class="label" x="660" y="562">Agent</text>
+  <text class="mono" x="170" y="692">目标：少写重复胶水代码，把原型更快跑起来。</text>
+</svg>
