@@ -2,6 +2,8 @@
 title: RandomAccess 接口使用
 date: 2016-03-19
 tags: ["java"]
+series: ["Post"]
+description: 介绍 Java 中 RandomAccess 标记接口的作用和使用场景，说明 ArrayList 和 LinkedList 的高效遍历方式差异，以及如何根据接口选择遍历算法
 ---
 
 List 实现所使用的标记接口，用来表明其支持快速（通常是固定时间）随机访问。此接口的主要目的是允许一般的算法更改其行为，从而在将其应用到随机或连续访问列表时能提供良好的性能。

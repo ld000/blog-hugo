@@ -2,6 +2,8 @@
 title: MacOS 用 automater 自动备份安装的软件列表
 date: 2019-09-15
 tags: ["automater"]
+series: ["Post"]
+description: 使用 Homebrew 和 Automator 自动备份 Mac 上安装的软件列表，避免重装系统后遗漏软件，实现一键恢复所有应用程序和命令行工具
 ---
 
 不知道有没有人经历过重装系统后需要把所有软件都重装一遍的痛苦，而且很有可能落下几个软件没装，等到用的时候才发现，重新下载再重新配置，时间不知不觉就没了。 

@@ -2,6 +2,8 @@
 title: "[翻译]Pinterest 现在已支持 HTTP/3 协议"
 date: 2023-03-13
 tags: [""]
+series: ["Post"]
+description: 翻译 Pinterest 工程博客文章，介绍 Pinterest 如何在 CDN 和客户端应用中部署 HTTP/3 协议，以及 HTTP/3 带来的性能提升和用户体验改善
 ---
 
 > 原文：[https://medium.com/pinterest-engineering/pinterest-is-now-on-http-3-608fb5581094](https://medium.com/pinterest-engineering/pinterest-is-now-on-http-3-608fb5581094)

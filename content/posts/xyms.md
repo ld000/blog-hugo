@@ -2,6 +2,8 @@
 title: 响应模式
 date: 2016-12-20
 tags: ["html"]
+series: ["Post"]
+description: 介绍常见的响应式网页设计模式，包括大体流动模型、掉落列模型、活动布局模型和画布溢出模型，以及对应的 CSS Flexbox 实现方式
 ---
 # 常见响应模式
 - 大体流动模型(mostly fluid)

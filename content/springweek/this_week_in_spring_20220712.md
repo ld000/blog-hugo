@@ -2,6 +2,7 @@
 title: Spring周报 - 2022.7.12
 date: 2022-07-12
 tags: []
+description: Spring 官方周报翻译，涵盖 Spring Framework、Spring Boot、Spring Cloud 等项目的最新动态、技术文章和社区资讯
 ---
 
 Hi，Spring 粉丝们！欢迎收看另一期的 Spring 周报！你好吗？本周，我在阳光明媚的华盛顿州西雅图给您写这个，我们将在那里进行 SpringOne Tour 系列的下一部分。再次看到所有这些有趣和友好的面孔并见到人们真是太有趣了，其中许多人在疫情之前我就再也没有见过！在这里见到一些来自微软和 AWS 等大型云公司的朋友，我也很开心。了解人们如何使用 Spring 的最新和最强大的技术来构建针对这些云平台的惊人系统和软件总是很有趣的。

@@ -2,6 +2,8 @@
 title: 用外置 Tomcat 部署 Spring Boot 应用
 date: 2019-10-25
 tags: ["java"]
+series: ["Post"]
+description: 将 Spring Boot 应用打包成 war 包并部署到外置 Tomcat 的完整步骤，包括 pom.xml 配置修改、启动类改造和部署注意事项
 ---
 
 现在越来越多的人使用 Spring Boot 来开发自己的应用了，Spring Boot 用起来是各种方便，还内置 web 容器，只需要`java -jar`就能启动应用。但有时候有些公司的 Tomcat 是单独部署，有专人维护的，这时我们就需要将 Spring Boot 应用打包成 war 部署。

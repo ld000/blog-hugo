@@ -2,6 +2,8 @@
 title: 让 Redis zset 支持多条件排序
 date: 2019-10-23
 tags: ["java"]
+series: ["Post"]
+description: 利用 Redis zset 实现多维度排序的几种方法，通过 score 编码技巧支持主排序+次排序，适用于排行榜等场景
 ---
 
 一些需求中经常要我们实现一个排行榜，数据量少的话可以使用 RDB 数据库排序，数据量大可以自己实现算法或者使用 NoSQL 数据库排序，NoSQL 数据库中最方便的可能就是利用 Redis 的 zset 来实现了。 例如要实现一个玩家成就点数的排行榜：

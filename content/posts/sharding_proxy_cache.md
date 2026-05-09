@@ -2,6 +2,8 @@
 title: sharding-proxy 连接缓存导致 fullGC 内存不释放
 date: 2020-05-25
 tags: ["java", "sharding-proxy"]
+series: ["Post"]
+description: 排查 sharding-proxy 3.1.0 因 Guava 缓存使用不当导致内存泄漏和频繁 fullGC 的问题，通过 jmap 和 MAT 分析定位 ChannelRegistry 缓存泄漏根因
 ---
 
 sharding-proxy版本：3.1.0

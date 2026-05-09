@@ -2,6 +2,7 @@
 title: Spring周报 - 2022.7.19
 date: 2022-07-19
 tags: []
+description: Spring 官方周报翻译，涵盖 Spring Framework、Spring Boot、Spring Cloud 等项目的最新动态、技术文章和社区资讯
 ---
 
 Hi, Spring 粉丝们! 欢迎收看另一期的 Spring 周报! 这周我正试着结束一些事情，然后和我的家人一起去度假。这将是一个了不起的时刻，真的！但这并不能阻止 Springdom 广阔世界中的新奇事物和新闻泛滥，所以本周我们有很多内容要介绍。让我们开始吧！

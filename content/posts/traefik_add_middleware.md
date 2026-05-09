@@ -2,6 +2,8 @@
 title: 给 traefik 添加插件
 date: 2020-10-12
 tags: [""]
+series: ["Post"]
+description: 在 Traefik 2.2.8 中通过修改源码添加自定义中间件插件的方法，以 token 验证插件为例演示插件开发和集成流程
 ---
 
 版本：2.2.8

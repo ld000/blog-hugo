@@ -2,6 +2,8 @@
 title: 为 Traefik 添加从 nacos 读取服务地址功能
 date: 2021-06-12
 tags: [""]
+series: ["Post"]
+description: 为 Traefik 2.4.0 扩展 Nacos 服务发现功能，实现从 Nacos 动态读取服务地址，替代静态配置文件，支持服务自动注册和发现
 ---
 
 ## 软件版本

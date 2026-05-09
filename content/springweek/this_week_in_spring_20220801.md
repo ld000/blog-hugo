@@ -2,6 +2,7 @@
 title: Spring周报 - 2022.8.1
 date: 2022-08-01
 tags: []
+description: Spring 官方周报翻译，涵盖 Spring Framework、Spring Boot、Spring Cloud 等项目的最新动态、技术文章和社区资讯
 ---
 
 Aloha, Spring fans! Welcome to another installment of *This Week in Spring*!

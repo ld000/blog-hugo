@@ -2,6 +2,8 @@
 title: discuz 接入 cas
 date: 2018-07-23
 tags: ["discuz", "cas"]
+series: ["Post"]
+description: Discuz 3.3 接入 CAS 5.x 实现单点登录（SSO）的完整方法，包括 casPHP 插件配置、登录界面修改和强制登录实现
 ---
 
 discuz 接入 cas 实现 SSO 的方法。

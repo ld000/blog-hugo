@@ -3,6 +3,8 @@ title: 从 Travis CI 迁移到 GitHub Actions：Hugo 博客部署现代化实践
 date: 2026-05-01T22:32:24+08:00
 tags: ["GitHub Actions", "Travis CI", "Hugo", "CI/CD", "DevOps"]
 categories: ["技术"]
+series: ["Post"]
+description: 记录 Hugo 博客从 Travis CI 迁移到 GitHub Actions 的完整过程，构建速度提升 50%，配置更简单，完全免费，包含详细的配置示例和最佳实践建议
 ---
 
 最近对博客的部署流程进行了现代化改造，将持续集成和部署从 Travis CI 迁移到了 GitHub Actions。这篇文章记录了整个迁移过程和背后的思考。

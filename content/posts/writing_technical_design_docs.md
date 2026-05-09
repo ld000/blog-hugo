@@ -2,6 +2,8 @@
 title: (翻译)写技术设计文档
 date: 2020-09-01
 tags: [""]
+series: ["Post"]
+description: 翻译文章，介绍如何编写高质量的技术设计文档（TDD），包括设计过程、文档结构、常见错误和最佳实践，帮助工程师提升技术沟通能力
 ---
 
 > 原文：[https://medium.com/machine-words/writing-technical-design-docs-71f446e42f2e](https://medium.com/machine-words/writing-technical-design-docs-71f446e42f2e)
