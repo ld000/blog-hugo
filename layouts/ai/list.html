@@ -54,28 +54,9 @@
     </div>
 
     {{ if gt (len $pages) 0 }}
-      <section class="ai-entry-list" aria-label="AI articles">
-        {{ range $index, $page := $paginator.Pages }}
-          <article class="ai-entry">
-            <a href="{{ $page.RelPermalink }}" class="ai-entry-link">
-              <span class="ai-entry-number">{{ printf "%02d" (add $index 1) }}</span>
-              <div class="ai-entry-body">
-                <h3>{{ $page.Title | emojify }}</h3>
-                <p class="ai-entry-meta">{{ $page.Date.Format "2006-01-02" }}</p>
-                {{ $summary := $page.Description | default ($page.Summary | plainify) }}
-                {{ with $summary }}
-                  <p class="ai-entry-summary">{{ . | truncate 150 }}</p>
-                {{ end }}
-                {{ with $page.Params.tags }}
-                  <div class="ai-entry-tags">
-                    {{ range first 4 . }}
-                      <span>{{ . }}</span>
-                    {{ end }}
-                  </div>
-                {{ end }}
-              </div>
-            </a>
-          </article>
+      <section class="ai-entry-list space-y-3 w-full" aria-label="AI articles">
+        {{ range $paginator.Pages }}
+          {{ partial "article-link/simple.html" . }}
         {{ end }}
       </section>
     {{ else }}

@@ -1,0 +1,30 @@
+{{/* Linear Now/Craft-inspired article index row. Overrides Blowfish's default list item and omits thumbnails. */}}
+{{ $page := .Page }}
+{{ $dateTag := $page.Date.Format "2006.01.02" }}
+
+<article class="linear-task-card article-link--simple">
+  <a
+    {{ with $page.Params.externalUrl }}
+      href="{{ . }}" target="_blank" rel="external"
+    {{ else }}
+      href="{{ $page.RelPermalink }}"
+    {{ end }}
+    class="linear-task-link">
+    <span class="linear-task-main">
+      <span class="linear-task-title">
+        {{ $page.Title | emojify }}
+        {{ if $page.Params.externalUrl }}
+          <span class="linear-external-mark" aria-hidden="true">&#8599;</span>
+        {{ end }}
+      </span>
+      {{ $summary := $page.Description | default ($page.Summary | plainify) }}
+      {{ with $summary }}
+        <span class="linear-task-summary">{{ . | truncate 132 }}</span>
+      {{ end }}
+    </span>
+    <span class="linear-task-meta">
+      <span class="linear-version-tag">[{{ $dateTag }}]</span>
+      <span class="linear-row-arrow" aria-hidden="true">&#8594;</span>
+    </span>
+  </a>
+</article>

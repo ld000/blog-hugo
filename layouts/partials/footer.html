@@ -1,0 +1,23 @@
+<footer id="site-footer" class="linear-site-footer print:hidden">
+  <div class="linear-footer-line">
+    <a class="linear-footer-mark" href="{{ "" | relLangURL }}">{{ .Site.Title | markdownify }}</a>
+    <span class="linear-footer-divider"></span>
+    <span>&copy; {{ now.Format "2006" }} {{ .Site.Params.Author.name | default .Site.Title | markdownify }}</span>
+    <span class="linear-footer-divider"></span>
+    <span>Built with Hugo / Blowfish</span>
+  </div>
+
+  {{ if not .Site.Params.disableImageZoom | default true }}
+    <script>
+      mediumZoom(document.querySelectorAll("img:not(.nozoom)"), {
+        margin: 24,
+        background: "rgba(0,0,0,0.5)",
+        scrollOffset: 0,
+      });
+    </script>
+  {{ end }}
+
+  {{ if templates.Exists "partials/extend-footer.html" }}
+    {{ partialCached "extend-footer.html" . }}
+  {{ end }}
+</footer>
