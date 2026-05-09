@@ -1,8 +1,8 @@
 ---
 title: '翻译: Spring AOP 讨论最多的问题 #1 - aspects 没有生效'
 date: 2017-06-12
-tags: ["aspect", "spring", "java"]
-series: ["Post"]
+tags: ["Spring", "AOP", "代理模式", "Java"]
+series: ["翻译文章"]
 description: 翻译文章，深入解析 Spring AOP 中最常见的问题：为什么 aspects 没有生效。详细说明自身调用（self-calls）的原理和代理机制，帮助理解 AOP 代理的工作方式
 ---
 

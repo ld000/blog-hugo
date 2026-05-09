@@ -1,8 +1,8 @@
 ---
 title: "[翻译]Tumblr 如何存储帖子内容"
 date: 2022-07-27
-tags: []
-series: ["Post"]
+tags: ["数据存储", "架构设计", "数据模型"]
+series: ["翻译文章"]
 description: 翻译 Tumblr 工程博客文章，揭秘 Tumblr 如何存储数十亿帖子内容，从旧的帖子类型系统到 Neue 帖子格式的演进历程，以及数据模型设计的挑战
 ---
 

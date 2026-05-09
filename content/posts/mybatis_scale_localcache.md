@@ -1,8 +1,8 @@
 ---
 title: MyBatis 一级缓存在分布式下的坑
 date: 2019-11-24
-tags: ["java"]
-series: ["Post"]
+tags: ["MyBatis", "缓存", "分布式", "Java"]
+series: ["数据库与中间件"]
 description: 分析 MyBatis 一级缓存在分布式环境下导致脏数据的问题，通过实验验证一级缓存的生效条件和会话范围，提供关闭一级缓存的解决方案
 ---
 

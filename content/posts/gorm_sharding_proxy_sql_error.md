@@ -1,8 +1,8 @@
 ---
 title: gorm调用sharding-proxy, 参数带单引号sql报错
 date: 2020-03-27
-tags: ["go", "gorm", "sharding-proxy", "MySQL"]
-series: ["Post"]
+tags: ["Go", "gorm", "Sharding-Proxy", "MySQL"]
+series: ["Go 开发"]
 description: 解决 gorm 通过 sharding-proxy 执行 SQL 时参数包含单引号导致报错的问题，分析 gorm 和 sharding-proxy 的参数转义机制差异
 ---
 
