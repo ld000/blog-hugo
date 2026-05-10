@@ -11,22 +11,20 @@ module.exports = {
     extend: {
       colors: {
         linear: {
-          bg: "#111111",
-          surface: "rgba(255, 255, 255, 0.03)",
-          border: "rgba(255, 255, 255, 0.08)",
-          text: "#FFFFFF",
-          muted: "rgba(255, 255, 255, 0.62)",
-        },
-        neon: {
-          cyan: "#00F3FF",
-          pink: "#FF00FF",
-          green: "#39FF14",
-          orange: "#FFA500",
+          bg: "#010102",
+          surface: "#0f1011",
+          surfaceHover: "#141516",
+          border: "#23252a",
+          borderStrong: "#34343a",
+          text: "#f7f8f8",
+          muted: "#d0d6e0",
+          subtle: "#8a8f98",
+          accent: "#5e6ad2",
         },
       },
       fontFamily: {
-        sans: ['"Instrument Sans"', "Inter", "ui-sans-serif", "system-ui", "sans-serif"],
-        mono: ['"JetBrains Mono"', "ui-monospace", "SFMono-Regular", "monospace"],
+        sans: ["Inter", '"SF Pro Display"', "-apple-system", "BlinkMacSystemFont", '"Segoe UI"', "ui-sans-serif", "system-ui", "sans-serif"],
+        mono: ['"JetBrains Mono"', "ui-monospace", '"SF Mono"', "Menlo", "monospace"],
       },
       fontSize: {
         technical: ["0.9rem", { lineHeight: "1.75" }],
@@ -35,26 +33,15 @@ module.exports = {
         linear: "0",
       },
       backgroundImage: {
-        "dot-matrix":
-          "radial-gradient(circle, rgba(255,255,255,0.05) 1px, transparent 1px)",
+        "dot-matrix": "none",
       },
       backgroundSize: {
         matrix: "18px 18px",
       },
       boxShadow: {
-        "linear-hover": "0 0 20px rgba(0, 243, 255, 0.1)",
-        "linear-cyan": "0 0 20px rgba(0, 243, 255, 0.16)",
-        "linear-pink": "0 0 20px rgba(255, 0, 255, 0.12)",
-      },
-      keyframes: {
-        "linear-scanline": {
-          "0%": { transform: "translateY(-120%)", opacity: "0" },
-          "8%": { opacity: "0.02" },
-          "100%": { transform: "translateY(120vh)", opacity: "0" },
-        },
-      },
-      animation: {
-        "linear-scanline": "linear-scanline 8s linear infinite",
+        "linear-hover": "inset 0 1px 0 rgba(247, 248, 248, 0.045)",
+        "linear-cyan": "inset 0 1px 0 rgba(247, 248, 248, 0.045)",
+        "linear-pink": "inset 0 1px 0 rgba(247, 248, 248, 0.045)",
       },
       backdropBlur: {
         linear: "10px",
@@ -65,22 +52,21 @@ module.exports = {
     plugin(function ({ addUtilities }) {
       addUtilities({
         ".surface-linear": {
-          background: "rgba(255, 255, 255, 0.03)",
-          border: "1px solid rgba(255, 255, 255, 0.08)",
-          "backdrop-filter": "blur(10px)",
+          background: "#0f1011",
+          border: "1px solid #23252a",
+          boxShadow: "inset 0 1px 0 rgba(247, 248, 248, 0.045)",
         },
         ".hover-linear": {
           transition:
             "filter 160ms ease, box-shadow 160ms ease, border-color 160ms ease, background-color 160ms ease",
         },
         ".hover-linear:hover": {
-          filter: "brightness(1.08)",
-          boxShadow: "0 0 20px rgba(0, 243, 255, 0.1)",
+          background: "#141516",
+          boxShadow: "inset 0 1px 0 rgba(247, 248, 248, 0.045)",
         },
         ".bg-dot-matrix": {
-          backgroundImage:
-            "radial-gradient(circle, rgba(255,255,255,0.05) 1px, transparent 1px)",
-          backgroundSize: "18px 18px",
+          backgroundImage: "none",
+          backgroundColor: "#010102",
         },
       });
     }),

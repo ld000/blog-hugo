@@ -4,10 +4,8 @@ date: 2026-05-09
 tags: ["AI", "LangChain", "LangGraph", "LangSmith", "Agent"]
 categories: ["AI"]
 series: ["AI 手记"]
-description: 参考 ByteMonk 的讲解视频，梳理 LangChain、LangGraph、LangSmith 分别解决什么问题，它们之间的关系，以及什么时候真的需要这套 AI 工程栈
+description: 梳理 LangChain、LangGraph、LangSmith 分别解决什么问题，它们之间的关系，以及什么时候真的需要这套 AI 工程栈
 ---
-
-最近看了一个视频：[Stop Confusing LangChain, LangGraph, and LangSmith | Full Breakdown](https://www.youtube.com/watch?v=e-GR3PlEOVU)，讲的是 LangChain、LangGraph、LangSmith 这三个东西到底分别是什么。
 
 这几个名字很容易混在一起。尤其是 LangChain 早期给人的印象是“写 chain、做 RAG 的框架”，后来又出现 LangGraph、LangSmith，很多文章会把它们统一叫 LangChain 生态，但实际写代码时它们解决的是三类问题。
 
@@ -63,7 +61,7 @@ LangChain 是一个开源框架，官方现在更强调它是一个 agent framew
 
 比如你要写一个 agent，让它能根据用户问题决定是否查询天气、搜索资料或读取文档。LangChain 提供的就是这些基础积木。
 
-但 LangChain 也有一个常见问题：抽象层多。对于很简单的需求，它会显得重；一旦出问题，你可能要顺着框架内部追很多层才能找到真正的业务逻辑。所以我觉得它比较适合这类场景：
+但 LangChain 也有一个常见问题：抽象层多。对于很简单的需求，它会显得重；一旦出问题，你可能要顺着框架内部追很多层才能找到真正的业务逻辑。它更适合这类场景：
 
 - 你要快速接入多个模型供应商。
 - 你有 RAG、工具调用、agent 这些通用需求。
@@ -75,24 +73,7 @@ LangChain 是一个开源框架，官方现在更强调它是一个 agent framew
 
 当 agent 开始调用工具后，一个更麻烦的问题会出现：流程不再是线性的。
 
-普通 chain 更像这样：
-
-```text
-检索文档 -> 调用模型 -> 格式化结果
-```
-
-但真实 agent 经常是这样：
-
-```text
-分析问题 -> 搜索资料 -> 判断信息够不够
-                 ^              |
-                 |              |
-                 +--- 不够，继续搜索
-```
-
-它会分支，会循环，会根据中间结果决定下一步。比如研究型 agent 可能先搜索，读结果，发现不够，再换关键词搜索，最后整理答案。这个流程用单向 pipeline 表达会很别扭。
-
-![Agent 的 ReAct 循环：分析、行动、观察，再决定是否继续](assets/react-loop.svg)
+普通 chain 更像一条固定 pipeline：检索文档、调用模型、格式化结果。但真实 agent 会分支，会循环，会根据中间结果决定下一步。比如研究型 agent 可能先搜索，读结果，发现不够，再换关键词搜索，最后整理答案。这个流程用单向 pipeline 表达会很别扭。
 
 LangGraph 解决的就是这个问题。它把 AI 应用组织成 graph：
 
@@ -140,41 +121,23 @@ LangSmith 做的就是 AI 应用的观测、调试和评估。它会记录一次
 
 除了观测，LangSmith 还做 evaluation、prompt engineering 和 deployment。也就是说，它不只是一个日志平台，更像是面向 LLM / Agent 应用的工程平台。
 
-我觉得 LangSmith 最有价值的地方，是把“感觉这个 prompt 好像更好了”变成“用同一批测试集跑一遍，看指标有没有提升”。AI 应用如果没有评估集，很容易进入玄学调参。
+LangSmith 最有价值的地方，是把“感觉这个 prompt 好像更好了”变成“用同一批测试集跑一遍，看指标有没有提升”。AI 应用如果没有评估集，很容易进入玄学调参。
 
 ## 三者怎么一起工作
 
-一个典型架构可以这样理解：
-
-```text
-用户请求
-  |
-  v
-LangGraph 决定执行路径
-  |
-  v
-LangChain 组件完成具体工作
-  |
-  v
-模型调用 / 工具调用 / RAG 检索
-  |
-  v
-LangSmith 记录 trace、评估质量、监控线上表现
-```
-
-比如做一个客服 agent：
+落到一个具体系统里，不需要把三者看成并列选择。比如做一个客服 agent，可以把它们放在不同层次上：
 
 1. LangGraph 负责整体流程：先分类问题，再决定查知识库、查订单系统，还是转人工。
 2. LangChain 负责具体组件：调用模型、组织 prompt、接入检索、封装订单查询工具。
 3. LangSmith 负责观察每一次运行：用户问了什么，查了哪些资料，调用了哪个工具，最后为什么给出这个答案。
 
-这三个东西不是同一层的竞品，而是分别站在不同层次上。
+这三个东西不是同一层的竞品，而是分别站在不同位置上：LangGraph 决定路径，LangChain 提供组件能力，LangSmith 记录和评估运行过程。
 
 ![三者组合后的端到端 AI 应用架构](assets/end-to-end-architecture.svg)
 
 ## 什么时候需要，什么时候不需要
 
-我的理解是，不要一开始就默认上全套。
+不要一开始就默认上全套。
 
 只做一次模型调用：
 
@@ -202,7 +165,7 @@ LangSmith 记录 trace、评估质量、监控线上表现
 
 ![不同复杂度下是否需要引入 LangChain、LangGraph、LangSmith](assets/decision-guide.svg)
 
-视频里也提到了这个点：当 agent 要代表真实用户去访问 Gmail、Slack、Jira、GitHub 这类系统时，问题就变成“它用谁的身份访问”“它能访问什么”“用户是否授权过”。这不是 LangChain、LangGraph、LangSmith 本身能完全解决的，需要额外的权限系统或工具调用网关。
+当 agent 要代表真实用户去访问 Gmail、Slack、Jira、GitHub 这类系统时，问题就不只是工具调用，而是身份、授权和权限边界。它用谁的身份访问，能访问什么，用户是否授权过，都需要额外的权限系统或工具调用网关处理。这不是 LangChain、LangGraph、LangSmith 本身能完全解决的问题。
 
 ![生产级 agent 还需要单独处理认证、授权、审计和租户隔离](assets/production-gap.svg)
 

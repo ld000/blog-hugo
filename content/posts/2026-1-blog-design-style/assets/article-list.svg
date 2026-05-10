@@ -2,7 +2,7 @@
   <title id="title">文章列表用细线而不是卡片组织</title>
   <desc id="desc">展示文章列表像任务列表一样，用标题、摘要、日期和箭头组成一行，以底部分割线区分条目。</desc>
   <defs><style>
-    .bg{fill:#0f0f0f}.line{stroke:#303030;stroke-width:1}.strong{stroke:#444;stroke-width:1.2}.title{fill:#fff;font:650 42px "Instrument Sans","Inter","PingFang SC",sans-serif}.h{fill:#fff;font:650 25px "Instrument Sans","Inter","PingFang SC",sans-serif}.body{fill:#cfcfcf;font:400 21px "Instrument Sans","Inter","PingFang SC",sans-serif}.muted{fill:#9b9b9b;font:400 20px "Instrument Sans","Inter","PingFang SC",sans-serif}.sub{fill:#9b9b9b;font:400 18px "Instrument Sans","Inter","PingFang SC",sans-serif}.mono{fill:#b8b8b8;font:500 18px "JetBrains Mono","SFMono-Regular",monospace}
+    .bg{fill:#010102}.line{stroke:#23252a;stroke-width:1}.strong{stroke:#34343a;stroke-width:1.2}.title{fill:#f7f8f8;font:650 42px "Inter","SF Pro Display","PingFang SC",sans-serif}.h{fill:#f7f8f8;font:650 25px "Inter","SF Pro Display","PingFang SC",sans-serif}.body{fill:#d0d6e0;font:400 21px "Inter","SF Pro Display","PingFang SC",sans-serif}.muted{fill:#8a8f98;font:400 20px "Inter","SF Pro Display","PingFang SC",sans-serif}.sub{fill:#8a8f98;font:400 18px "Inter","SF Pro Display","PingFang SC",sans-serif}.mono{fill:#d0d6e0;font:500 18px "JetBrains Mono","SFMono-Regular",monospace}
   </style></defs>
   <rect class="bg" width="1440" height="860"/>
   <path class="line" d="M120 120h1200M120 728h1200"/>
@@ -18,8 +18,8 @@
       <path class="line" d="M0 130h1080"/>
     </g>
     <g transform="translate(0 145)">
-      <text class="h" x="0" y="58">这个网站的设计风格</text>
-      <text class="sub" x="0" y="96">记录当前博客从传统文章流改成内容索引界面的取舍</text>
+      <text class="h" x="0" y="58">这个网站的视觉风格</text>
+      <text class="sub" x="0" y="96">记录当前博客近黑、细线、低对比的视觉取舍</text>
       <text class="mono" x="885" y="70">[2026.05.09]</text><text class="mono" x="1035" y="70">→</text>
       <path class="line" d="M0 130h1080"/>
     </g>

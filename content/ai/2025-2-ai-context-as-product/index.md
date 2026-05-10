@@ -1,6 +1,6 @@
 ---
 title: "AI 工具链的第一原则：把上下文当成产品"
-date: 2026-05-09
+date: 2025-07-20
 tags: ["AI", "工具链", "上下文"]
 categories: ["AI"]
 series: ["AI 手记"]

@@ -2,9 +2,9 @@
   <title id="title">生产级 agent 还需要认证、授权、审计和租户隔离</title>
   <desc id="desc">展示 agent 调用 Gmail、Slack、Jira、GitHub 等工具时，需要在工具调用前解决用户身份、权限范围、凭证管理和审计日志。</desc>
   <defs>
-    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto"><path d="M2 2l8 4-8 4z" fill="#8a8a8a"/></marker>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto"><path d="M2 2l8 4-8 4z" fill="#8a8f98"/></marker>
     <style>
-      .bg{fill:#0f0f0f}.panel{fill:#151515;stroke:#343434;stroke-width:1.3}.box{fill:#1a1a1a;stroke:#3b3b3b;stroke-width:1.2}.guard{fill:#171717;stroke:#ffd59a;stroke-width:1.8}.edge{fill:none;stroke:#8a8a8a;stroke-width:2;marker-end:url(#arrow)}.line{stroke:#303030;stroke-width:1}.title{fill:#fff;font:650 42px "Instrument Sans","Inter","PingFang SC",sans-serif}.label{fill:#fff;font:650 27px "Instrument Sans","Inter","PingFang SC",sans-serif}.body{fill:#cfcfcf;font:400 22px "Instrument Sans","Inter","PingFang SC",sans-serif}.muted{fill:#9b9b9b;font:400 21px "Instrument Sans","Inter","PingFang SC",sans-serif}.mono{fill:#b8b8b8;font:500 18px "JetBrains Mono","SFMono-Regular",monospace}
+      .bg{fill:#010102}.panel{fill:#0f1011;stroke:#34343a;stroke-width:1.3}.box{fill:#17181b;stroke:#34343a;stroke-width:1.2}.guard{fill:#141517;stroke:#5e6ad2;stroke-width:1.8}.edge{fill:none;stroke:#8a8f98;stroke-width:2;marker-end:url(#arrow)}.line{stroke:#23252a;stroke-width:1}.title{fill:#f7f8f8;font:650 42px "Inter","SF Pro Text","PingFang SC",sans-serif}.label{fill:#f7f8f8;font:650 27px "Inter","SF Pro Text","PingFang SC",sans-serif}.body{fill:#d7dadd;font:400 22px "Inter","SF Pro Text","PingFang SC",sans-serif}.muted{fill:#8a8f98;font:400 21px "Inter","SF Pro Text","PingFang SC",sans-serif}.mono{fill:#aeb4bf;font:500 18px "JetBrains Mono","SFMono-Regular",monospace}
     </style>
   </defs>
   <rect class="bg" width="1440" height="860"/>

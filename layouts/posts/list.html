@@ -1,0 +1,60 @@
+{{ define "main" }}
+  {{ .Scratch.Set "scope" "list" }}
+  {{ $pages := where site.RegularPages "Section" "posts" }}
+  {{ $pages = $pages.ByDate.Reverse }}
+  {{ $paginator := .Paginate $pages }}
+  {{ $latest := false }}
+  {{ if gt (len $pages) 0 }}
+    {{ $latest = index $pages 0 }}
+  {{ end }}
+
+  <section class="ai-series-page ai-index-page posts-index-page">
+    <header class="ai-index-header" aria-labelledby="posts-index-title">
+      <div class="ai-index-copy">
+        <p class="linear-eyebrow">Article Index</p>
+        <h1 id="posts-index-title">{{ .Title }}</h1>
+        {{ with .Description }}
+          <p class="ai-description">{{ . }}</p>
+        {{ end }}
+        {{ with .Content }}
+          <div class="ai-intro">{{ . }}</div>
+        {{ end }}
+      </div>
+
+      <dl class="ai-index-stats" aria-label="Posts section status">
+        <div>
+          <dt>Status</dt>
+          <dd>{{ cond (gt (len $pages) 0) "indexed" "empty" }}</dd>
+        </div>
+        <div>
+          <dt>Posts</dt>
+          <dd>{{ len $pages }}</dd>
+        </div>
+        <div>
+          <dt>Latest</dt>
+          <dd>{{ cond $latest ($latest.Date.Format "2006.01.02") "soon" }}</dd>
+        </div>
+      </dl>
+    </header>
+
+    <div class="ai-stream-head">
+      <div>
+        <p>Archive</p>
+        <h2>全部文章</h2>
+      </div>
+      <span>{{ len $pages }} 篇</span>
+    </div>
+
+    {{ if gt (len $pages) 0 }}
+      <section class="ai-entry-list space-y-3 w-full" aria-label="Posts articles">
+        {{ range $paginator.Pages }}
+          {{ partial "article-link/simple.html" . }}
+        {{ end }}
+      </section>
+    {{ else }}
+      <p class="ai-empty">这里还没有普通文章。</p>
+    {{ end }}
+
+    {{ partial "pagination.html" . }}
+  </section>
+{{ end }}

@@ -3,7 +3,7 @@
   <desc id="desc">一张决策表，展示单次模型调用、RAG、简单工具调用、复杂 agent、生产级 agent 分别适合哪些工具。</desc>
   <defs>
     <style>
-      .bg{fill:#0f0f0f}.table{fill:#151515;stroke:#343434;stroke-width:1.3}.cell{fill:#181818;stroke:#303030;stroke-width:1}.head{fill:#202020;stroke:#383838;stroke-width:1}.line{stroke:#303030;stroke-width:1}.title{fill:#fff;font:650 42px "Instrument Sans","Inter","PingFang SC",sans-serif}.label{fill:#fff;font:650 23px "Instrument Sans","Inter","PingFang SC",sans-serif}.body{fill:#cfcfcf;font:400 21px "Instrument Sans","Inter","PingFang SC",sans-serif}.muted{fill:#9b9b9b;font:400 20px "Instrument Sans","Inter","PingFang SC",sans-serif}.yes{fill:#9ad6ff;font:650 23px "Instrument Sans","Inter","PingFang SC",sans-serif}.maybe{fill:#ffd59a;font:650 23px "Instrument Sans","Inter","PingFang SC",sans-serif}.no{fill:#777;font:650 23px "Instrument Sans","Inter","PingFang SC",sans-serif}
+      .bg{fill:#010102}.table{fill:#0f1011;stroke:#34343a;stroke-width:1.3}.cell{fill:#141517;stroke:#23252a;stroke-width:1}.head{fill:#17181b;stroke:#34343a;stroke-width:1}.line{stroke:#23252a;stroke-width:1}.title{fill:#f7f8f8;font:650 42px "Inter","SF Pro Text","PingFang SC",sans-serif}.label{fill:#f7f8f8;font:650 23px "Inter","SF Pro Text","PingFang SC",sans-serif}.body{fill:#d7dadd;font:400 21px "Inter","SF Pro Text","PingFang SC",sans-serif}.muted{fill:#8a8f98;font:400 20px "Inter","SF Pro Text","PingFang SC",sans-serif}.yes{fill:#5e6ad2;font:650 23px "Inter","SF Pro Text","PingFang SC",sans-serif}.maybe{fill:#aeb4bf;font:650 23px "Inter","SF Pro Text","PingFang SC",sans-serif}.no{fill:#6f7480;font:650 23px "Inter","SF Pro Text","PingFang SC",sans-serif}
     </style>
   </defs>
   <rect class="bg" width="1440" height="900"/>

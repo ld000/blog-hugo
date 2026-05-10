@@ -2,7 +2,7 @@
   <title id="title">细线和留白承担布局结构</title>
   <desc id="desc">展示页面用淡分割线和留白区分内容区块，而不是厚重背景卡片。</desc>
   <defs><style>
-    .bg{fill:#0f0f0f}.line{stroke:#303030;stroke-width:1}.guide{stroke:#9ad6ff;stroke-width:1.5;stroke-dasharray:8 8}.title{fill:#fff;font:650 42px "Instrument Sans","Inter","PingFang SC",sans-serif}.h{fill:#fff;font:650 28px "Instrument Sans","Inter","PingFang SC",sans-serif}.body{fill:#cfcfcf;font:400 21px "Instrument Sans","Inter","PingFang SC",sans-serif}.muted{fill:#9b9b9b;font:400 20px "Instrument Sans","Inter","PingFang SC",sans-serif}.mono{fill:#b8b8b8;font:500 18px "JetBrains Mono","SFMono-Regular",monospace}
+    .bg{fill:#010102}.line{stroke:#23252a;stroke-width:1}.guide{stroke:#5e6ad2;stroke-width:1.5;stroke-dasharray:8 8}.title{fill:#f7f8f8;font:650 42px "Inter","SF Pro Display","PingFang SC",sans-serif}.h{fill:#f7f8f8;font:650 28px "Inter","SF Pro Display","PingFang SC",sans-serif}.body{fill:#d0d6e0;font:400 21px "Inter","SF Pro Display","PingFang SC",sans-serif}.muted{fill:#8a8f98;font:400 20px "Inter","SF Pro Display","PingFang SC",sans-serif}.mono{fill:#d0d6e0;font:500 18px "JetBrains Mono","SFMono-Regular",monospace}
   </style></defs>
   <rect class="bg" width="1440" height="820"/>
   <path class="line" d="M120 120h1200M120 690h1200"/>

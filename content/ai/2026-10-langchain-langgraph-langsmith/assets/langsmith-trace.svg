@@ -3,22 +3,22 @@
   <desc id="desc">一张深色 trace 图，展示用户请求、RAG 检索、模型调用、工具调用、最终答案，以及旁边的调试和评估指标。</desc>
   <defs>
     <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
-      <path d="M2 2l8 4-8 4z" fill="#777777"/>
+      <path d="M2 2l8 4-8 4z" fill="#8a8f98"/>
     </marker>
     <style>
-      .bg { fill: #0f0f0f; }
-      .panel { fill: #151515; stroke: #343434; stroke-width: 1.3; }
-      .row { fill: #191919; stroke: #303030; stroke-width: 1.1; }
-      .line { stroke: #343434; stroke-width: 1; }
-      .edge { fill: none; stroke: #777777; stroke-width: 2; marker-end: url(#arrow); }
-      .title { fill: #ffffff; font: 650 42px "Instrument Sans", "Inter", "PingFang SC", sans-serif; }
-      .label { fill: #ffffff; font: 650 25px "Instrument Sans", "Inter", "PingFang SC", sans-serif; }
-      .body { fill: #cfcfcf; font: 400 22px "Instrument Sans", "Inter", "PingFang SC", sans-serif; }
-      .muted { fill: #9b9b9b; font: 400 22px "Instrument Sans", "Inter", "PingFang SC", sans-serif; }
-      .mono { fill: #b8b8b8; font: 500 19px "JetBrains Mono", "SFMono-Regular", monospace; }
-      .ok { fill: #9ad6ff; }
-      .warn { fill: #ffd59a; }
-      .pink { fill: #d7c4ff; }
+      .bg { fill: #010102; }
+      .panel { fill: #0f1011; stroke: #34343a; stroke-width: 1.3; }
+      .row { fill: #0f1011; stroke: #23252a; stroke-width: 1.1; }
+      .line { stroke: #34343a; stroke-width: 1; }
+      .edge { fill: none; stroke: #8a8f98; stroke-width: 2; marker-end: url(#arrow); }
+      .title { fill: #f7f8f8; font: 650 42px "Inter","SF Pro Text","PingFang SC", sans-serif; }
+      .label { fill: #f7f8f8; font: 650 25px "Inter","SF Pro Text","PingFang SC", sans-serif; }
+      .body { fill: #d7dadd; font: 400 22px "Inter","SF Pro Text","PingFang SC", sans-serif; }
+      .muted { fill: #8a8f98; font: 400 22px "Inter","SF Pro Text","PingFang SC", sans-serif; }
+      .mono { fill: #aeb4bf; font: 500 19px "JetBrains Mono", "SFMono-Regular", monospace; }
+      .ok { fill: #5e6ad2; }
+      .warn { fill: #5e6ad2; }
+      .pink { fill: #5e6ad2; }
     </style>
   </defs>
 

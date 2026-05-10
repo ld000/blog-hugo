@@ -1,6 +1,6 @@
 ---
 title: 'Claude Code防封号分享'
-date: 2026-01-01
+date: 2025-07-13
 tags: ["claude"]
 categories: ["AI"]
 series: ["AI 手记"]
@@ -11,7 +11,7 @@ description: 分享国内开发者安全使用 Claude Code 的完整方案，包
 
 由于 Anthropic 对地域及 IP 的风控强度远超 OpenAI，国内开发者必须构建一套从账号权重到网络链路的完整合规环境。
 
-## **阅前须知**
+## 阅前须知
 
 > 本文面向的读者。如果你追求开箱即用的体验，建议直接选择国内 Coding Plan 或中转站商家。
 
@@ -33,7 +33,7 @@ description: 分享国内开发者安全使用 Claude Code 的完整方案，包
 [https://www.equaldcdn.com/?ref=7afbd4d73a
 ](https://www.equaldcdn.com/?ref=7afbd4d73a)通过邀请链接注册，可以享受八折优惠。
 
-## **4、购买步骤：**
+## 购买步骤：
 
 1、打开注册链接，填写邮箱和、密码、验证码完成注册
 
@@ -113,11 +113,11 @@ IP 查询渠道：这个默认即可
 
 🔒重要原则：以后使用 Claude，永远只在这个指纹浏览器里操作。不要用你本机的 Chrome、Safari 或者 Edge 登录 Claude，哪怕只是看一眼也不行。
 
-## 订阅Claude**推荐方案：通过 App Store 订阅**
+## 订阅Claude推荐方案：通过 App Store 订阅
 
 这是目前公认比较稳定的订阅方式之一。通过苹果的 App Store 支付，Claude 会认为你是一个正规的 iOS 用户，账号权重大幅提升。
 
-## **注册美区 Apple ID**
+## 注册美区 Apple ID
 
 注册美区 Apple ID 和购买 Apple 礼品卡都需要一个美国地址，在这里使用神奇的美国地址生成器来获取。
 
@@ -131,7 +131,7 @@ IP 查询渠道：这个默认即可
 
 其实要用到的只有这一小部分，保存好，每次购买礼品卡都要用。
 
-## **注册 ID**
+## 注册 ID
 
 然后来到[苹果官网](https://appleid.apple.com/account)注册 Apple ID，建议全程使用美国节点科学上网。
 
@@ -155,7 +155,7 @@ IP 查询渠道：这个默认即可
 
 国家选美国，付款方式选`无`，因为我们只通过礼品卡充值，所以不需要绑定支付方式，下面填入我们获取的美国地址和联系方式，如果提示电话号码无效，请去[美国地址生成器](https://www.meiguodizhi.com/usa-address/montana)多刷新几个试试，因为这个号码只是账单地址所以不需要真实有效。保存信息后这个 Apple ID 就可以在 App Store 正常进行支付购买了。
 
-## **购买礼品卡**
+## 购买礼品卡
 
 第一步，前往[苹果官网](https://www.apple.com/shop/buy-giftcard/giftcard)购买礼品卡。
 
@@ -211,7 +211,7 @@ IP 查询渠道：这个默认即可
 
 最后打开 Claude app，点击订阅，输入 Apple ID 密码就能成功订阅。取消订阅在 Appstore 的**订阅**里操作，Claude 同理。
 
-# **六、日常使用的注意事项**
+## 日常使用的注意事项
 
 账号注册好了，日常使用也要注意几点，才能长期保持稳定：
 

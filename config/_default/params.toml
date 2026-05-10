@@ -1,4 +1,4 @@
-colorScheme = "linear-neon"
+colorScheme = "linear"
 defaultAppearance = "dark"
 autoSwitchAppearance = false
 enableA11y = true
