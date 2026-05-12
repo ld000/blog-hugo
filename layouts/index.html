@@ -2,12 +2,14 @@
   {{ $aiPages := where site.RegularPages "Section" "ai" }}
   {{ $postPages := where site.RegularPages "Section" "posts" }}
   {{ $springPages := where site.RegularPages "Section" "springweek" }}
+  {{ $uapRecords := hugo.Data.uap_release_01 }}
   {{ $aiPages = $aiPages.ByDate.Reverse }}
   {{ $postPages = $postPages.ByDate.Reverse }}
   {{ $springPages = $springPages.ByDate.Reverse }}
   {{ $aiSection := site.GetPage "section" "ai" }}
   {{ $postSection := site.GetPage "section" "posts" }}
   {{ $springSection := site.GetPage "section" "springweek" }}
+  {{ $uapSection := site.GetPage "section" "uap" }}
   {{ $aiLatest := false }}
   {{ $postLatest := false }}
   {{ $springLatest := false }}
@@ -19,7 +21,7 @@
     <header class="home-console-header">
       <p class="linear-eyebrow">Start here</p>
       <h1 id="home-title">{{ .Site.Title | markdownify }}</h1>
-      <p>选择一个阅读方向。AI 笔记放新的模型、工具链和工作流观察；普通文章保留技术实践、翻译和旧笔记。</p>
+      <p>选择一个阅读方向。AI 笔记放新的模型、工具链和工作流观察；普通文章保留技术实践、翻译和旧笔记；UAP 收集 PURSUE Release 01 的中文索引和本地同步入口。</p>
     </header>
 
     <div class="home-choice-grid" aria-label="Content sections">
@@ -41,6 +43,17 @@
         <span class="home-choice-meta">
           <span>{{ len $postPages }} posts</span>
           <span>{{ cond $postLatest ($postLatest.Date.Format "2006.01.02") "none" }}</span>
+          <span>indexed</span>
+        </span>
+      </a>
+
+      <a class="home-choice" href="{{ "uap/" | relLangURL }}">
+        <span class="home-choice-kicker">{{ with $uapSection }}{{ .Title }}{{ else }}UAP{{ end }}</span>
+        <span class="home-choice-title">UAP release</span>
+        <span class="home-choice-summary">{{ with $uapSection }}{{ .Description }}{{ else }}PURSUE Release 01 的官方资料索引、本地下载和中文说明。{{ end }}</span>
+        <span class="home-choice-meta">
+          <span>{{ len $uapRecords }} records</span>
+          <span>2026.05.08</span>
           <span>indexed</span>
         </span>
       </a>

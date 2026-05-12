@@ -1,0 +1,144 @@
+{
+  "generated_at": "2026-05-10T17:58:50Z",
+  "downloaded": [
+    {
+      "number": 79,
+      "path": "uap/release-01/files/videos/079-dow-uap-pr19-unresolved-uap-report-middle-east-may-2022.mp4",
+      "bytes": 6814452,
+      "sha256": "a38432ae56298abadf50de06103a6fbd591ea539e124ab1db25a4a511468cfb6"
+    },
+    {
+      "number": 81,
+      "path": "uap/release-01/files/videos/081-dow-uap-pr21-unresolved-uap-report-iraq-may-2022.mp4",
+      "bytes": 12752210,
+      "sha256": "af62b4e40a2eb0fd39f98093be2a6ae50271a011e7d5caca2119b26aaabc1212"
+    },
+    {
+      "number": 82,
+      "path": "uap/release-01/files/videos/082-dow-uap-pr22-unresolved-uap-report-syria-july-2022.mp4",
+      "bytes": 3982264,
+      "sha256": "17106a65c823fb0c4c55f41be31f863f18300bd858f536726ea6f9f3cf35ac8c"
+    },
+    {
+      "number": 83,
+      "path": "uap/release-01/files/videos/083-dow-uap-pr23-unresolved-uap-report-iraq-december-2022.mp4",
+      "bytes": 5300653,
+      "sha256": "d6a177a7004837546b8e3ea12ad0e632d9c31eabca427e05ae6eb9d4e4493f47"
+    },
+    {
+      "number": 84,
+      "path": "uap/release-01/files/videos/084-dow-uap-pr26-unresolved-uap-report-united-arab-emirates-october-2023.mp4",
+      "bytes": 27493716,
+      "sha256": "46fdeec860cdaa6b27b6fcc51d0b7e045347d494832cdc65f2038e702eaa58aa"
+    },
+    {
+      "number": 85,
+      "path": "uap/release-01/files/videos/085-dow-uap-pr27-unresolved-uap-report-united-arab-emirates-october-2023.mp4",
+      "bytes": 155885289,
+      "sha256": "3c510fe34677a0784c656105b9653ce3039d83de46f929f1ee6d6fb820ce3b8c"
+    },
+    {
+      "number": 88,
+      "path": "uap/release-01/files/videos/088-dow-uap-pr31-unresolved-uap-report-syria-october-2024.mp4",
+      "bytes": 644525,
+      "sha256": "3862ae94ef113a44814a6cc0362ac689333580afd1a307005f51abd0d4b9e3df"
+    },
+    {
+      "number": 89,
+      "path": "uap/release-01/files/videos/089-dow-uap-pr32-unresolved-uap-report-syria-october-2024.mp4",
+      "bytes": 1834659,
+      "sha256": "74bd47f0b608c19367b673ba186071db725719eebc7c7b251b8ef2b944c6427e"
+    },
+    {
+      "number": 90,
+      "path": "uap/release-01/files/videos/090-dow-uap-pr33-unresolved-uap-report-syria-october-2024.mp4",
+      "bytes": 426911,
+      "sha256": "5bdc888fd25014c5519d625764233f66ee0214bfa48c1670aff5d7c00029a5d9"
+    },
+    {
+      "number": 91,
+      "path": "uap/release-01/files/videos/091-dow-uap-pr34-unresolved-uap-report-greece-october-2023.mp4",
+      "bytes": 198248609,
+      "sha256": "34eb85ab42bb6ce5d376c02fd2db4eee0211864ed3bcd8a8247a08fe0da8c99e"
+    },
+    {
+      "number": 92,
+      "path": "uap/release-01/files/videos/092-dow-uap-pr35-unresolved-uap-report-greece-october-2023.mp4",
+      "bytes": 2406930,
+      "sha256": "670077e60bca959cde784ae1595688d645397804d811a7f5a85912c60045d471"
+    },
+    {
+      "number": 93,
+      "path": "uap/release-01/files/videos/093-dow-uap-pr36-unresolved-uap-report-middle-east-may-2020.mp4",
+      "bytes": 142686223,
+      "sha256": "5f32ce0126de2c9571f2af368b2629c15b4f1cb3582700641ef31c1d1a8ceac8"
+    }
+  ],
+  "skipped": [
+    {
+      "number": 21,
+      "path": "uap/release-01/files/videos/021-nasa-uap-d3a-gemini-7-audio-excerpt-1965.mp4"
+    },
+    {
+      "number": 86,
+      "path": "uap/release-01/files/videos/086-dow-uap-pr28-unresolved-uap-report-greece-january-2024.mp4"
+    },
+    {
+      "number": 87,
+      "path": "uap/release-01/files/videos/087-dow-uap-pr29-unresolved-uap-report-united-arab-emirates-june-2024.mp4"
+    },
+    {
+      "number": 94,
+      "path": "uap/release-01/files/videos/094-dow-uap-pr37-unresolved-uap-report-middle-east-2020.mp4"
+    },
+    {
+      "number": 95,
+      "path": "uap/release-01/files/videos/095-dow-uap-pr38-unresolved-uap-report-middle-east-2013.mp4"
+    },
+    {
+      "number": 96,
+      "path": "uap/release-01/files/videos/096-dow-uap-pr39-unresolved-uap-report-middle-east-2020.mp4"
+    },
+    {
+      "number": 97,
+      "path": "uap/release-01/files/videos/097-dow-uap-pr40-unresolved-uap-report-middle-east-2020.mp4"
+    },
+    {
+      "number": 98,
+      "path": "uap/release-01/files/videos/098-dow-uap-pr41-unresolved-uap-report-middle-east-2020.mp4"
+    },
+    {
+      "number": 99,
+      "path": "uap/release-01/files/videos/099-dow-uap-pr42-unresolved-uap-report-middle-east-2020.mp4"
+    },
+    {
+      "number": 100,
+      "path": "uap/release-01/files/videos/100-dow-uap-pr43-unresolved-uap-report-africa-2025.mp4"
+    },
+    {
+      "number": 101,
+      "path": "uap/release-01/files/videos/101-dow-uap-pr44-unresolved-uap-report-middle-east-2020.mp4"
+    },
+    {
+      "number": 102,
+      "path": "uap/release-01/files/videos/102-dow-uap-pr45-unresolved-uap-report-middle-east-2020.mp4"
+    },
+    {
+      "number": 103,
+      "path": "uap/release-01/files/videos/103-dow-uap-pr46-unresolved-uap-report-indopacom-2024.mp4"
+    },
+    {
+      "number": 104,
+      "path": "uap/release-01/files/videos/104-dow-uap-pr47-unresolved-uap-report-indopacom-2023.mp4"
+    },
+    {
+      "number": 105,
+      "path": "uap/release-01/files/videos/105-dow-uap-pr48-unresolved-uap-report-indopacom-2024.mp4"
+    },
+    {
+      "number": 106,
+      "path": "uap/release-01/files/videos/106-dow-uap-pr49-unresolved-uap-report-department-of-the-army-2026.mp4"
+    }
+  ],
+  "failed": []
+}

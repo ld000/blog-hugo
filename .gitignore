@@ -1,2 +1,4 @@
 public
 .env.local
+static/uap/release-01/files/
+.cache/

@@ -1,0 +1,147 @@
+{
+  "generated_at": "2026-05-11T06:50:48Z",
+  "downloaded": [],
+  "skipped": [],
+  "failed": [
+    {
+      "number": 107,
+      "title": "FBI Photo A1",
+      "kind": "image",
+      "source_url": "https://www.war.gov/medialink/ufo/release_1/fbi-photo-a1.png",
+      "attempted_urls": [
+        "https://www.war.gov/medialink/ufo/release_1/fbi-photo-a1.png"
+      ],
+      "error": "HTTP Error 403: Forbidden"
+    },
+    {
+      "number": 108,
+      "title": "FBI Photo A2",
+      "kind": "image",
+      "source_url": "https://www.war.gov/medialink/ufo/release_1/fbi-photo-a2.png",
+      "attempted_urls": [
+        "https://www.war.gov/medialink/ufo/release_1/fbi-photo-a2.png"
+      ],
+      "error": "HTTP Error 403: Forbidden"
+    },
+    {
+      "number": 109,
+      "title": "FBI Photo A3",
+      "kind": "image",
+      "source_url": "https://www.war.gov/medialink/ufo/release_1/fbi-photo-a3.png",
+      "attempted_urls": [
+        "https://www.war.gov/medialink/ufo/release_1/fbi-photo-a3.png"
+      ],
+      "error": "HTTP Error 403: Forbidden"
+    },
+    {
+      "number": 110,
+      "title": "FBI Photo A4",
+      "kind": "image",
+      "source_url": "https://www.war.gov/medialink/ufo/release_1/fbi-photo-a4.png",
+      "attempted_urls": [
+        "https://www.war.gov/medialink/ufo/release_1/fbi-photo-a4.png"
+      ],
+      "error": "HTTP Error 403: Forbidden"
+    },
+    {
+      "number": 111,
+      "title": "FBI Photo A5",
+      "kind": "image",
+      "source_url": "https://www.war.gov/medialink/ufo/release_1/fbi-photo-a5.png",
+      "attempted_urls": [
+        "https://www.war.gov/medialink/ufo/release_1/fbi-photo-a5.png"
+      ],
+      "error": "HTTP Error 403: Forbidden"
+    },
+    {
+      "number": 112,
+      "title": "FBI Photo A6",
+      "kind": "image",
+      "source_url": "https://www.war.gov/medialink/ufo/release_1/fbi-photo-a6.png",
+      "attempted_urls": [
+        "https://www.war.gov/medialink/ufo/release_1/fbi-photo-a6.png"
+      ],
+      "error": "HTTP Error 403: Forbidden"
+    },
+    {
+      "number": 113,
+      "title": "FBI Photo A7",
+      "kind": "image",
+      "source_url": "https://www.war.gov/medialink/ufo/release_1/fbi-photo-a7.png",
+      "attempted_urls": [
+        "https://www.war.gov/medialink/ufo/release_1/fbi-photo-a7.png"
+      ],
+      "error": "HTTP Error 403: Forbidden"
+    },
+    {
+      "number": 114,
+      "title": "FBI Photo A8",
+      "kind": "image",
+      "source_url": "https://www.war.gov/medialink/ufo/release_1/fbi-photo-a8.png",
+      "attempted_urls": [
+        "https://www.war.gov/medialink/ufo/release_1/fbi-photo-a8.png"
+      ],
+      "error": "HTTP Error 403: Forbidden"
+    },
+    {
+      "number": 145,
+      "title": "NASA-UAP-VM1, Apollo 12, 1969",
+      "kind": "image",
+      "source_url": "https://www.war.gov/medialink/ufo/release_1/nasa-uap-vm1-apollo-12-1969.jpg",
+      "attempted_urls": [
+        "https://www.war.gov/medialink/ufo/release_1/nasa-uap-vm1-apollo-12-1969.jpg"
+      ],
+      "error": "HTTP Error 403: Forbidden"
+    },
+    {
+      "number": 146,
+      "title": "NASA-UAP-VM2, Apollo 12, 1969",
+      "kind": "image",
+      "source_url": "https://www.war.gov/medialink/ufo/release_1/nasa-uap-vm2-apollo-12-1969.jpg",
+      "attempted_urls": [
+        "https://www.war.gov/medialink/ufo/release_1/nasa-uap-vm2-apollo-12-1969.jpg"
+      ],
+      "error": "HTTP Error 403: Forbidden"
+    },
+    {
+      "number": 147,
+      "title": "NASA-UAP-VM3, Apollo 12, 1969",
+      "kind": "image",
+      "source_url": "https://www.war.gov/medialink/ufo/release_1/nasa-uap-vm3-apollo-12-1969.jpg",
+      "attempted_urls": [
+        "https://www.war.gov/medialink/ufo/release_1/nasa-uap-vm3-apollo-12-1969.jpg"
+      ],
+      "error": "HTTP Error 403: Forbidden"
+    },
+    {
+      "number": 148,
+      "title": "NASA-UAP-VM4, Apollo 12, 1969",
+      "kind": "image",
+      "source_url": "https://www.war.gov/medialink/ufo/release_1/nasa-uap-vm4-apollo-12-1969.jpg",
+      "attempted_urls": [
+        "https://www.war.gov/medialink/ufo/release_1/nasa-uap-vm4-apollo-12-1969.jpg"
+      ],
+      "error": "HTTP Error 403: Forbidden"
+    },
+    {
+      "number": 149,
+      "title": "NASA-UAP-VM5, Apollo 12, 1969",
+      "kind": "image",
+      "source_url": "https://www.war.gov/medialink/ufo/release_1/nasa-uap-vm5-apollo-12-1969.jpg",
+      "attempted_urls": [
+        "https://www.war.gov/medialink/ufo/release_1/nasa-uap-vm5-apollo-12-1969.jpg"
+      ],
+      "error": "HTTP Error 403: Forbidden"
+    },
+    {
+      "number": 150,
+      "title": "NASA-UAP-VM6, Apollo 17, 1972",
+      "kind": "image",
+      "source_url": "https://www.war.gov/medialink/ufo/release_1/nasa-uap-vm6-apollo-17-1972.jpg",
+      "attempted_urls": [
+        "https://www.war.gov/medialink/ufo/release_1/nasa-uap-vm6-apollo-17-1972.jpg"
+      ],
+      "error": "HTTP Error 403: Forbidden"
+    }
+  ]
+}

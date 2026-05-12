@@ -10,6 +10,8 @@
 ## Process
 
 - 做 Hugo 内容或配置变更时，尽量运行 `hugo --gc --minify` 验证构建。
+- UAP 大媒体不要放在 `static/`，否则常规 `hugo --gc --minify` 会复制到 `public/` 并可能耗尽磁盘；本地缓存放在 `.cache/uap-release-01-files/`，页面引用 R2 公网 URL。
+- UAP 大媒体上传 Cloudflare R2 使用 `scripts/upload_uap_r2.py`，从 `.env.local` 读取 R2 凭据；`R2_PUBLIC_BASE_URL` 必须是 `pub-*.r2.dev` 或自定义公开域名，不要用 `*.r2.cloudflarestorage.com` 的 S3 API endpoint 作为网页资源 URL。当前 R2 public base 使用 `https://pub-aaaf3285ff104d6884de7c33c724514f.r2.dev`。
 - 不编辑 `themes/`、`public/`、`resources/`，除非明确要求。
 - 博客写作语气和方法已整理到 `context/blog-writing.md`；写新文章或改旧文章前先读该文件。
 - 为本项目创建或更新 Codex skill 时，放在仓库内 `.codex/skills/`，不要默认放到全局 `~/.codex/skills/`。
@@ -28,6 +30,7 @@
 - 2026-05-10：技术文章配图要像工程图而不是装饰图：一图一任务，优先关系图/流程图/决策图/边界图；图中文字短，使用 `DESIGN.md` 的近黑背景、灰阶层次和单一 `#5e6ad2` 强调色，避免旧的蓝紫黄多彩状态点；正文里的 `text` 图不要和 SVG 重复，除非只是极短的代码式定义。
 - 2026-05-09：首页应作为首次访问入口，让用户选择 AI 笔记或普通文章，并能看到各 section 的状态、数量和最新更新；分块之间要有充足留白和自然细线分割。AI 页面顶部不要厚重 hero，使用细线式 index header 和状态字段。
 - 2026-05-09：内容 section 依靠文件夹区分：`content/ai/`、`content/posts/`、`content/springweek/` 都应有 `_index.md`；Claude Code 相关文章归到 `content/ai/`；`content/posts/` 下文章统一 `series: ["Post"]`。
+- 2026-05-11：首页新增第三个入口 `UAP release`，对应 `content/uap/`，用于收集和中文索引美国战争部 PURSUE Release 01 UAP 资料；同步脚本限定 Release 01。war.gov/medialink 在本机环境会返回 403；PDF 可通过 pursueindex.com 的 R2 镜像 fallback 下载，DVIDS 视频可下载，图片仍会 403。
 
 ## Output
 
