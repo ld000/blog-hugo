@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="760" viewBox="0 0 1280 760" role="img" aria-labelledby="title desc">
+  <title id="title">Skill 在 agent 知识体系里的位置</title>
+  <desc id="desc">对比 RAG、MCP、微调和 Skill 分别提供的能力边界。</desc>
+  <defs>
+    <style>
+      .bg { fill: #010102; }
+      .panel { fill: #0f1011; stroke: #2a2d33; stroke-width: 1.2; }
+      .panel-accent { fill: #111323; stroke: #5e6ad2; stroke-width: 1.8; }
+      .center { fill: #090a0c; stroke: #3a3e49; stroke-width: 1.4; }
+      .line { stroke: #3e424e; stroke-width: 1.4; fill: none; }
+      .accent-line { stroke: #5e6ad2; stroke-width: 2; fill: none; }
+      .title { fill: #f7f8f8; font: 700 30px Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+      .label { fill: #f7f8f8; font: 650 23px Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+      .small { fill: #a5a9b3; font: 500 17px Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+      .tag { fill: #d8daf0; font: 650 16px "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace; }
+    </style>
+  </defs>
+
+  <rect class="bg" width="1280" height="760"/>
+  <text class="title" x="80" y="76">Skill 负责“怎么做”，不是“能访问什么”</text>
+  <text class="small" x="80" y="110">不同机制给 agent 补的是不同类型的能力</text>
+
+  <rect class="center" x="490" y="294" width="300" height="172" rx="8"/>
+  <text class="label" x="590" y="352">Agent</text>
+  <text class="small" x="538" y="390">理解任务、选择路径</text>
+  <text class="small" x="556" y="420">调用模型和工具</text>
+
+  <rect class="panel" x="90" y="190" width="330" height="150" rx="8"/>
+  <text class="tag" x="120" y="230">RAG</text>
+  <text class="label" x="120" y="268">事实性知识</text>
+  <text class="small" x="120" y="304">从文档和知识库检索</text>
+
+  <rect class="panel" x="860" y="190" width="330" height="150" rx="8"/>
+  <text class="tag" x="890" y="230">MCP / Tools</text>
+  <text class="label" x="890" y="268">外部触达能力</text>
+  <text class="small" x="890" y="304">访问 API、文件和服务</text>
+
+  <rect class="panel" x="90" y="500" width="330" height="150" rx="8"/>
+  <text class="tag" x="120" y="540">Fine-tuning</text>
+  <text class="label" x="120" y="578">权重里的行为模式</text>
+  <text class="small" x="120" y="614">长期、昂贵、更新较重</text>
+
+  <rect class="panel-accent" x="860" y="500" width="330" height="150" rx="8"/>
+  <text class="tag" x="890" y="540">Skill</text>
+  <text class="label" x="890" y="578">流程性知识</text>
+  <text class="small" x="890" y="614">步骤、规则、模板和判断</text>
+
+  <path class="line" d="M420 265 L490 336"/>
+  <path class="line" d="M860 265 L790 336"/>
+  <path class="line" d="M420 575 L490 424"/>
+  <path class="accent-line" d="M860 575 L790 424"/>
+
+  <text class="small" x="502" y="534">Skill 可以调用工具、读取资料、运行脚本</text>
+  <text class="small" x="502" y="566">但它的核心是规定使用这些能力的流程</text>
+</svg>

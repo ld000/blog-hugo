@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="820" viewBox="0 0 1440 820" role="img" aria-labelledby="title desc">
+  <title id="title">降低模型幻觉风险的几层工程控制</title>
+  <desc id="desc">一张深色分层图，展示从回答边界、外部事实、证据绑定、验证、追踪到人工确认的幻觉风险控制层。</desc>
+  <defs>
+    <style>
+      .bg { fill: #010102; }
+      .panel { fill: #0f1011; stroke: #23252a; stroke-width: 1; }
+      .panel-strong { fill: #141516; stroke: #34343a; stroke-width: 1; }
+      .line { stroke: #23252a; stroke-width: 1; fill: none; }
+      .accent { stroke: #5e6ad2; stroke-width: 3; fill: none; }
+      .muted { fill: #8a8f98; font: 400 24px "Inter","SF Pro Text","PingFang SC", sans-serif; letter-spacing: 0; }
+      .title { fill: #f7f8f8; font: 650 42px "Inter","SF Pro Text","PingFang SC", sans-serif; letter-spacing: 0; }
+      .label { fill: #f7f8f8; font: 650 28px "Inter","SF Pro Text","PingFang SC", sans-serif; letter-spacing: 0; }
+      .body { fill: #d0d6e0; font: 400 22px "Inter","SF Pro Text","PingFang SC", sans-serif; letter-spacing: 0; }
+      .small { fill: #8a8f98; font: 400 19px "Inter","SF Pro Text","PingFang SC", sans-serif; letter-spacing: 0; }
+      .mono { fill: #aeb4bf; font: 500 19px "JetBrains Mono","SFMono-Regular",monospace; letter-spacing: 0; }
+    </style>
+  </defs>
+
+  <rect class="bg" width="1440" height="820"/>
+  <path class="line" d="M120 128h1200M120 690h1200"/>
+
+  <text class="muted" x="120" y="92">Mitigation layers</text>
+  <text class="title" x="120" y="154">不能消灭幻觉，但可以压进边界</text>
+  <text class="body" x="120" y="196">控制思路不是相信一句 prompt，而是给模型外面加证据、验证和回放能力。</text>
+
+  <g transform="translate(120 270)">
+    <rect class="panel" x="0" y="0" width="1200" height="66" rx="8"/>
+    <line class="accent" x1="28" y1="33" x2="98" y2="33"/>
+    <text class="label" x="130" y="43">回答边界</text>
+    <text class="small" x="332" y="42">只根据材料回答；不知道就说不知道；高风险内容必须说明依据。</text>
+  </g>
+
+  <g transform="translate(120 350)">
+    <rect class="panel" x="0" y="0" width="1200" height="66" rx="8"/>
+    <line class="accent" x1="28" y1="33" x2="98" y2="33"/>
+    <text class="label" x="130" y="43">外部事实</text>
+    <text class="small" x="332" y="42">实时状态、数字、权限、价格、日期，交给数据库、搜索、API 或计算器。</text>
+  </g>
+
+  <g transform="translate(120 430)">
+    <rect class="panel" x="0" y="0" width="1200" height="66" rx="8"/>
+    <line class="accent" x1="28" y1="33" x2="98" y2="33"/>
+    <text class="label" x="130" y="43">证据绑定</text>
+    <text class="small" x="332" y="42">关键结论要能回到文档片段、工具返回值或可点击来源。</text>
+  </g>
+
+  <g transform="translate(120 510)">
+    <rect class="panel" x="0" y="0" width="1200" height="66" rx="8"/>
+    <line class="accent" x1="28" y1="33" x2="98" y2="33"/>
+    <text class="label" x="130" y="43">独立验证</text>
+    <text class="small" x="332" y="42">检查引用、数字、权限、代码 API 和上下文支持关系，不把生成当最终事实。</text>
+  </g>
+
+  <g transform="translate(120 590)">
+    <rect class="panel-strong" x="0" y="0" width="1200" height="66" rx="8"/>
+    <line class="accent" x1="28" y1="33" x2="98" y2="33"/>
+    <text class="label" x="130" y="43">追踪与人工确认</text>
+    <text class="small" x="420" y="42">保存请求链路；高风险动作进入审批、审计和回滚流程。</text>
+  </g>
+
+  <text class="mono" x="120" y="742">目标：把“模型可能胡编”变成“系统能发现、限制和修正”。</text>
+</svg>

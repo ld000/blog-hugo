@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="820" viewBox="0 0 1440 820" role="img" aria-labelledby="title desc">
+  <title id="title">模型幻觉的边界</title>
+  <desc id="desc">一张深色技术图，说明模型幻觉发生在输出和事实、上下文、工具结果或不确定性边界不一致时。</desc>
+  <defs>
+    <style>
+      .bg { fill: #010102; }
+      .panel { fill: #0f1011; stroke: #23252a; stroke-width: 1; }
+      .panel-strong { fill: #141516; stroke: #34343a; stroke-width: 1; }
+      .line { stroke: #34343a; stroke-width: 1.5; fill: none; }
+      .accent { stroke: #5e6ad2; stroke-width: 3; fill: none; }
+      .accent-fill { fill: #5e6ad2; }
+      .muted { fill: #8a8f98; font: 400 24px "Inter","SF Pro Text","PingFang SC", sans-serif; letter-spacing: 0; }
+      .title { fill: #f7f8f8; font: 650 42px "Inter","SF Pro Text","PingFang SC", sans-serif; letter-spacing: 0; }
+      .label { fill: #f7f8f8; font: 650 30px "Inter","SF Pro Text","PingFang SC", sans-serif; letter-spacing: 0; }
+      .body { fill: #d0d6e0; font: 400 23px "Inter","SF Pro Text","PingFang SC", sans-serif; letter-spacing: 0; }
+      .small { fill: #8a8f98; font: 400 20px "Inter","SF Pro Text","PingFang SC", sans-serif; letter-spacing: 0; }
+      .mono { fill: #aeb4bf; font: 500 20px "JetBrains Mono","SFMono-Regular",monospace; letter-spacing: 0; }
+    </style>
+  </defs>
+
+  <rect class="bg" width="1440" height="820"/>
+  <path class="line" d="M120 128h1200M120 690h1200"/>
+
+  <text class="muted" x="120" y="92">Hallucination boundary</text>
+  <text class="title" x="120" y="154">幻觉不是“错”，而是没有依据地确定</text>
+  <text class="body" x="120" y="196">重点看输出是否越过事实、上下文、工具结果和不确定性的边界。</text>
+
+  <g transform="translate(120 270)">
+    <rect class="panel" x="0" y="0" width="300" height="260" rx="8"/>
+    <line class="accent" x1="32" y1="36" x2="132" y2="36"/>
+    <text class="label" x="32" y="86">真实事实</text>
+    <text class="body" x="32" y="134">世界中可验证的</text>
+    <text class="body" x="32" y="170">时间、人物、事件、</text>
+    <text class="body" x="32" y="206">规则和状态</text>
+  </g>
+
+  <g transform="translate(440 270)">
+    <rect class="panel" x="0" y="0" width="300" height="260" rx="8"/>
+    <line class="accent" x1="32" y1="36" x2="132" y2="36"/>
+    <text class="label" x="32" y="86">给定上下文</text>
+    <text class="body" x="32" y="134">用户提供的文档、</text>
+    <text class="body" x="32" y="170">日志、合同、代码</text>
+    <text class="body" x="32" y="206">和约束</text>
+  </g>
+
+  <g transform="translate(760 270)">
+    <rect class="panel" x="0" y="0" width="300" height="260" rx="8"/>
+    <line class="accent" x1="32" y1="36" x2="132" y2="36"/>
+    <text class="label" x="32" y="86">工具结果</text>
+    <text class="body" x="32" y="134">检索、数据库、</text>
+    <text class="body" x="32" y="170">计算器、业务 API</text>
+    <text class="body" x="32" y="206">返回的证据</text>
+  </g>
+
+  <g transform="translate(1080 270)">
+    <rect class="panel" x="0" y="0" width="240" height="260" rx="8"/>
+    <line class="accent" x1="32" y1="36" x2="132" y2="36"/>
+    <text class="label" x="32" y="86">不确定性</text>
+    <text class="body" x="32" y="134">不知道时要</text>
+    <text class="body" x="32" y="170">停下来，或标明</text>
+    <text class="body" x="32" y="206">需要验证</text>
+  </g>
+
+  <g>
+    <path class="line" d="M270 530v58h900v-58"/>
+    <path class="line" d="M590 530v58"/>
+    <path class="line" d="M910 530v58"/>
+    <path class="line" d="M1200 530v58"/>
+    <rect class="panel-strong" x="382" y="588" width="676" height="74" rx="8"/>
+    <text class="mono" x="424" y="634">没有依据的内容 + 确定表达 = 幻觉风险</text>
+  </g>
+</svg>

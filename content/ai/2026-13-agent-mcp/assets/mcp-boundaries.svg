@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="760" viewBox="0 0 1280 760" role="img" aria-labelledby="title desc">
+  <title id="title">MCP 和相邻概念的边界</title>
+  <desc id="desc">对比模型工具调用、RAG、Skill、Harness 和 MCP 在 agent 系统里分别负责的层次。</desc>
+  <defs>
+    <style>
+      .bg { fill: #010102; }
+      .panel { fill: #0f1011; stroke: #252832; stroke-width: 1.2; }
+      .panel-hot { fill: #111323; stroke: #5e6ad2; stroke-width: 1.8; }
+      .node { fill: #090a0c; stroke: #343842; stroke-width: 1.2; }
+      .line { stroke: #4d5260; stroke-width: 1.5; fill: none; marker-end: url(#arrow); }
+      .accent-line { stroke: #5e6ad2; stroke-width: 2; fill: none; marker-end: url(#arrowAccent); }
+      .muted { fill: #8a8f98; font: 400 18px system-ui, -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif; }
+      .title { fill: #f7f8f8; font: 650 34px system-ui, -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif; letter-spacing: 0; }
+      .label { fill: #f7f8f8; font: 650 23px system-ui, -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif; letter-spacing: 0; }
+      .body { fill: #d7dadd; font: 400 17px system-ui, -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif; letter-spacing: 0; }
+      .mono { fill: #aeb4bf; font: 500 16px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; letter-spacing: 0; }
+    </style>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#4d5260"/>
+    </marker>
+    <marker id="arrowAccent" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#5e6ad2"/>
+    </marker>
+  </defs>
+
+  <rect class="bg" width="1280" height="760"/>
+  <text class="muted" x="80" y="70">Boundaries</text>
+  <text class="title" x="80" y="118">MCP 管连接，Harness 管运行，Skill 管流程</text>
+  <text class="body" x="80" y="154">这些概念经常一起出现，但它们不在同一层。</text>
+
+  <rect class="panel" x="90" y="246" width="260" height="120" rx="8"/>
+  <text class="mono" x="122" y="286">function calling</text>
+  <text class="label" x="122" y="324">表达调用意图</text>
+  <text class="body" x="122" y="348">函数名、参数、结果格式</text>
+
+  <rect class="panel" x="90" y="456" width="260" height="120" rx="8"/>
+  <text class="mono" x="122" y="496">rag</text>
+  <text class="label" x="122" y="534">检索事实资料</text>
+  <text class="body" x="122" y="558">索引、召回、引用</text>
+
+  <rect class="panel-hot" x="510" y="330" width="260" height="150" rx="8"/>
+  <text class="mono" x="542" y="372">mcp</text>
+  <text class="label" x="542" y="412">连接外部能力</text>
+  <text class="body" x="542" y="442">tools、resources、prompts</text>
+
+  <rect class="panel" x="930" y="246" width="260" height="120" rx="8"/>
+  <text class="mono" x="962" y="286">skill</text>
+  <text class="label" x="962" y="324">沉淀执行流程</text>
+  <text class="body" x="962" y="348">步骤、规则、模板</text>
+
+  <rect class="panel" x="930" y="456" width="260" height="120" rx="8"/>
+  <text class="mono" x="962" y="496">harness</text>
+  <text class="label" x="962" y="534">控制运行边界</text>
+  <text class="body" x="962" y="558">loop、权限、审批、trace</text>
+
+  <rect class="node" x="510" y="600" width="260" height="82" rx="8"/>
+  <text class="label" x="574" y="634">外部系统</text>
+  <text class="body" x="558" y="662">文件、API、数据库、服务</text>
+
+  <path class="accent-line" d="M350 306h160"/>
+  <path class="line" d="M350 516l160-72"/>
+  <path class="line" d="M770 408l160-82"/>
+  <path class="line" d="M770 442l160 74"/>
+  <path class="accent-line" d="M640 480v120"/>
+
+  <text class="muted" x="80" y="706">最小判断：MCP 告诉 agent 能连什么；Skill 告诉 agent 怎么做；Harness 决定能不能做。</text>
+</svg>

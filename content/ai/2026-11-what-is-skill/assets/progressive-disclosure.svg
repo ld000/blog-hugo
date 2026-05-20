@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="760" viewBox="0 0 1280 760" role="img" aria-labelledby="title desc">
+  <title id="title">Skill 通过渐进加载减少上下文占用</title>
+  <desc id="desc">展示 agent 先加载所有 Skill 的名称和描述，再按任务匹配加载完整说明，最后按需加载脚本和参考资料。</desc>
+  <defs>
+    <style>
+      .bg { fill: #010102; }
+      .panel { fill: #0f1011; stroke: #2a2d33; stroke-width: 1.2; }
+      .panel-hot { fill: #111323; stroke: #5e6ad2; stroke-width: 1.8; }
+      .line { stroke: #4d5260; stroke-width: 1.6; fill: none; marker-end: url(#arrow); }
+      .muted-line { stroke: #30333b; stroke-width: 1.2; fill: none; }
+      .accent { fill: #5e6ad2; }
+      .title { fill: #f7f8f8; font: 700 30px Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+      .label { fill: #f7f8f8; font: 650 22px Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+      .small { fill: #a5a9b3; font: 500 17px Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+      .mono { fill: #d8daf0; font: 600 16px "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace; }
+    </style>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#4d5260"/>
+    </marker>
+  </defs>
+
+  <rect class="bg" width="1280" height="760"/>
+  <text class="title" x="80" y="76">渐进加载：先知道有什么，再按需读取细节</text>
+  <text class="small" x="80" y="110">Skill 可以很多，但上下文里只保留当前任务需要的部分</text>
+
+  <rect class="panel" x="80" y="178" width="270" height="146" rx="8"/>
+  <text class="label" x="110" y="224">启动</text>
+  <text class="small" x="110" y="260">扫描已安装 Skill</text>
+  <text class="mono" x="110" y="292">name + description</text>
+
+  <path class="line" d="M360 251 L466 251"/>
+
+  <rect class="panel" x="480" y="178" width="300" height="146" rx="8"/>
+  <text class="label" x="510" y="224">轻量索引</text>
+  <text class="small" x="510" y="260">保留触发条件</text>
+  <text class="small" x="510" y="290">不加载完整正文</text>
+
+  <path class="line" d="M790 251 L896 251"/>
+
+  <rect class="panel-hot" x="910" y="178" width="290" height="146" rx="8"/>
+  <text class="label" x="940" y="224">任务匹配</text>
+  <text class="small" x="940" y="260">用户请求命中描述</text>
+  <text class="mono" x="940" y="292">load SKILL.md</text>
+
+  <path class="line" d="M1055 334 L1055 422"/>
+
+  <rect class="panel" x="910" y="438" width="290" height="146" rx="8"/>
+  <text class="label" x="940" y="484">执行</text>
+  <text class="small" x="940" y="520">按步骤完成任务</text>
+  <text class="small" x="940" y="550">必要时读资源或跑脚本</text>
+
+  <path class="line" d="M896 511 L788 511"/>
+
+  <rect class="panel" x="480" y="438" width="300" height="146" rx="8"/>
+  <text class="label" x="510" y="484">按需资源</text>
+  <text class="small" x="510" y="520">references / assets</text>
+  <text class="small" x="510" y="550">scripts 只在需要时使用</text>
+
+  <path class="muted-line" d="M214 356 L214 636 L1055 636 L1055 596"/>
+  <circle class="accent" cx="214" cy="356" r="5"/>
+  <text class="small" x="246" y="676">没有命中的 Skill 保持在索引层，不占用完整上下文</text>
+</svg>

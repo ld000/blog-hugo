@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="760" viewBox="0 0 1280 760" role="img" aria-labelledby="title desc">
+  <title id="title">一个 Skill 文件夹里的核心文件和可选资源</title>
+  <desc id="desc">展示 Skill 文件夹由 SKILL.md、scripts、references 和 assets 组成，其中 SKILL.md 包含元数据和执行说明。</desc>
+  <defs>
+    <style>
+      .bg { fill: #010102; }
+      .panel { fill: #0f1011; stroke: #2a2d33; stroke-width: 1.2; }
+      .panel-soft { fill: #08090a; stroke: #252830; stroke-width: 1.2; }
+      .accent { fill: #5e6ad2; }
+      .accent-stroke { stroke: #5e6ad2; stroke-width: 2.2; fill: none; }
+      .line { stroke: #383b44; stroke-width: 1.4; fill: none; }
+      .title { fill: #f7f8f8; font: 700 30px Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+      .label { fill: #f7f8f8; font: 650 22px Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+      .small { fill: #a5a9b3; font: 500 17px Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+      .mono { fill: #f7f8f8; font: 650 20px "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace; }
+      .mono-dim { fill: #a5a9b3; font: 500 17px "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace; }
+    </style>
+  </defs>
+
+  <rect class="bg" width="1280" height="760"/>
+  <text class="title" x="80" y="76">Skill 是一个可版本管理的文件夹</text>
+  <text class="small" x="80" y="110">入口文件负责触发和流程说明，资源文件按需加载</text>
+
+  <rect class="panel" x="80" y="160" width="360" height="480" rx="8"/>
+  <text class="mono" x="122" y="218">my-skill/</text>
+  <path class="line" d="M142 250 L142 560"/>
+  <path class="line" d="M142 272 L176 272"/>
+  <path class="line" d="M142 344 L176 344"/>
+  <path class="line" d="M142 416 L176 416"/>
+  <path class="line" d="M142 488 L176 488"/>
+  <text class="mono" x="190" y="280">SKILL.md</text>
+  <text class="mono-dim" x="190" y="352">scripts/</text>
+  <text class="mono-dim" x="190" y="424">references/</text>
+  <text class="mono-dim" x="190" y="496">assets/</text>
+  <text class="small" x="190" y="306">元数据 + 指令</text>
+  <text class="small" x="190" y="378">可执行脚本</text>
+  <text class="small" x="190" y="450">长文档和规范</text>
+  <text class="small" x="190" y="522">模板和静态资源</text>
+
+  <path class="accent-stroke" d="M454 272 C500 272 500 214 548 214"/>
+  <path class="line" d="M454 344 C500 344 500 360 548 360"/>
+  <path class="line" d="M454 416 C500 416 500 506 548 506"/>
+  <path class="line" d="M454 488 C500 488 500 590 548 590"/>
+
+  <rect class="panel" x="560" y="160" width="640" height="124" rx="8"/>
+  <rect class="accent" x="590" y="190" width="10" height="64" rx="5"/>
+  <text class="label" x="620" y="210">YAML front matter</text>
+  <text class="mono-dim" x="620" y="242">name: what-is-skill</text>
+  <text class="mono-dim" x="860" y="242">description: when to use</text>
+
+  <rect class="panel" x="560" y="306" width="640" height="124" rx="8"/>
+  <rect class="accent" x="590" y="336" width="10" height="64" rx="5"/>
+  <text class="label" x="620" y="356">Markdown instructions</text>
+  <text class="small" x="620" y="392">步骤、规则、示例、边界条件、验收方式</text>
+
+  <rect class="panel-soft" x="560" y="452" width="300" height="120" rx="8"/>
+  <text class="label" x="590" y="496">References</text>
+  <text class="small" x="590" y="530">详细规范按需读取</text>
+
+  <rect class="panel-soft" x="900" y="452" width="300" height="120" rx="8"/>
+  <text class="label" x="930" y="496">Scripts</text>
+  <text class="small" x="930" y="530">确定性步骤可执行</text>
+
+  <rect class="panel-soft" x="560" y="604" width="640" height="76" rx="8"/>
+  <text class="label" x="590" y="648">Assets</text>
+  <text class="small" x="680" y="648">模板、样例、数据文件、图像资源</text>
+</svg>

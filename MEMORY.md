@@ -10,6 +10,7 @@
 ## Process
 
 - 做 Hugo 内容或配置变更时，尽量运行 `hugo --gc --minify` 验证构建。
+- 本机 `/usr/local/bin/hugo` 是 `v0.107.0`，会因为现有 `layouts/_default/rss.xml` 使用 `site.Language.Locale` 而构建失败；需要按 CI 固定的 Hugo Extended `0.161.1` 验证。若临时解包运行 Hugo，避免把 `--gc` 清掉的 `resources/_gen/` 缓存作为源码变更保留。
 - UAP 大媒体不要放在 `static/`，否则常规 `hugo --gc --minify` 会复制到 `public/` 并可能耗尽磁盘；本地缓存放在 `.cache/uap-release-01-files/`，页面引用 R2 公网 URL。
 - UAP 大媒体上传 Cloudflare R2 使用 `scripts/upload_uap_r2.py`，从 `.env.local` 读取 R2 凭据；`R2_PUBLIC_BASE_URL` 必须是 `pub-*.r2.dev` 或自定义公开域名，不要用 `*.r2.cloudflarestorage.com` 的 S3 API endpoint 作为网页资源 URL。当前 R2 public base 使用 `https://pub-aaaf3285ff104d6884de7c33c724514f.r2.dev`。
 - 使用 Cloudflare R2 时必须优先避免超过免费额度；上传或新增媒体前先估算对象总量、存储量、请求量和公开访问风险，必要时提醒确认，不要默认继续扩容。

@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="760" viewBox="0 0 1280 760" role="img" aria-labelledby="title desc">
+  <title id="title">MCP 在 agent 系统里的位置</title>
+  <desc id="desc">展示用户、Host 应用、模型、Agent loop、MCP client、MCP server 和外部系统之间的关系。</desc>
+  <defs>
+    <style>
+      .bg { fill: #010102; }
+      .panel { fill: #0f1011; stroke: #252832; stroke-width: 1.2; }
+      .panel-hot { fill: #111323; stroke: #5e6ad2; stroke-width: 1.8; }
+      .node { fill: #090a0c; stroke: #343842; stroke-width: 1.2; }
+      .line { stroke: #4d5260; stroke-width: 1.6; fill: none; marker-end: url(#arrow); }
+      .accent-line { stroke: #5e6ad2; stroke-width: 2; fill: none; marker-end: url(#arrowAccent); }
+      .muted { fill: #8a8f98; font: 400 18px system-ui, -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif; }
+      .title { fill: #f7f8f8; font: 650 34px system-ui, -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif; letter-spacing: 0; }
+      .label { fill: #f7f8f8; font: 650 23px system-ui, -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif; letter-spacing: 0; }
+      .body { fill: #d7dadd; font: 400 17px system-ui, -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif; letter-spacing: 0; }
+      .mono { fill: #aeb4bf; font: 500 16px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; letter-spacing: 0; }
+    </style>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#4d5260"/>
+    </marker>
+    <marker id="arrowAccent" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#5e6ad2"/>
+    </marker>
+  </defs>
+
+  <rect class="bg" width="1280" height="760"/>
+  <text class="muted" x="80" y="70">Agent system</text>
+  <text class="title" x="80" y="118">MCP 是连接层，不是模型或 agent loop</text>
+  <text class="body" x="80" y="154">Host 管用户、模型和运行控制；MCP client/server 管外部能力的标准连接。</text>
+
+  <rect class="panel" x="80" y="328" width="160" height="96" rx="8"/>
+  <text class="label" x="128" y="368">用户</text>
+  <text class="body" x="112" y="398">目标、确认</text>
+
+  <rect class="panel-hot" x="310" y="220" width="440" height="312" rx="8"/>
+  <text class="mono" x="340" y="260">Host application</text>
+  <rect class="node" x="350" y="300" width="160" height="92" rx="8"/>
+  <text class="label" x="398" y="338">模型</text>
+  <text class="body" x="382" y="366">理解与生成</text>
+  <rect class="node" x="550" y="300" width="160" height="92" rx="8"/>
+  <text class="label" x="584" y="338">Agent loop</text>
+  <text class="body" x="584" y="366">状态、策略</text>
+  <rect class="node" x="350" y="424" width="360" height="72" rx="8"/>
+  <text class="label" x="426" y="456">MCP clients</text>
+  <text class="body" x="438" y="482">每个 server 一个连接</text>
+
+  <rect class="panel" x="820" y="218" width="180" height="92" rx="8"/>
+  <text class="label" x="858" y="256">文件 Server</text>
+  <text class="body" x="858" y="284">本地 stdio</text>
+  <rect class="panel" x="820" y="350" width="180" height="92" rx="8"/>
+  <text class="label" x="858" y="388">GitHub Server</text>
+  <text class="body" x="858" y="416">远端 HTTP</text>
+  <rect class="panel" x="820" y="482" width="180" height="92" rx="8"/>
+  <text class="label" x="858" y="520">数据库 Server</text>
+  <text class="body" x="858" y="548">查询接口</text>
+
+  <rect class="node" x="1080" y="218" width="140" height="92" rx="8"/>
+  <text class="label" x="1126" y="256">文件</text>
+  <text class="body" x="1110" y="284">目录、内容</text>
+  <rect class="node" x="1080" y="350" width="140" height="92" rx="8"/>
+  <text class="label" x="1122" y="388">GitHub</text>
+  <text class="body" x="1106" y="416">Issue、PR</text>
+  <rect class="node" x="1080" y="482" width="140" height="92" rx="8"/>
+  <text class="label" x="1118" y="520">数据库</text>
+  <text class="body" x="1110" y="548">Schema、SQL</text>
+
+  <path class="accent-line" d="M240 376h70"/>
+  <path class="line" d="M510 346h40"/>
+  <path class="accent-line" d="M710 460h80"/>
+  <path class="line" d="M1000 264h80"/>
+  <path class="line" d="M1000 396h80"/>
+  <path class="line" d="M1000 528h80"/>
+
+  <text class="muted" x="326" y="610">MCP 标准化的是 Host 到 Server 的能力发现、参数 schema、调用和结果返回。</text>
+</svg>

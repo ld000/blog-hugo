@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="920" viewBox="0 0 1440 920" role="img" aria-labelledby="title desc">
+  <title id="title">Agent 通过 MCP 调用工具的基本流程</title>
+  <desc id="desc">展示 Host 建立 MCP 连接、拉取工具列表、模型选择工具、Host 调用 server、server 返回结果并回填上下文的闭环。</desc>
+  <defs>
+    <style>
+      .bg { fill: #010102; }
+      .lane { fill: #0b0c0e; stroke: #23252a; stroke-width: 1; }
+      .panel { fill: #0f1011; stroke: #252832; stroke-width: 1.2; }
+      .panel-hot { fill: #111323; stroke: #5e6ad2; stroke-width: 1.8; }
+      .line { stroke: #4d5260; stroke-width: 1.7; fill: none; marker-end: url(#arrow); }
+      .accent-line { stroke: #5e6ad2; stroke-width: 2; fill: none; marker-end: url(#arrowAccent); }
+      .muted { fill: #8a8f98; font: 400 20px system-ui, -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif; }
+      .title { fill: #f7f8f8; font: 650 38px system-ui, -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif; letter-spacing: 0; }
+      .label { fill: #f7f8f8; font: 650 23px system-ui, -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif; letter-spacing: 0; }
+      .body { fill: #d7dadd; font: 400 18px system-ui, -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif; letter-spacing: 0; }
+      .mono { fill: #aeb4bf; font: 500 16px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; letter-spacing: 0; }
+    </style>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#4d5260"/>
+    </marker>
+    <marker id="arrowAccent" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#5e6ad2"/>
+    </marker>
+  </defs>
+
+  <rect class="bg" width="1440" height="920"/>
+  <text class="muted" x="100" y="86">Tool flow</text>
+  <text class="title" x="100" y="148">MCP 负责工具调用通道，Host 负责控制闭环</text>
+  <text class="body" x="100" y="192">模型提出工具意图，Host 经过策略判断后，通过 MCP client 调用 server。</text>
+
+  <rect class="lane" x="100" y="250" width="300" height="546" rx="8"/>
+  <text class="mono" x="128" y="292">host</text>
+  <rect class="lane" x="570" y="250" width="300" height="546" rx="8"/>
+  <text class="mono" x="598" y="292">model</text>
+  <rect class="lane" x="1040" y="250" width="300" height="546" rx="8"/>
+  <text class="mono" x="1068" y="292">mcp server</text>
+
+  <rect class="panel" x="142" y="336" width="216" height="72" rx="8"/>
+  <text class="label" x="180" y="372">建立连接</text>
+  <text class="body" x="174" y="394">初始化、协商</text>
+
+  <rect class="panel" x="142" y="458" width="216" height="72" rx="8"/>
+  <text class="label" x="180" y="494">读取能力</text>
+  <text class="body" x="174" y="516">tools / resources</text>
+
+  <rect class="panel-hot" x="612" y="458" width="216" height="72" rx="8"/>
+  <text class="label" x="650" y="494">选择工具</text>
+  <text class="body" x="660" y="516">函数名、参数</text>
+
+  <rect class="panel" x="142" y="580" width="216" height="72" rx="8"/>
+  <text class="label" x="180" y="616">策略检查</text>
+  <text class="body" x="174" y="638">权限、审批、预算</text>
+
+  <rect class="panel" x="1082" y="580" width="216" height="72" rx="8"/>
+  <text class="label" x="1120" y="616">执行工具</text>
+  <text class="body" x="1114" y="638">调用真实系统</text>
+
+  <rect class="panel" x="612" y="704" width="216" height="72" rx="8"/>
+  <text class="label" x="650" y="740">继续推理</text>
+  <text class="body" x="660" y="762">使用 observation</text>
+
+  <path class="accent-line" d="M358 372h682"/>
+  <text class="mono" x="596" y="350">initialize</text>
+  <path class="line" d="M1040 394H358"/>
+  <text class="mono" x="612" y="424">capabilities</text>
+  <path class="accent-line" d="M358 494h254"/>
+  <text class="mono" x="408" y="474">tool descriptions</text>
+  <path class="accent-line" d="M720 530v50H358"/>
+  <path class="accent-line" d="M358 616h724"/>
+  <text class="mono" x="610" y="596">tools/call</text>
+  <path class="line" d="M1082 638H358"/>
+  <text class="mono" x="610" y="668">tool result</text>
+  <path class="accent-line" d="M250 652v88h362"/>
+
+  <text class="muted" x="100" y="852">Host 可以在任意工具调用前加入 allowlist、人工审批、超时、日志和 trace。</text>
+</svg>

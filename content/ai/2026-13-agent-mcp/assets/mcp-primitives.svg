@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="760" viewBox="0 0 1280 760" role="img" aria-labelledby="title desc">
+  <title id="title">MCP Server 暴露的三类核心能力</title>
+  <desc id="desc">对比 tools、resources、prompts 分别提供动作、上下文和提示模板。</desc>
+  <defs>
+    <style>
+      .bg { fill: #010102; }
+      .panel { fill: #0f1011; stroke: #252832; stroke-width: 1.2; }
+      .panel-hot { fill: #111323; stroke: #5e6ad2; stroke-width: 1.8; }
+      .node { fill: #090a0c; stroke: #343842; stroke-width: 1.2; }
+      .line { stroke: #4d5260; stroke-width: 1.6; fill: none; marker-end: url(#arrow); }
+      .accent-line { stroke: #5e6ad2; stroke-width: 2; fill: none; marker-end: url(#arrowAccent); }
+      .muted { fill: #8a8f98; font: 400 18px system-ui, -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif; }
+      .title { fill: #f7f8f8; font: 650 34px system-ui, -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif; letter-spacing: 0; }
+      .label { fill: #f7f8f8; font: 650 25px system-ui, -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif; letter-spacing: 0; }
+      .body { fill: #d7dadd; font: 400 17px system-ui, -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif; letter-spacing: 0; }
+      .mono { fill: #aeb4bf; font: 500 16px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; letter-spacing: 0; }
+    </style>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#4d5260"/>
+    </marker>
+    <marker id="arrowAccent" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#5e6ad2"/>
+    </marker>
+  </defs>
+
+  <rect class="bg" width="1280" height="760"/>
+  <text class="muted" x="80" y="70">Server primitives</text>
+  <text class="title" x="80" y="118">Tools 做动作，Resources 给上下文，Prompts 给模板</text>
+  <text class="body" x="80" y="154">三类能力都由 server 暴露，host 决定如何呈现给模型和用户。</text>
+
+  <rect class="panel-hot" x="448" y="250" width="384" height="220" rx="8"/>
+  <text class="mono" x="486" y="294">mcp server</text>
+  <text class="label" x="506" y="352">标准能力清单</text>
+  <text class="body" x="506" y="386">可发现、可调用、可描述</text>
+  <text class="body" x="506" y="418">参数 schema 和返回结构清楚</text>
+
+  <rect class="panel" x="80" y="530" width="300" height="130" rx="8"/>
+  <text class="mono" x="112" y="570">tools</text>
+  <text class="label" x="112" y="610">执行动作</text>
+  <text class="body" x="112" y="640">搜索、查询、创建、写入</text>
+
+  <rect class="panel" x="490" y="530" width="300" height="130" rx="8"/>
+  <text class="mono" x="522" y="570">resources</text>
+  <text class="label" x="522" y="610">读取上下文</text>
+  <text class="body" x="522" y="640">文件、文档、对象、schema</text>
+
+  <rect class="panel" x="900" y="530" width="300" height="130" rx="8"/>
+  <text class="mono" x="932" y="570">prompts</text>
+  <text class="label" x="932" y="610">复用模板</text>
+  <text class="body" x="932" y="640">排障、审计、总结流程</text>
+
+  <rect class="node" x="92" y="234" width="262" height="106" rx="8"/>
+  <text class="label" x="148" y="276">外部 API</text>
+  <text class="body" x="124" y="306">真实服务和副作用</text>
+  <rect class="node" x="926" y="234" width="262" height="106" rx="8"/>
+  <text class="label" x="986" y="276">Host</text>
+  <text class="body" x="966" y="306">模型、策略、用户确认</text>
+
+  <path class="accent-line" d="M354 287h94"/>
+  <path class="accent-line" d="M832 287h94"/>
+  <path class="line" d="M592 470L300 530"/>
+  <path class="line" d="M640 470v60"/>
+  <path class="line" d="M688 470l292 60"/>
+</svg>

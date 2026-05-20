@@ -1,0 +1,93 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="920" viewBox="0 0 1440 920" role="img" aria-labelledby="title desc">
+  <title id="title">Agent Harness 运行闭环</title>
+  <desc id="desc">流程图展示任务进入 harness controller，模型决策后经由策略、审批、工具、沙箱、状态和观测形成闭环，最后输出结果。</desc>
+  <defs>
+    <style>
+      .bg { fill: #010102; }
+      .panel { fill: #0f1011; stroke: #252832; stroke-width: 1.2; }
+      .panel-hot { fill: #111323; stroke: #5e6ad2; stroke-width: 1.8; }
+      .node { fill: #090a0c; stroke: #343842; stroke-width: 1.2; }
+      .node-soft { fill: #111217; stroke: #343842; stroke-width: 1.1; }
+      .line { stroke: #4d5260; stroke-width: 1.7; fill: none; marker-end: url(#arrow); }
+      .accent-line { stroke: #5e6ad2; stroke-width: 2; fill: none; marker-end: url(#arrowAccent); }
+      .dash { stroke: #4d5260; stroke-width: 1.5; stroke-dasharray: 7 7; fill: none; marker-end: url(#arrow); }
+      .hairline { stroke: #23252a; stroke-width: 1; fill: none; }
+      .muted { fill: #8a8f98; font: 400 22px system-ui, -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif; }
+      .title { fill: #f7f8f8; font: 650 40px system-ui, -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif; letter-spacing: 0; }
+      .label { fill: #f7f8f8; font: 650 27px system-ui, -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif; letter-spacing: 0; }
+      .small-label { fill: #f7f8f8; font: 650 22px system-ui, -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif; letter-spacing: 0; }
+      .body { fill: #d7dadd; font: 400 20px system-ui, -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif; letter-spacing: 0; }
+      .mono { fill: #aeb4bf; font: 500 18px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; letter-spacing: 0; }
+    </style>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#4d5260"/>
+    </marker>
+    <marker id="arrowAccent" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#5e6ad2"/>
+    </marker>
+  </defs>
+
+  <rect class="bg" width="1440" height="920"/>
+  <path class="hairline" d="M120 224h1200M120 792h1200"/>
+
+  <text class="muted" x="120" y="92">Harness loop</text>
+  <text class="title" x="120" y="154">Harness 控制循环，模型只负责下一步判断</text>
+  <text class="body" x="120" y="196">任务进入后，运行层调度模型、工具、状态、审批、观测和沙箱，直到完成或被拦截。</text>
+
+  <rect class="panel" x="120" y="394" width="206" height="92" rx="8"/>
+  <text class="label" x="174" y="434">任务进入</text>
+  <text class="body" x="157" y="464">目标、约束</text>
+  <path class="accent-line" d="M326 440h92"/>
+
+  <rect class="panel-hot" x="418" y="270" width="604" height="370" rx="8"/>
+  <text class="mono" x="452" y="312">harness controller</text>
+
+  <rect class="node" x="496" y="360" width="220" height="92" rx="8"/>
+  <text class="label" x="552" y="398">模型决策</text>
+  <text class="body" x="532" y="428">答复或调用工具</text>
+
+  <rect class="node" x="754" y="360" width="190" height="92" rx="8"/>
+  <text class="label" x="806" y="398">策略门</text>
+  <text class="body" x="790" y="428">权限、预算</text>
+
+  <path class="accent-line" d="M716 406h38"/>
+  <path class="accent-line" d="M944 406h124"/>
+
+  <rect class="node-soft" x="754" y="506" width="190" height="82" rx="8"/>
+  <text class="small-label" x="802" y="540">回写状态</text>
+  <text class="body" x="794" y="568">session / memory</text>
+
+  <path class="line" d="M849 452v44"/>
+  <path class="line" d="M754 547H606V462"/>
+  <text class="mono" x="618" y="532">observation</text>
+
+  <rect class="panel" x="1078" y="278" width="242" height="84" rx="8"/>
+  <text class="label" x="1132" y="314">人工审批</text>
+  <text class="body" x="1114" y="342">高风险动作暂停</text>
+  <path class="line" d="M944 388h60v-68h64"/>
+  <path class="line" d="M1138 362v44"/>
+
+  <rect class="panel" x="1078" y="406" width="242" height="92" rx="8"/>
+  <text class="label" x="1132" y="444">工具网关</text>
+  <text class="body" x="1114" y="474">API、文件、浏览器</text>
+
+  <rect class="panel" x="1078" y="542" width="242" height="92" rx="8"/>
+  <text class="label" x="1132" y="580">沙箱运行</text>
+  <text class="body" x="1112" y="610">隔离、超时、凭据</text>
+  <path class="line" d="M1199 498v34"/>
+
+  <path class="line" d="M1078 588h-74v-41h-50"/>
+
+  <rect class="panel" x="120" y="560" width="206" height="92" rx="8"/>
+  <text class="label" x="174" y="600">结果输出</text>
+  <text class="body" x="157" y="630">完成、失败、暂停</text>
+  <path class="line" d="M496 406H382v200h-56"/>
+
+  <rect class="node-soft" x="438" y="690" width="564" height="70" rx="8"/>
+  <text class="body" x="474" y="732">Trace / hooks / metrics / evals 记录每一步输入、参数、结果和状态变化</text>
+  <path class="dash" d="M606 452v226"/>
+  <path class="dash" d="M849 588v90"/>
+  <path class="dash" d="M1199 634v44H1002"/>
+
+  <text class="muted" x="120" y="844">停止条件：完成、失败、超时、预算耗尽、人工拒绝、策略拦截。</text>
+</svg>

@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="760" viewBox="0 0 1280 760" role="img" aria-labelledby="title desc">
+  <title id="title">MCP 的 Host、Client、Server 关系</title>
+  <desc id="desc">展示 Host 里创建多个 MCP client，每个 client 连接一个 MCP server，server 后面连接不同外部系统。</desc>
+  <defs>
+    <style>
+      .bg { fill: #010102; }
+      .panel { fill: #0f1011; stroke: #252832; stroke-width: 1.2; }
+      .panel-hot { fill: #111323; stroke: #5e6ad2; stroke-width: 1.8; }
+      .node { fill: #090a0c; stroke: #343842; stroke-width: 1.2; }
+      .line { stroke: #4d5260; stroke-width: 1.6; fill: none; marker-end: url(#arrow); }
+      .accent-line { stroke: #5e6ad2; stroke-width: 2; fill: none; marker-end: url(#arrowAccent); }
+      .hairline { stroke: #23252a; stroke-width: 1; fill: none; }
+      .muted { fill: #8a8f98; font: 400 18px system-ui, -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif; }
+      .title { fill: #f7f8f8; font: 650 34px system-ui, -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif; letter-spacing: 0; }
+      .label { fill: #f7f8f8; font: 650 24px system-ui, -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif; letter-spacing: 0; }
+      .body { fill: #d7dadd; font: 400 17px system-ui, -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif; letter-spacing: 0; }
+      .mono { fill: #aeb4bf; font: 500 16px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; letter-spacing: 0; }
+    </style>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#4d5260"/>
+    </marker>
+    <marker id="arrowAccent" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#5e6ad2"/>
+    </marker>
+  </defs>
+
+  <rect class="bg" width="1280" height="760"/>
+  <text class="muted" x="80" y="70">MCP roles</text>
+  <text class="title" x="80" y="118">Host 面向用户，Server 面向外部系统</text>
+  <text class="body" x="80" y="154">Client 是 Host 内部的协议连接，一般一个 Server 对应一个 Client。</text>
+
+  <rect class="panel-hot" x="80" y="226" width="360" height="388" rx="8"/>
+  <text class="mono" x="112" y="268">host</text>
+  <text class="label" x="112" y="310">AI 应用</text>
+  <text class="body" x="112" y="342">会话、模型、UI、策略</text>
+  <path class="hairline" d="M112 374h296"/>
+  <rect class="node" x="112" y="408" width="126" height="74" rx="8"/>
+  <text class="body" x="150" y="440">Client A</text>
+  <text class="mono" x="144" y="464">stdio</text>
+  <rect class="node" x="282" y="408" width="126" height="74" rx="8"/>
+  <text class="body" x="320" y="440">Client B</text>
+  <text class="mono" x="316" y="464">http</text>
+  <rect class="node" x="112" y="514" width="296" height="62" rx="8"/>
+  <text class="body" x="174" y="552">工具选择、审批、上下文回填</text>
+
+  <rect class="panel" x="560" y="226" width="250" height="150" rx="8"/>
+  <text class="mono" x="590" y="268">mcp server</text>
+  <text class="label" x="590" y="310">文件系统</text>
+  <text class="body" x="590" y="342">tools、resources</text>
+
+  <rect class="panel" x="560" y="464" width="250" height="150" rx="8"/>
+  <text class="mono" x="590" y="506">mcp server</text>
+  <text class="label" x="590" y="548">项目管理</text>
+  <text class="body" x="590" y="580">issues、search</text>
+
+  <rect class="node" x="960" y="252" width="220" height="98" rx="8"/>
+  <text class="label" x="1020" y="292">本地目录</text>
+  <text class="body" x="1012" y="322">文件和配置</text>
+
+  <rect class="node" x="960" y="490" width="220" height="98" rx="8"/>
+  <text class="label" x="1018" y="530">远端 API</text>
+  <text class="body" x="1000" y="560">GitHub、Linear 等</text>
+
+  <path class="accent-line" d="M238 445h292"/>
+  <path class="accent-line" d="M408 445h76v94h46"/>
+  <path class="line" d="M810 301h150"/>
+  <path class="line" d="M810 539h150"/>
+
+  <text class="muted" x="80" y="684">模型不直接访问外部系统。Host 通过 MCP client 调用 server，再把结果交回模型上下文。</text>
+</svg>
