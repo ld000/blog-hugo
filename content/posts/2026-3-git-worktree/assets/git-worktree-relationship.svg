@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="620" viewBox="0 0 1200 620" role="img" aria-labelledby="title desc">
+  <title id="title">Git worktree 和主仓库共享 git 元数据</title>
+  <desc id="desc">主仓库提供共享的 git 后端，多个工作树各自拥有工作目录，但 gitdir 指向主仓库下的 worktrees 元数据。</desc>
+  <defs>
+    <style>
+      .bg { fill: #010102; }
+      .panel { fill: #0f1011; stroke: #23252a; stroke-width: 1.5; }
+      .panel-soft { fill: #141516; stroke: #2c2f36; stroke-width: 1.5; }
+      .title { fill: #f7f8f8; font: 600 28px Inter, "SF Pro Display", Arial, sans-serif; }
+      .label { fill: #d0d6e0; font: 500 21px Inter, "SF Pro Display", Arial, sans-serif; }
+      .mono { fill: #8a8f98; font: 18px "JetBrains Mono", Menlo, monospace; }
+      .small { fill: #8a8f98; font: 16px Inter, "SF Pro Display", Arial, sans-serif; }
+      .accent { fill: #5e6ad2; }
+      .line { stroke: #5e6ad2; stroke-width: 2.5; fill: none; }
+      .dash { stroke: #5e6ad2; stroke-width: 2; stroke-dasharray: 7 9; fill: none; opacity: 0.8; }
+      .muted-line { stroke: #343842; stroke-width: 1.5; fill: none; }
+    </style>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#5e6ad2"/>
+    </marker>
+  </defs>
+
+  <rect class="bg" width="1200" height="620"/>
+
+  <text class="title" x="64" y="74">worktree 是多份工作目录，共享一个仓库后端</text>
+  <text class="small" x="64" y="106">文件目录看起来隔离，但提交时仍可能写入主仓库 .git/worktrees/... 元数据。</text>
+
+  <rect class="panel" x="64" y="154" width="420" height="330" rx="8"/>
+  <text class="label" x="96" y="204">主仓库</text>
+  <text class="mono" x="96" y="244">/Users/d/code/project</text>
+  <line class="muted-line" x1="96" y1="270" x2="452" y2="270"/>
+  <text class="mono" x="96" y="312">.git/</text>
+  <text class="small" x="128" y="344">objects / refs</text>
+  <text class="small" x="128" y="374">index / HEAD</text>
+  <text class="small" x="128" y="404">worktrees/project-fix/</text>
+  <circle class="accent" cx="98" cy="440" r="5"/>
+  <text class="small" x="116" y="446">真正的 Git 元数据中心</text>
+
+  <rect class="panel-soft" x="716" y="150" width="420" height="160" rx="8"/>
+  <text class="label" x="748" y="200">工作树 A</text>
+  <text class="mono" x="748" y="240">/private/tmp/project-fix</text>
+  <text class="small" x="748" y="274">.git -> 主仓库 .git/worktrees/...</text>
+
+  <rect class="panel-soft" x="716" y="360" width="420" height="160" rx="8"/>
+  <text class="label" x="748" y="410">工作树 B</text>
+  <text class="mono" x="748" y="450">/.codex/worktrees/run/project</text>
+  <text class="small" x="748" y="484">代码隔离，元数据仍需可写</text>
+
+  <path class="line" d="M 716 230 C 620 230 600 250 488 314" marker-end="url(#arrow)"/>
+  <path class="line" d="M 716 438 C 620 438 600 420 488 390" marker-end="url(#arrow)"/>
+
+  <path class="dash" d="M 274 484 C 380 548 822 548 928 520"/>
+  <text class="small" x="396" y="568">commit / add 会写 index.lock，权限不足时会失败</text>
+</svg>
