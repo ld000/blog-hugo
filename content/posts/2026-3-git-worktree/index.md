@@ -96,6 +96,105 @@ worktree 不是这样。worktree 更像同一个仓库伸出去的另一只手�
 
 这也是它容易误判的地方：目录看起来隔离了，但 Git 元数据没有完全隔离。
 
+## worktree 和分支的区别
+
+worktree 和分支不是同一层东西。
+
+分支是 Git 里的一个名字，指向某个提交。比如：
+
+```text
+master -> 521b9296
+feature/a -> abc1234
+```
+
+它本质上是“这条开发线现在停在哪个 commit”。切换分支时，Git 会把同一个工作目录里的文件切到另一个提交状态。
+
+worktree 是一个真实的工作目录。它让同一个仓库同时展开多个目录，每个目录可以 checkout 不同分支或不同 commit。
+
+例如：
+
+```text
+/Users/d/code/project              # 主工作目录，在 master
+/private/tmp/project-feature-a      # 另一个 worktree，在 feature/a
+```
+
+一个简单类比是：
+
+```text
+分支 = 书签，指向故事的某一章
+worktree = 打开的书桌，可以把某个书签对应的内容摊开来改
+```
+
+常见组合是：
+
+```bash
+git branch feature/a
+git worktree add /private/tmp/project-feature-a feature/a
+```
+
+这表示：先创建一条开发线 `feature/a`，再给它打开一个独立目录。分支负责记录提交线，worktree 负责提供文件现场。
+
+也可以没有分支，直接让 worktree 停在某个 commit 上：
+
+```bash
+git worktree add --detach /private/tmp/project-review 521b9296
+```
+
+这种 detached worktree 适合只读检查、临时构建、对比旧版本。它没有分支名字跟着移动，如果在里面提交，后续要额外小心把提交挂回某个分支，否则容易变成“我记得改过，但不知道挂在哪”的状态。
+
+简单对比：
+
+| 项目 | 分支 | worktree |
+| --- | --- | --- |
+| 是什么 | commit 指针 | 文件目录 |
+| 存在哪里 | Git 元数据里 | 文件系统里 |
+| 主要解决什么 | 保存一条开发线 | 同时展开多个文件现场 |
+| 能不能直接编辑文件 | 不能 | 能 |
+| 能不能没有分支 | 不适用 | 可以 detached HEAD |
+| 删除影响 | 删除指针，不删目录 | 删除目录，不一定删分支 |
+
+## 什么时候用分支，什么时候用 worktree
+
+如果只是要做一条新的开发线，用分支就够了：
+
+- 新功能或修复要有独立提交历史。
+- 需要开 PR。
+- 当前工作目录是干净的，切分支不会打断别的事情。
+
+例如：
+
+```bash
+git switch -c feature/search
+```
+
+如果你需要“同时保留两个文件现场”，再用 worktree：
+
+- 当前目录正在跑 dev server，不想停掉。
+- 当前目录有没提交的改动，不想 stash。
+- 要同时看 `master` 和另一个分支。
+- 自动化要在隔离目录里改文件，避免碰用户当前 checkout。
+- 大仓库重新 clone 太慢，只想复用已有对象库。
+
+例如：
+
+```bash
+git worktree add ../project-hotfix -b hotfix/login master
+```
+
+这会从 `master` 新建 `hotfix/login` 分支，并在 `../project-hotfix` 打开它。
+
+如果要完全隔离 Git 元数据，尤其是自动化要自己 commit / push，又不确定主仓库 `.git/worktrees/...` 是否可写，用独立 clone 更稳：
+
+```bash
+git clone git@github.com:owner/project.git /private/tmp/project-submit
+```
+
+判断标准可以粗暴一点：
+
+- 只需要一条提交线：用分支。
+- 需要两个目录同时存在：用 worktree。
+- 需要连 Git 元数据、锁文件、权限都隔离：用独立 clone。
+
 ## 什么时候适合用 worktree
 
 worktree 适合这些场景：
