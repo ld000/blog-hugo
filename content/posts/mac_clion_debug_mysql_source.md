@@ -1,6 +1,6 @@
 ---
 title: Mac下用CLion debug MySQL5.7源码
-date: 2020-03-26
+date: 2020-03-26T00:00:00+08:00
 tags: ["MySQL", "CLion", "源码调试", "macOS"]
 series: ["数据库与中间件"]
 description: 在 Mac 环境下使用 CLion 编译和调试 MySQL 5.7 源码的完整步骤，包括 CMake 配置、编译参数设置和 CLion 调试配置

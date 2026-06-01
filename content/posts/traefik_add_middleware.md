@@ -1,6 +1,6 @@
 ---
 title: 给 traefik 添加插件
-date: 2020-10-12
+date: 2020-10-12T00:00:00+08:00
 tags: ["Traefik", "中间件", "Go", "API网关"]
 series: ["网络与架构"]
 description: 在 Traefik 2.2.8 中通过修改源码添加自定义中间件插件的方法，以 token 验证插件为例演示插件开发和集成流程

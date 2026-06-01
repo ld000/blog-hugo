@@ -1,6 +1,6 @@
 ---
 title: "Agent MCP 是什么：给 Agent 接外部世界的协议层"
-date: 2026-05-20
+date: 2026-05-20T00:00:00+08:00
 tags: ["AI", "Agent", "MCP"]
 categories: ["AI"]
 series: ["AI 手记"]

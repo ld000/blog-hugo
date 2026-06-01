@@ -1,6 +1,6 @@
 ---
 title: MemoryPoolMXBean 各内存池名字
-date: 2020-04-13
+date: 2020-04-13T00:00:00+08:00
 tags: ["Java", "JVM", "内存管理", "垃圾回收"]
 series: ["Java 开发"]
 description: 整理 Java 各版本中 MemoryPoolMXBean 内存池的名称，包括 Code Cache、Metaspace、SerialGC、ParallelGC、CMS、G1GC、ZGC 等不同垃圾回收器的内存池命名规则

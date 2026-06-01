@@ -1,6 +1,6 @@
 ---
 title: "Agent Harness 是什么：模型之外的运行层"
-date: 2026-05-15
+date: 2026-05-15T00:00:00+08:00
 tags: ["AI", "Agent", "Harness"]
 categories: ["AI"]
 series: ["AI 手记"]

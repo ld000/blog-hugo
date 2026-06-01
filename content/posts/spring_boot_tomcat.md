@@ -1,6 +1,6 @@
 ---
 title: 用外置 Tomcat 部署 Spring Boot 应用
-date: 2019-10-25
+date: 2019-10-25T00:00:00+08:00
 tags: ["Spring Boot", "Tomcat", "部署", "Java"]
 series: ["Spring 生态"]
 description: 将 Spring Boot 应用打包成 war 包并部署到外置 Tomcat 的完整步骤，包括 pom.xml 配置修改、启动类改造和部署注意事项

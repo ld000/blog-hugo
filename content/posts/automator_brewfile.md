@@ -1,6 +1,6 @@
 ---
 title: MacOS 用 automater 自动备份安装的软件列表
-date: 2019-09-15
+date: 2019-09-15T00:00:00+08:00
 tags: ["macOS", "Homebrew", "Automator", "自动化"]
 series: ["DevOps 与工具"]
 description: 使用 Homebrew 和 Automator 自动备份 Mac 上安装的软件列表，避免重装系统后遗漏软件，实现一键恢复所有应用程序和命令行工具

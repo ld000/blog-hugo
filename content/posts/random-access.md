@@ -1,6 +1,6 @@
 ---
 title: RandomAccess 接口使用
-date: 2016-03-19
+date: 2016-03-19T00:00:00+08:00
 tags: ["Java", "集合框架", "性能优化"]
 series: ["Java 开发"]
 description: 介绍 Java 中 RandomAccess 标记接口的作用和使用场景，说明 ArrayList 和 LinkedList 的高效遍历方式差异，以及如何根据接口选择遍历算法

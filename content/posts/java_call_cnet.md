@@ -1,6 +1,6 @@
 ---
 title: java 调用 c# 的方法
-date: 2017-06-28
+date: 2017-06-28T00:00:00+08:00
 tags: ["Java", "C#", "JNI", "互操作"]
 series: ["Java 开发"]
 description: 介绍 Java 调用 C# 程序的几种方式，包括 jni4net、IKVM、Web Service 等方案，分析各方案的优缺点和适用场景

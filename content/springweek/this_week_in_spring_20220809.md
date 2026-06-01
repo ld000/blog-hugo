@@ -1,6 +1,6 @@
 ---
 title: Spring周报 - 2022.8.9
-date: 2022-08-09
+date: 2022-08-09T00:00:00+08:00
 tags: ["Spring", "Spring Boot", "Spring Cloud"]
 series: ["Spring 周报"]
 description: Spring 官方周报翻译，涵盖 Spring Framework、Spring Boot、Spring Cloud 等项目的最新动态、技术文章和社区资讯

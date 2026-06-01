@@ -1,6 +1,6 @@
 ---
 title: "什么是模型幻觉"
-date: 2025-08-01
+date: 2025-08-01T00:00:00+08:00
 tags: ["AI", "LLM", "模型幻觉"]
 categories: ["AI"]
 series: ["AI 手记"]

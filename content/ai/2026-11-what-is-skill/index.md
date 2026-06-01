@@ -1,6 +1,6 @@
 ---
 title: "什么是 Skill：Agent 的流程性记忆"
-date: 2026-05-14
+date: 2026-05-14T00:00:00+08:00
 tags: ["AI", "Agent", "Skill"]
 categories: ["AI"]
 series: ["AI 手记"]

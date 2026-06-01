@@ -1,6 +1,6 @@
 ---
 title: Spring周报 - 2022.7.5
-date: 2022-07-05
+date: 2022-07-05T00:00:00+08:00
 tags: ["Spring", "Spring Boot", "Spring Cloud"]
 series: ["Spring 周报"]
 description: Spring 官方周报翻译，涵盖 Spring Framework、Spring Boot、Spring Cloud 等项目的最新动态、技术文章和社区资讯

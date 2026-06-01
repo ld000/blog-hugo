@@ -1,6 +1,6 @@
 ---
 title: "把 Windows 文件夹当作局域网 NAS 使用"
-date: 2026-05-29
+date: 2026-05-29T00:00:00+08:00
 tags: ["Windows", "SMB", "NAS", "局域网", "备份"]
 categories: ["技术"]
 series: ["Post"]

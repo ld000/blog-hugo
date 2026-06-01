@@ -60,6 +60,7 @@ For content-only edits, a full build is still preferred when practical because H
 ## Content Conventions
 
 - Markdown content uses YAML front matter delimited by `---`.
+- Article dates should use explicit Beijing time (`+08:00`), for example `date: 2026-06-02T00:00:00+08:00`; avoid date-only values because Hugo interprets them as UTC and can treat fresh posts as future content.
 - New posts should normally be created under `content/posts/`.
 - The default archetype creates draft posts; keep `draft: true` for unfinished drafts and set it to `false` or remove it only when publishing.
 - Prefer colocated page bundles such as `content/posts/<slug>/index.md` when a post has many local assets.

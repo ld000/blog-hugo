@@ -1,6 +1,6 @@
 ---
 title: "Git worktree 是什么"
-date: 2026-06-02
+date: 2026-06-02T00:00:00+08:00
 tags: ["Git", "worktree", "Codex", "自动化"]
 categories: ["技术"]
 series: ["Post"]

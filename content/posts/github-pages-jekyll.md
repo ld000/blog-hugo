@@ -1,6 +1,6 @@
 ---
 title: 搭建一个基于 github-pages 和 jekyll 的免费博客
-date: 2016-12-16
+date: 2016-12-16T00:00:00+08:00
 tags: ["GitHub Pages", "Jekyll", "博客搭建", "静态网站"]
 series: ["DevOps 与工具"]
 description: 从零开始搭建基于 GitHub Pages 和 Jekyll 的免费博客，包括仓库创建、Jekyll 安装配置、主题选择和本地调试的完整教程
