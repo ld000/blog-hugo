@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="760" viewBox="0 0 1280 760" role="img" aria-labelledby="title desc">
+  <title id="title">ReAct 把推理和行动交替组织成闭环</title>
+  <desc id="desc">展示用户目标进入 agent 后，模型推理、调用工具、接收外部观察并继续推理的关系。</desc>
+  <defs>
+    <style>
+      .bg { fill: #010102; }
+      .panel { fill: #0f1011; stroke: #252832; stroke-width: 1.2; }
+      .panel-hot { fill: #111323; stroke: #5e6ad2; stroke-width: 1.8; }
+      .node { fill: #090a0c; stroke: #343842; stroke-width: 1.2; }
+      .line { stroke: #4d5260; stroke-width: 1.6; fill: none; marker-end: url(#arrow); }
+      .accent-line { stroke: #5e6ad2; stroke-width: 2; fill: none; marker-end: url(#arrowAccent); }
+      .muted { fill: #8a8f98; font: 400 18px system-ui, -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif; }
+      .title { fill: #f7f8f8; font: 650 34px system-ui, -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif; letter-spacing: 0; }
+      .label { fill: #f7f8f8; font: 650 24px system-ui, -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif; letter-spacing: 0; }
+      .body { fill: #d7dadd; font: 400 17px system-ui, -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif; letter-spacing: 0; }
+      .mono { fill: #aeb4bf; font: 500 16px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; letter-spacing: 0; }
+    </style>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#4d5260"/>
+    </marker>
+    <marker id="arrowAccent" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#5e6ad2"/>
+    </marker>
+  </defs>
+
+  <rect class="bg" width="1280" height="760"/>
+  <text class="muted" x="80" y="70">Reasoning + Acting</text>
+  <text class="title" x="80" y="118">ReAct 让 agent 根据外部反馈继续判断</text>
+  <text class="body" x="80" y="154">模型不是一次性答完，而是在 Thought、Action、Observation 之间推进。</text>
+
+  <rect class="panel" x="80" y="334" width="170" height="96" rx="8"/>
+  <text class="label" x="126" y="374">用户目标</text>
+  <text class="body" x="110" y="404">任务和约束</text>
+
+  <rect class="panel-hot" x="340" y="226" width="420" height="312" rx="8"/>
+  <text class="mono" x="374" y="270">agent loop</text>
+  <rect class="node" x="386" y="322" width="150" height="88" rx="8"/>
+  <text class="label" x="424" y="358">Thought</text>
+  <text class="body" x="408" y="386">判断下一步</text>
+  <rect class="node" x="574" y="322" width="150" height="88" rx="8"/>
+  <text class="label" x="614" y="358">Action</text>
+  <text class="body" x="602" y="386">调用工具</text>
+  <rect class="node" x="480" y="434" width="150" height="72" rx="8"/>
+  <text class="label" x="510" y="464">Observation</text>
+  <text class="body" x="512" y="490">外部反馈</text>
+
+  <rect class="panel" x="850" y="226" width="340" height="126" rx="8"/>
+  <text class="label" x="900" y="272">外部环境</text>
+  <text class="body" x="900" y="304">搜索、数据库、浏览器、文件</text>
+
+  <rect class="panel" x="850" y="452" width="340" height="126" rx="8"/>
+  <text class="label" x="900" y="498">最终输出</text>
+  <text class="body" x="900" y="530">答案、修改、报告、暂停</text>
+
+  <path class="accent-line" d="M250 382h90"/>
+  <path class="accent-line" d="M536 366h38"/>
+  <path class="accent-line" d="M724 366h126"/>
+  <path class="line" d="M1020 352v82"/>
+  <path class="line" d="M850 514H650"/>
+  <path class="line" d="M555 434v-24"/>
+  <path class="line" d="M480 470H426v-48"/>
+
+  <text class="muted" x="80" y="652">ReAct 的重点不是格式，而是“外部反馈驱动下一步”。</text>
+</svg>

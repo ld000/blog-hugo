@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="920" viewBox="0 0 1440 920" role="img" aria-labelledby="title desc">
+  <title id="title">ReAct 和 Standard、CoT、Act-only 的区别</title>
+  <desc id="desc">对比 Standard 直接回答、Chain-of-Thought 只推理、Act-only 只行动、ReAct 交替推理和行动。</desc>
+  <defs>
+    <style>
+      .bg { fill: #010102; }
+      .panel { fill: #0f1011; stroke: #252832; stroke-width: 1.2; }
+      .panel-hot { fill: #111323; stroke: #5e6ad2; stroke-width: 1.8; }
+      .node { fill: #090a0c; stroke: #343842; stroke-width: 1.1; }
+      .line { stroke: #4d5260; stroke-width: 1.5; fill: none; marker-end: url(#arrow); }
+      .accent-line { stroke: #5e6ad2; stroke-width: 2; fill: none; marker-end: url(#arrowAccent); }
+      .muted { fill: #8a8f98; font: 400 20px system-ui, -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif; }
+      .title { fill: #f7f8f8; font: 650 38px system-ui, -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif; letter-spacing: 0; }
+      .label { fill: #f7f8f8; font: 650 24px system-ui, -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif; letter-spacing: 0; }
+      .body { fill: #d7dadd; font: 400 18px system-ui, -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif; letter-spacing: 0; }
+      .mono { fill: #aeb4bf; font: 500 16px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; letter-spacing: 0; }
+    </style>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#4d5260"/>
+    </marker>
+    <marker id="arrowAccent" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#5e6ad2"/>
+    </marker>
+  </defs>
+
+  <rect class="bg" width="1440" height="920"/>
+  <text class="muted" x="100" y="86">Prompting patterns</text>
+  <text class="title" x="100" y="148">ReAct 的差异在于推理和行动互相校正</text>
+  <text class="body" x="100" y="192">CoT 只展开内部推理，Act-only 只触达环境，ReAct 把两者放进同一个轨迹。</text>
+
+  <rect class="panel" x="100" y="272" width="560" height="132" rx="8"/>
+  <text class="mono" x="134" y="314">standard</text>
+  <text class="label" x="134" y="352">直接回答</text>
+  <rect class="node" x="330" y="314" width="104" height="52" rx="8"/>
+  <text class="body" x="358" y="348">输入</text>
+  <path class="line" d="M434 340h64"/>
+  <rect class="node" x="498" y="314" width="104" height="52" rx="8"/>
+  <text class="body" x="526" y="348">输出</text>
+
+  <rect class="panel" x="780" y="272" width="560" height="132" rx="8"/>
+  <text class="mono" x="814" y="314">chain of thought</text>
+  <text class="label" x="814" y="352">只推理</text>
+  <rect class="node" x="988" y="314" width="88" height="52" rx="8"/>
+  <text class="body" x="1016" y="348">想</text>
+  <path class="line" d="M1076 340h48"/>
+  <rect class="node" x="1124" y="314" width="88" height="52" rx="8"/>
+  <text class="body" x="1152" y="348">想</text>
+  <path class="line" d="M1212 340h40"/>
+  <rect class="node" x="1252" y="314" width="64" height="52" rx="8"/>
+  <text class="body" x="1268" y="348">答</text>
+
+  <rect class="panel" x="100" y="520" width="560" height="132" rx="8"/>
+  <text class="mono" x="134" y="562">act only</text>
+  <text class="label" x="134" y="600">只行动</text>
+  <rect class="node" x="330" y="562" width="88" height="52" rx="8"/>
+  <text class="body" x="346" y="596">行动</text>
+  <path class="line" d="M418 588h48"/>
+  <rect class="node" x="466" y="562" width="88" height="52" rx="8"/>
+  <text class="body" x="482" y="596">反馈</text>
+  <path class="line" d="M554 588h40"/>
+  <rect class="node" x="594" y="562" width="42" height="52" rx="8"/>
+  <text class="body" x="606" y="596">?</text>
+
+  <rect class="panel-hot" x="780" y="520" width="560" height="172" rx="8"/>
+  <text class="mono" x="814" y="562">react</text>
+  <text class="label" x="814" y="600">推理和行动交替</text>
+  <rect class="node" x="996" y="582" width="76" height="52" rx="8"/>
+  <text class="body" x="1018" y="616">想</text>
+  <path class="accent-line" d="M1072 608h42"/>
+  <rect class="node" x="1114" y="582" width="76" height="52" rx="8"/>
+  <text class="body" x="1130" y="616">行动</text>
+  <path class="line" d="M1190 608h42"/>
+  <rect class="node" x="1232" y="582" width="76" height="52" rx="8"/>
+  <text class="body" x="1248" y="616">反馈</text>
+  <path class="line" d="M1232 654H996"/>
+  <path class="accent-line" d="M996 654v-20"/>
+
+  <text class="muted" x="100" y="790">ReAct 不是更长的回答，而是让下一步行动受当前观察约束。</text>
+</svg>

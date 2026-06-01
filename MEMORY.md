@@ -17,6 +17,8 @@
 - 博客写作语气和方法已整理到 `context/blog-writing.md`；写新文章或改旧文章前先读该文件。
 - 为本项目创建或更新 Codex skill 时，放在仓库内 `.codex/skills/`，不要默认放到全局 `~/.codex/skills/`。
 - 同步博客文章到 Notion 时，本地图片要上传为 Notion 文件，不要改成站点外链。
+- 2026-05-29：当前 Notion 文章数据源只有 `Name`、`Tags`、`Created`、`Edited` 属性，缺少推荐的 `Source Path`、`Slug`、`URL`、`Content Hash` 等属性；同步脚本只能主要按标题匹配页面，不能靠 Content Hash 跳过未变化文章。全量 full sync 会比较慢，也可能更新所有匹配文章。若要增量更稳，应先补齐推荐属性。
+- 2026-05-29：Notion 全量正文同步时，脚本需要支持 Hugo 根路径图片 `/img/...` 映射到 `static/img/...` 后上传为 Notion 文件；代码块语言 `sh`/`zsh` 要映射成 Notion 支持的 `shell`；Notion 429/5xx 需要重试。
 
 ## People
 

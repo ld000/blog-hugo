@@ -11,6 +11,7 @@ import mimetypes
 import os
 import re
 import sys
+import time
 import urllib.error
 import urllib.parse
 import urllib.request
@@ -137,6 +138,7 @@ def discover_articles(repo: Path, config: dict[str, Any], include_drafts: bool) 
                     "title": title,
                     "section": section,
                     "slug": slug,
+                    "repo": repo,
                     "path": path,
                     "article_dir": path.parent,
                     "source_path": rel,
@@ -180,22 +182,39 @@ class NotionClient:
 
     def request(self, method: str, path: str, payload: dict[str, Any] | None = None) -> dict[str, Any]:
         body = None if payload is None else json.dumps(payload).encode("utf-8")
-        request = urllib.request.Request(
-            f"https://api.notion.com/v1{path}",
-            data=body,
-            method=method,
-            headers={
-                "Authorization": f"Bearer {self.token}",
-                "Content-Type": "application/json",
-                "Notion-Version": self.version,
-            },
-        )
-        try:
-            with urllib.request.urlopen(request, timeout=30) as response:
-                return json.loads(response.read().decode("utf-8"))
-        except urllib.error.HTTPError as exc:
-            message = exc.read().decode("utf-8", errors="replace")
-            raise RuntimeError(f"Notion API {method} {path} failed: {exc.code} {message}") from exc
+        max_attempts = 5
+        retry_statuses = {429, 500, 502, 503, 504}
+        for attempt in range(1, max_attempts + 1):
+            request = urllib.request.Request(
+                f"https://api.notion.com/v1{path}",
+                data=body,
+                method=method,
+                headers={
+                    "Authorization": f"Bearer {self.token}",
+                    "Content-Type": "application/json",
+                    "Notion-Version": self.version,
+                },
+            )
+            try:
+                with urllib.request.urlopen(request, timeout=30) as response:
+                    return json.loads(response.read().decode("utf-8"))
+            except urllib.error.HTTPError as exc:
+                message = exc.read().decode("utf-8", errors="replace")
+                if exc.code in retry_statuses and attempt < max_attempts:
+                    retry_after = exc.headers.get("Retry-After")
+                    delay = float(retry_after) if retry_after else min(2**attempt, 20)
+                    print(f"Retrying Notion API {method} {path} after HTTP {exc.code} in {delay:.1f}s", file=sys.stderr, flush=True)
+                    time.sleep(delay)
+                    continue
+                raise RuntimeError(f"Notion API {method} {path} failed: {exc.code} {message}") from exc
+            except urllib.error.URLError as exc:
+                if attempt < max_attempts:
+                    delay = min(2**attempt, 20)
+                    print(f"Retrying Notion API {method} {path} after network error in {delay:.1f}s: {exc.reason}", file=sys.stderr, flush=True)
+                    time.sleep(delay)
+                    continue
+                raise RuntimeError(f"Notion API {method} {path} failed: {exc.reason}") from exc
+        raise RuntimeError(f"Notion API {method} {path} failed after {max_attempts} attempts")
 
     def upload_file(self, file_path: Path) -> str:
         print(f"Uploading image: {file_path}", file=sys.stderr, flush=True)
@@ -400,6 +419,24 @@ def asset_url(site_url: str | None, article: dict[str, Any], image_src: str) -> 
     return urllib.parse.urljoin(page_url, image_src)
 
 
+def resolve_local_image_path(article: dict[str, Any], image_src: str) -> Path:
+    parsed = urllib.parse.urlparse(image_src)
+    image_path_text = urllib.parse.unquote(parsed.path)
+    if image_path_text.startswith("/"):
+        repo = Path(article["repo"])
+        candidates = [
+            repo / "static" / image_path_text.lstrip("/"),
+            repo / image_path_text.lstrip("/"),
+        ]
+    else:
+        candidates = [(Path(article["article_dir"]) / image_path_text).resolve()]
+
+    for candidate in candidates:
+        if candidate.exists():
+            return candidate
+    raise FileNotFoundError(f"Local image not found: {image_src}; checked: {', '.join(str(path) for path in candidates)}")
+
+
 def image_block_from_upload(upload_id: str, caption: str) -> dict[str, Any]:
     return {
         "object": "block",
@@ -428,6 +465,8 @@ def notion_code_language(language: str) -> str:
     normalized = language.strip().lower()
     if normalized in {"", "txt", "text", "plaintext"}:
         return "plain text"
+    if normalized in {"sh", "zsh"}:
+        return "shell"
     return normalized
 
 
@@ -491,10 +530,7 @@ def markdown_blocks(
             elif image_mode == "upload":
                 if not client or not article:
                     raise RuntimeError("Local image upload requires a Notion client and article context")
-                image_path = (Path(article["article_dir"]) / urllib.parse.unquote(image_src)).resolve()
-                if not image_path.exists():
-                    raise FileNotFoundError(f"Local image not found: {image_path}")
-                blocks.append(image_block_from_upload(client.upload_file(image_path), caption))
+                blocks.append(image_block_from_upload(client.upload_file(resolve_local_image_path(article, image_src)), caption))
             elif image_mode == "external":
                 image_url = asset_url(site_url, article or {}, image_src)
                 if not image_url:
