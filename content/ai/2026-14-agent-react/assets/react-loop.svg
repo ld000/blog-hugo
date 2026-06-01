@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="760" viewBox="0 0 1280 760" role="img" aria-labelledby="title desc">
+  <title id="title">Thought、Action、Observation 形成 ReAct loop</title>
+  <desc id="desc">展示 ReAct 循环中 Thought 决定下一步，Action 触达外部系统，Observation 回填上下文，并重复直到结束。</desc>
+  <defs>
+    <style>
+      .bg { fill: #010102; }
+      .panel { fill: #0f1011; stroke: #252832; stroke-width: 1.2; }
+      .panel-hot { fill: #111323; stroke: #5e6ad2; stroke-width: 1.8; }
+      .line { stroke: #4d5260; stroke-width: 1.8; fill: none; marker-end: url(#arrow); }
+      .accent-line { stroke: #5e6ad2; stroke-width: 2.1; fill: none; marker-end: url(#arrowAccent); }
+      .muted { fill: #8a8f98; font: 400 18px system-ui, -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif; }
+      .title { fill: #f7f8f8; font: 650 34px system-ui, -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif; letter-spacing: 0; }
+      .label { fill: #f7f8f8; font: 650 26px system-ui, -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif; letter-spacing: 0; }
+      .body { fill: #d7dadd; font: 400 18px system-ui, -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif; letter-spacing: 0; }
+      .mono { fill: #aeb4bf; font: 500 16px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; letter-spacing: 0; }
+    </style>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#4d5260"/>
+    </marker>
+    <marker id="arrowAccent" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#5e6ad2"/>
+    </marker>
+  </defs>
+
+  <rect class="bg" width="1280" height="760"/>
+  <text class="muted" x="80" y="70">ReAct loop</text>
+  <text class="title" x="80" y="118">每一轮都把外部反馈带回模型上下文</text>
+  <text class="body" x="80" y="154">循环应该有停止条件：完成、失败、预算耗尽、审批拒绝或达到最大步数。</text>
+
+  <rect class="panel-hot" x="480" y="190" width="320" height="118" rx="8"/>
+  <text class="mono" x="516" y="232">thought</text>
+  <text class="label" x="516" y="270">判断下一步</text>
+  <text class="body" x="516" y="294">拆目标、选工具、处理异常</text>
+
+  <rect class="panel" x="820" y="416" width="320" height="118" rx="8"/>
+  <text class="mono" x="856" y="458">action</text>
+  <text class="label" x="856" y="496">执行动作</text>
+  <text class="body" x="856" y="520">搜索、查询、点击、运行命令</text>
+
+  <rect class="panel" x="140" y="416" width="320" height="118" rx="8"/>
+  <text class="mono" x="176" y="458">observation</text>
+  <text class="label" x="176" y="496">读取反馈</text>
+  <text class="body" x="176" y="520">结果、错误、状态、证据</text>
+
+  <rect class="panel" x="480" y="596" width="320" height="92" rx="8"/>
+  <text class="label" x="544" y="636">停止或回答</text>
+  <text class="body" x="530" y="662">足够信息后输出结果</text>
+
+  <path class="accent-line" d="M760 308C900 320 980 350 980 416"/>
+  <path class="line" d="M820 475H460"/>
+  <path class="line" d="M300 416C300 328 378 286 480 264"/>
+  <path class="accent-line" d="M640 308v288"/>
+
+  <text class="muted" x="80" y="704">关键设计点：Observation 要短、准、可引用；Action 要受权限和预算控制。</text>
+</svg>

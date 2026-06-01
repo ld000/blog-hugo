@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="760" viewBox="0 0 1280 760" role="img" aria-labelledby="title desc">
+  <title id="title">ReAct 在 MCP、Skill、Harness 之间的位置</title>
+  <desc id="desc">展示 Skill 给流程规则，MCP 给外部工具，ReAct 决定下一步行动，Harness 控制权限、状态和观测。</desc>
+  <defs>
+    <style>
+      .bg { fill: #010102; }
+      .panel { fill: #0f1011; stroke: #252832; stroke-width: 1.2; }
+      .panel-hot { fill: #111323; stroke: #5e6ad2; stroke-width: 1.8; }
+      .node { fill: #090a0c; stroke: #343842; stroke-width: 1.2; }
+      .line { stroke: #4d5260; stroke-width: 1.6; fill: none; marker-end: url(#arrow); }
+      .accent-line { stroke: #5e6ad2; stroke-width: 2; fill: none; marker-end: url(#arrowAccent); }
+      .muted { fill: #8a8f98; font: 400 18px system-ui, -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif; }
+      .title { fill: #f7f8f8; font: 650 34px system-ui, -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif; letter-spacing: 0; }
+      .label { fill: #f7f8f8; font: 650 24px system-ui, -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif; letter-spacing: 0; }
+      .body { fill: #d7dadd; font: 400 17px system-ui, -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif; letter-spacing: 0; }
+      .mono { fill: #aeb4bf; font: 500 16px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; letter-spacing: 0; }
+    </style>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#4d5260"/>
+    </marker>
+    <marker id="arrowAccent" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#5e6ad2"/>
+    </marker>
+  </defs>
+
+  <rect class="bg" width="1280" height="760"/>
+  <text class="muted" x="80" y="70">Agent stack</text>
+  <text class="title" x="80" y="118">ReAct 决定下一步，周边系统决定边界</text>
+  <text class="body" x="80" y="154">有 ReAct loop 不等于生产级 agent，还需要工具连接、流程规则和运行控制。</text>
+
+  <rect class="panel" x="90" y="250" width="260" height="126" rx="8"/>
+  <text class="mono" x="122" y="292">skill</text>
+  <text class="label" x="122" y="330">流程规则</text>
+  <text class="body" x="122" y="354">先做什么、如何验收</text>
+
+  <rect class="panel" x="90" y="468" width="260" height="126" rx="8"/>
+  <text class="mono" x="122" y="510">mcp / tools</text>
+  <text class="label" x="122" y="548">外部能力</text>
+  <text class="body" x="122" y="572">搜索、文件、API、数据库</text>
+
+  <rect class="panel-hot" x="510" y="346" width="260" height="150" rx="8"/>
+  <text class="mono" x="542" y="388">react</text>
+  <text class="label" x="542" y="428">下一步决策</text>
+  <text class="body" x="542" y="456">想、行动、观察、继续</text>
+
+  <rect class="panel" x="930" y="250" width="260" height="126" rx="8"/>
+  <text class="mono" x="962" y="292">harness</text>
+  <text class="label" x="962" y="330">运行控制</text>
+  <text class="body" x="962" y="354">状态、审批、超时、trace</text>
+
+  <rect class="panel" x="930" y="468" width="260" height="126" rx="8"/>
+  <text class="mono" x="962" y="510">human</text>
+  <text class="label" x="962" y="548">人工介入</text>
+  <text class="body" x="962" y="572">确认、纠正、停止</text>
+
+  <rect class="node" x="510" y="614" width="260" height="72" rx="8"/>
+  <text class="label" x="576" y="646">最终结果</text>
+  <text class="body" x="560" y="672">答案、代码、报告、暂停</text>
+
+  <path class="line" d="M350 313l160 72"/>
+  <path class="accent-line" d="M350 531l160-72"/>
+  <path class="line" d="M770 408l160-96"/>
+  <path class="line" d="M770 452l160 78"/>
+  <path class="accent-line" d="M640 496v118"/>
+
+  <text class="muted" x="80" y="716">最小判断：Skill 告诉怎么做，MCP 给可用动作，ReAct 选下一步，Harness 管能不能做。</text>
+</svg>
