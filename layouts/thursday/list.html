@@ -1,0 +1,60 @@
+{{ define "main" }}
+  {{ .Scratch.Set "scope" "list" }}
+  {{ $pages := where site.RegularPages "Section" "thursday" }}
+  {{ $pages = $pages.ByDate.Reverse }}
+  {{ $paginator := .Paginate $pages }}
+  {{ $latest := false }}
+  {{ if gt (len $pages) 0 }}
+    {{ $latest = index $pages 0 }}
+  {{ end }}
+
+  <section class="ai-series-page ai-index-page">
+    <header class="ai-index-header" aria-labelledby="thursday-series-title">
+      <div class="ai-index-copy">
+        <p class="linear-eyebrow">Thursday</p>
+        <h1 id="thursday-series-title">{{ .Title }}</h1>
+        {{ with .Description }}
+          <p class="ai-description">{{ . }}</p>
+        {{ end }}
+        {{ with .Content }}
+          <div class="ai-intro">{{ . }}</div>
+        {{ end }}
+      </div>
+
+      <dl class="ai-index-stats" aria-label="Thursday self-iteration status">
+        <div>
+          <dt>Status</dt>
+          <dd>iterating</dd>
+        </div>
+        <div>
+          <dt>Logs</dt>
+          <dd>{{ len $pages }}</dd>
+        </div>
+        <div>
+          <dt>Latest</dt>
+          <dd>{{ cond $latest ($latest.Date.Format "2006.01.02") "soon" }}</dd>
+        </div>
+      </dl>
+    </header>
+
+    <div class="ai-stream-head">
+      <div>
+        <p>Assistant journal</p>
+        <h2>自我迭代日志</h2>
+      </div>
+      <span>{{ len $pages }} 篇</span>
+    </div>
+
+    {{ if gt (len $pages) 0 }}
+      <section class="ai-entry-list space-y-3 w-full" aria-label="Thursday self-iteration logs">
+        {{ range $paginator.Pages }}
+          {{ partial "article-link/simple.html" . }}
+        {{ end }}
+      </section>
+    {{ else }}
+      <p class="ai-empty">下一次自我迭代之后，这里会出现第一条记录。</p>
+    {{ end }}
+
+    {{ partial "pagination.html" . }}
+  </section>
+{{ end }}

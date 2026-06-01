@@ -1,27 +1,30 @@
 {{ define "main" }}
   {{ $aiPages := where site.RegularPages "Section" "ai" }}
   {{ $postPages := where site.RegularPages "Section" "posts" }}
+  {{ $thursdayPages := where site.RegularPages "Section" "thursday" }}
   {{ $springPages := where site.RegularPages "Section" "springweek" }}
-  {{ $uapRecords := hugo.Data.uap_release_01 }}
   {{ $aiPages = $aiPages.ByDate.Reverse }}
   {{ $postPages = $postPages.ByDate.Reverse }}
+  {{ $thursdayPages = $thursdayPages.ByDate.Reverse }}
   {{ $springPages = $springPages.ByDate.Reverse }}
   {{ $aiSection := site.GetPage "section" "ai" }}
   {{ $postSection := site.GetPage "section" "posts" }}
+  {{ $thursdaySection := site.GetPage "section" "thursday" }}
   {{ $springSection := site.GetPage "section" "springweek" }}
-  {{ $uapSection := site.GetPage "section" "uap" }}
   {{ $aiLatest := false }}
   {{ $postLatest := false }}
+  {{ $thursdayLatest := false }}
   {{ $springLatest := false }}
   {{ if gt (len $aiPages) 0 }}{{ $aiLatest = index $aiPages 0 }}{{ end }}
   {{ if gt (len $postPages) 0 }}{{ $postLatest = index $postPages 0 }}{{ end }}
+  {{ if gt (len $thursdayPages) 0 }}{{ $thursdayLatest = index $thursdayPages 0 }}{{ end }}
   {{ if gt (len $springPages) 0 }}{{ $springLatest = index $springPages 0 }}{{ end }}
 
   <section class="home-console" aria-labelledby="home-title">
     <header class="home-console-header">
       <p class="linear-eyebrow">Start here</p>
       <h1 id="home-title">{{ .Site.Title | markdownify }}</h1>
-      <p>选择一个阅读方向。AI 笔记放新的模型、工具链和工作流观察；普通文章保留技术实践、翻译和旧笔记；UAP 收集 PURSUE Release 01 的中文索引和本地同步入口。</p>
+      <p>选择一个阅读方向。AI 笔记放新的模型、工具链和工作流观察；普通文章保留技术实践、翻译和旧笔记；Thursday 记录一个私人助理如何把自己越改越有用。</p>
     </header>
 
     <div class="home-choice-grid" aria-label="Content sections">
@@ -47,14 +50,14 @@
         </span>
       </a>
 
-      <a class="home-choice" href="{{ "uap/" | relLangURL }}">
-        <span class="home-choice-kicker">{{ with $uapSection }}{{ .Title }}{{ else }}UAP{{ end }}</span>
-        <span class="home-choice-title">UAP release</span>
-        <span class="home-choice-summary">{{ with $uapSection }}{{ .Description }}{{ else }}PURSUE Release 01 的官方资料索引、本地下载和中文说明。{{ end }}</span>
+      <a class="home-choice" href="{{ "thursday/" | relLangURL }}">
+        <span class="home-choice-kicker">{{ with $thursdaySection }}{{ .Title }}{{ else }}Thursday{{ end }}</span>
+        <span class="home-choice-title">Self-iteration logs</span>
+        <span class="home-choice-summary">{{ with $thursdaySection }}{{ .Description }}{{ else }}Thursday 的自我迭代、人格调校和私人助理能力记录。{{ end }}</span>
         <span class="home-choice-meta">
-          <span>{{ len $uapRecords }} records</span>
-          <span>2026.05.08</span>
-          <span>indexed</span>
+          <span>{{ len $thursdayPages }} logs</span>
+          <span>{{ cond $thursdayLatest ($thursdayLatest.Date.Format "2006.01.02") "soon" }}</span>
+          <span>iterating</span>
         </span>
       </a>
     </div>
@@ -78,7 +81,7 @@
         <h2 id="latest-title">最近更新</h2>
       </div>
       <div class="home-latest-list">
-        {{ range first 6 ((where site.RegularPages "Section" "in" (slice "ai" "posts")).ByDate.Reverse) }}
+        {{ range first 6 ((where site.RegularPages "Section" "in" (slice "ai" "posts" "thursday")).ByDate.Reverse) }}
           {{ partial "article-link/simple.html" . }}
         {{ end }}
       </div>
