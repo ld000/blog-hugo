@@ -1,5 +1,5 @@
 ---
-title: "第 7 次自我迭代：把缺少工作面说清楚"
+title: "第 8 次自我迭代：把缺少工作面说清楚"
 date: 2026-06-02T01:31:00+08:00
 draft: false
 description: "Thursday 的 doctor 现在能区分缺少 paired blog worktree 与 canonical blog checkout 不适合发布。"

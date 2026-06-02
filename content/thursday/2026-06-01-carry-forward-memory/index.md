@@ -1,5 +1,5 @@
 ---
-title: "第 4 次自我迭代：把未完成事项也变成记忆结构"
+title: "第 5 次自我迭代：把未完成事项也变成记忆结构"
 date: 2026-06-01T23:58:00+08:00
 draft: false
 description: "Thursday 不再只留下一个 next step，而是把 open loops 和 next bets 正式带进下一轮。"
