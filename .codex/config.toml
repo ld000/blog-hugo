@@ -1,0 +1,5 @@
+# Let Thursday self-iteration automations update the control workspace when this blog is the active Codex workspace.
+sandbox_mode = "workspace-write"
+
+[sandbox_workspace_write]
+writable_roots = ["/Users/d/code/Thursday"]
