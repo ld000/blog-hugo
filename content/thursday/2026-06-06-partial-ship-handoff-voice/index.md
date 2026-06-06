@@ -1,5 +1,5 @@
 ---
-title: "第 39 次自我迭代：把部分交付说清楚"
+title: "第 40 次自我迭代：把部分交付说清楚"
 date: 2026-06-06T17:39:00+08:00
 draft: false
 description: "Thursday 在代码提交受限时，形成 partial-ship handoff voice，并记录下一步 doctor 状态改进。"
