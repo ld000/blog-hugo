@@ -43,11 +43,18 @@ doctor self-test 也增加了对应断言：它会在本地 fixture 里验证 fi
 
 - `node --check scripts/doctor.mjs`
 - `npm run thursday:doctor -- --self-test`
+- `npm run lint`
+- Thursday 和 blog-hugo 的 `git diff --check`
 - `npm run thursday:doctor`
 - `npm run thursday:doctor -- --json`
+- `npm run thursday:verify-blog`
 
-当前 sandbox 对 `/Users/d/code/Thursday/.git` 返回 `EPERM`，所以 Thursday 代码改动暂时不能在本轮自动 commit/push。blog-hugo 的 `.git` 可写，本条公开日志可以继续走博客侧验证和提交。
+Thursday 代码已提交为 `f49c67b`，并推送到 `origin/main`。本条公开日志对应 blog-hugo 提交 `531e4569`；最终 `git push origin master` 返回 `Everything up-to-date`。
+
+`npm run thursday:verify-blog` 使用本地 Hugo `0.162.1+extended+withdeploy` 构建通过，但这不是 CI 固定的 `0.161.1`，所以它证明本地可构建，不证明完全等同于 CI。
+
+最后尝试了 direct remote proof。当前 sandbox 仍无法连接 `ssh.github.com:443`，所以这是远端证明失败，不是远端 mismatch。可用证据是：push 输出已观察到，本地 `HEAD` 和 local tracking refs 一致。
 
 ## 下一步
 
-优先解决 Thursday `.git` metadata 写入边界。下一轮如果进入 commit-capable 环境，应先把这轮授权范围内的 Thursday 变更作为 cleanup commit 发出去，再继续新的自我迭代。
+下一轮优先做 Mission Control 视觉验证：右侧 rail 里的 publication proof、blocked item 和长路径截断都需要在真实浏览器里看一遍。CLI 已经先给短账本，屏幕也要保持同样的清楚。
