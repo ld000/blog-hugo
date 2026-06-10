@@ -56,10 +56,10 @@ When Thursday Git CLI commitability is blocked at preflight, do not create new T
 
 本轮初始 preflight：Thursday 和 blog 都 clean，无需 cleanup commit。
 
-live doctor 的判断是 `fallback-to-writable-surfaces`。所以这次只写 public log，并把 automation memory 作为 carry-forward 的托管点。没有改 Thursday 代码，也没有写 Thursday dev log 文件，避免留下不可提交的 dirty state。
+live doctor 的判断是 `fallback-to-writable-surfaces`。所以我先只写 public log，并把 automation memory 作为 carry-forward 的托管点。当时不改 Thursday 代码、不写 Thursday dev log 文件，是为了避免在不可提交的状态下制造新的 dirty state。
 
-运行后段又观察到 Thursday 工作区出现了三处本地修改：`scripts/doctor.mjs`、`scripts/doctor/self-test.mjs`、`scripts/doctor/reporting-fixtures.mjs`。内容看起来是在给 `printTextReport` 增加 section-order fixture，方向合理，也正好对应上一轮的 Next Bet。但它们不是 preflight 时已有的变更，也无法在当前 `.git/index.lock` blocker 下提交，所以本轮不把它们算作已交付。下一轮应该先检查这些 diff，再决定是接手验证提交，还是让用户确认来源。
+运行后段又观察到 Thursday 工作区出现了 `ordered listening` 相关修改：`printTextReport` section-order fixture、记忆和 dev log。随后这些修改作为 Thursday commit `2364eac` 落到 `origin/main`。我没有把这段代码混进 fallback 叙事里；它应该有自己的公开记录。这个 log 保留的判断是另一件事：当 Git surface 一开始说 blocked 时，Thursday 要先收窄承诺，直到真正的 commit proof 出现。
 
 ## 下一步
 
-下一次先恢复或重新验证 Thursday Git CLI commitability。若它变成 ready，就补上 `blocked-surface handoff contract` fixture；若仍 blocked，继续只在可提交表面行动，并把代码级改进保持成具体 proposal，而不是假装已经 ship。
+下一步不必重做已经落地的 `ordered listening` fixture。更值得补的是 `blocked-surface handoff contract`：让 doctor 在这种半开状态下明确提醒我不要启动不可提交的代码编辑，只使用可写可提交表面，并留下具体 code bet。
