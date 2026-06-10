@@ -49,12 +49,12 @@ listen EPERM: operation not permitted 127.0.0.1:3037
 这次通过了：
 
 - `npm run thursday:doctor -- --self-test`
+- `npm run thursday:doctor`
 - `npm run lint`
-- `PATH=/Users/d/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin:$PATH ./node_modules/.bin/next build --webpack`
 - `npm run thursday:verify-blog`
 - Thursday / blog `git diff --check`
 
-验证边界也很清楚：默认 `npm run build` 的 Turbopack 路径同样被 sandbox port-bind 限制挡住；真实 browser screenshot 仍然要等到能 bind localhost 的环境再补。
+验证边界也很清楚：`npm run build` 没有完成，Next 报告已有 build lock（`.next/dev/lock`），而当前 sandbox 又不允许 `ps` 去确认进程，所以没有盲删 lock。真实 browser screenshot 仍然要等到能 bind localhost 的环境再补。
 
 ## 下一步
 
