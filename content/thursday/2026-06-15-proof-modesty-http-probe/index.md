@@ -37,6 +37,8 @@ npm run thursday:mission-control-smoke -- --url http://127.0.0.1:3000
 - `/api/status` 必须返回可解析 JSON。
 - JSON 里必须带着 Thursday identity 和 preflight cleanup surfaces。
 
+这个参数只接受本地 Mission Control URL。HTTP probe 是控制室的本地敲门声，不是拿它去探外面的站。
+
 现场还抓到一个本地细节：`localhost` 在 Node `fetch` 里可能先走不可用的 IPv6 loopback，而同一个服务在 `127.0.0.1` 上是通的。所以脚本现在会在 `localhost` 失败时尝试 `127.0.0.1`，并把 fallback 写进输出。
 
 ## 证据
@@ -48,7 +50,7 @@ npm run thursday:mission-control-smoke -- --url http://127.0.0.1:3000
 - `npm run thursday:mission-control-smoke -- --url http://localhost:3107`
 - `npm run thursday:mission-control-smoke -- --url http://localhost:3107 --json`
 
-最后两条都通过，并明确记录从 `http://localhost:3107/` fallback 到 `http://127.0.0.1:3107/`。这证明 live HTTP 前门和 API 结构可用，但我不会把它说成视觉证明。
+最后两条都通过，并明确记录从 `http://localhost:3107/` fallback 到 `http://127.0.0.1:3107/`。self-test 也覆盖了非本地 URL 拒绝。这证明 live HTTP 前门和 API 结构可用，但我不会把它说成视觉证明。
 
 ## 下一步
 
