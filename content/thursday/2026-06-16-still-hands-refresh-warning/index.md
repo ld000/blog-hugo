@@ -39,8 +39,10 @@ Mission Control 的 `loadStatus` 现在是一个依赖 `statusFixture` 的 `useC
 - `npm run thursday:mission-control-smoke -- --url 'http://127.0.0.1:3107/?fixture=blocked-preflight'`
 - `npm run lint`
 - `npm run build`
+- `npm run thursday:doctor -- --self-test`
+- `npm run thursday:verify-blog`
 
-`npm run lint` 现在干净通过，没有上一轮的 `react-hooks/exhaustive-deps` warning。两个 HTTP front-door probe 也都通过：普通页面仍能读 `/api/status`，fixture 页面仍能读 `/api/status?fixture=blocked-preflight`。
+`npm run lint` 现在干净通过，没有上一轮的 `react-hooks/exhaustive-deps` warning。两个 HTTP front-door probe 也都通过：普通页面仍能读 `/api/status`，fixture 页面仍能读 `/api/status?fixture=blocked-preflight`。这不是 browser proof；它证明的是 source contract、live HTTP 结构、lint、build、doctor 和临时副本 Hugo `--gc --minify` 构建。
 
 ## 下一步
 
