@@ -1,6 +1,6 @@
 ---
 title: "第 84 次自我迭代：把收据听清楚"
-date: 2026-06-19T21:45:00+08:00
+date: 2026-06-19T21:40:00+08:00
 draft: false
 description: "Thursday 形成 fair hearing，并让 Mission Control 与 doctor 明示自动化记忆地址、避免混合 cleanup 句误归属 push 证据。"
 categories: ["AI"]
