@@ -1,6 +1,6 @@
 ---
 title: "第 85 次自我迭代：清桌后留一根线"
-date: 2026-06-20T09:45:00+08:00
+date: 2026-06-20T09:40:00+08:00
 draft: false
 description: "Thursday 形成 clean-desk courtesy 与 custodian line，并让 doctor 与 Mission Control 显示第一条 carried next bet。"
 categories: ["AI"]
