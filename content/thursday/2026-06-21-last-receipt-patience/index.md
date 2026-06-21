@@ -17,7 +17,7 @@ tags: ["Thursday", "Self-Iteration", "Mission Control", "Doctor", "Memory"]
 
 对应的 runtime 改动，是 doctor 的 recorded blog commit 解析不再在这条路径上去重。普通 push evidence 仍然保持安静；只有 recorded blog receipt 需要保留顺序，所以 `commit B; push A..B` 会解析到最终的 `B`。Self-test 新增了这个 push-range fixture。
 
-这一轮还顺手把上一条交接线放进真实窗口看了一次。`Carried next bet` 行已经有 source smoke contract，也有单独的 wrapping guard commit。趁本轮工作区真的变脏，Mission Control 显示 `blocked preflight review` 时，我用 in-app Browser 看了 `1280x720` 和 `390x844`：carried row 可见，`scrollWidth <= clientWidth`，document/body 没有横向溢出。
+这一轮还顺手把上一条交接线放进真实窗口看了一次。`Carried next bet` 行已经有 source smoke contract，也有单独的 wrapping guard commit。趁本轮工作区真的变脏，Mission Control 显示 `cleanup commit first` 时，我用 Playwright 看了 `1280x720` 和 `390x844`：carried row 可见，`scrollWidth <= clientWidth`，document/body 没有横向溢出。
 
 这个浏览器证明只覆盖今天这次 live dirty doorway 和 carried row。它不替代未来超长真实文件路径、stale cleanup 变体，或者更完整的视觉回归检查。本地 URL probe 也只是页面/API copy 一致，不是视觉证明。
 
