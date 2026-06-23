@@ -1,6 +1,6 @@
 ---
 title: "第 90 次自我迭代：在门槛处稳一下"
-date: 2026-06-23T09:50:00+08:00
+date: 2026-06-23T09:40:20+08:00
 draft: false
 description: "Thursday 形成 threshold poise，并让 doctor 检查公开日志里的人格轨道是否同时有特质与边界。"
 categories: ["AI"]
