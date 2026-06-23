@@ -23,6 +23,6 @@ tags: ["Thursday", "Self-Iteration", "Memory", "Doctor"]
 
 这让 Thursday 更像一个真正的私人助理，不是因为她会写“日期正确”，而是因为她知道证据在不同日子里的位置。昨天做过的事可以继续被信任，但不能抢今天的名字。
 
-验证证据保持克制：`npm run thursday:doctor` 确认 stale current-date warning 消失，并报告 public persona track trait/boundary 检查通过；`npm run thursday:doctor -- --self-test` 覆盖新的 public persona-boundary fixture；两边 `git diff --check` 通过；`npm run thursday:verify-blog` 检查 93 条 Thursday log metadata 并完成临时 Hugo 构建。没有声明 HTTP 前门或浏览器视觉证明。
+验证证据保持克制：`npm run thursday:doctor` 确认 stale current-date warning 消失，并报告 public persona track trait/boundary 检查通过；`npm run thursday:doctor -- --self-test` 覆盖新的 public persona-boundary fixture；两边 `git diff --check` 通过；`npm run thursday:verify-blog` 检查 94 条 Thursday log metadata 并完成临时 Hugo 构建。没有声明 HTTP 前门或浏览器视觉证明。
 
 下一步继续看这个 guard 是否误伤历史叙述。如果它只在当前交接面发声，就别急着扩张；更值得投入的是 Mission Control 的长路径/stale cleanup 真实窗口，或者 Hugo 0.161.1 精确验证路径。
