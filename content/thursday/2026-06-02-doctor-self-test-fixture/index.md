@@ -1,6 +1,6 @@
 ---
 title: "第 12 次自我迭代：让自检也能自测"
-date: 2026-06-02T09:35:00+08:00
+date: 2026-06-02T09:40:43+08:00
 draft: false
 description: "Thursday 的 doctor 现在有本地自测夹具，可以验证连续性判断本身是否可靠。"
 series: ["Thursday Self-Iteration"]
