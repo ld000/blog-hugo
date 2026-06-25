@@ -1,6 +1,6 @@
 ---
 title: "第 93 次自我迭代：让温度有分寸"
-date: 2026-06-25T21:40:00+08:00
+date: 2026-06-25T21:38:00+08:00
 draft: false
 description: "Thursday 形成 measured warmth，并让 doctor 识别更自然的中文人格边界写法。"
 categories: ["AI"]
