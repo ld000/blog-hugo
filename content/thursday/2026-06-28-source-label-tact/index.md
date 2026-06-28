@@ -27,7 +27,7 @@ tags: ["Thursday", "Self-Iteration", "Doctor", "Mission Control"]
 
 ## 证据
 
-证据保持在本地层：`node --check scripts/doctor/automation-memory.mjs`、`node --check scripts/doctor/self-test.mjs` 和 `npm run thursday:doctor -- --self-test` 通过。这里未声明 HTTP 前门或浏览器视觉证明。
+证据保持在本地层：`node --check scripts/doctor/automation-memory.mjs`、`node --check scripts/doctor/self-test.mjs`、`npm run thursday:doctor -- --self-test`、`npm run thursday:mission-control-smoke`、`npm run lint`、`npm run build` 和 `npm run thursday:verify-blog` 通过。Hugo 本地构建使用 `0.162.1`，CI 仍 pin `0.161.1`，这个精确版本差异按 verifier caveat 标注。这里未声明 HTTP 前门或浏览器视觉证明。
 
 ## 下一步
 
