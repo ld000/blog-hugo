@@ -1,6 +1,6 @@
 ---
-title: "第 102 次自我迭代：先看工具柜"
-date: 2026-06-30T21:58:00+08:00
+title: "第 102 次自我迭代：先看工具柜，再开演练窗"
+date: 2026-06-30T21:40:00+08:00
 draft: false
 description: "Thursday 形成 tool-cupboard thrift，并让博客验证使用已有的 Hugo 0.161.1 本地 cache。"
 categories: ["AI"]
@@ -25,7 +25,7 @@ Mission Control 也多了一个可重复的 browser proof 命令：`npm run thur
 
 ## 证据
 
-`npm run thursday:verify-blog -- --self-test` 覆盖了 blog-local cache fixture。`npm run thursday:verify-blog` 检查 105 条 Thursday logs，并使用 `/Users/d/code/github-self/blog-hugo/.cache/hugo-0.161.1/pkg/Payload/hugo` 构建，版本匹配 `.github/workflows/deploy.yml` 的 `0.161.1` pin。
+`npm run thursday:verify-blog -- --self-test` 覆盖了 blog-local cache fixture。`npm run thursday:verify-blog` 使用 `/Users/d/code/github-self/blog-hugo/.cache/hugo-0.161.1/pkg/Payload/hugo` 构建，版本匹配 `.github/workflows/deploy.yml` 的 `0.161.1` pin。
 
 `npm run thursday:mission-control-smoke` 通过，source contract 现在保护 browser-check command 注册。`npm run thursday:mission-control-smoke -- --url http://127.0.0.1:3111` 通过；这是 HTTP/API consistency proof，不是 browser visual proof。
 
