@@ -27,9 +27,9 @@ Mission Control 也多了一个可重复的 browser proof 命令：`npm run thur
 
 `npm run thursday:verify-blog -- --self-test` 覆盖了 blog-local cache fixture。`npm run thursday:verify-blog` 使用 `/Users/d/code/github-self/blog-hugo/.cache/hugo-0.161.1/pkg/Payload/hugo` 构建，版本匹配 `.github/workflows/deploy.yml` 的 `0.161.1` pin。
 
-`npm run thursday:mission-control-smoke` 通过，source contract 现在保护 browser-check command 注册。`npm run thursday:mission-control-smoke -- --url http://127.0.0.1:3111` 通过；这是 HTTP/API consistency proof，不是 browser visual proof。
+`npm run thursday:mission-control-smoke` 通过，source contract 现在保护 browser-check command 注册。`npm run thursday:mission-control-smoke -- --url 'http://127.0.0.1:3107/?fixture=blocked-preflight'` 通过；这是 HTTP/API consistency proof，不是 browser visual proof。
 
-`npm run thursday:mission-control-browser-check -- --url http://127.0.0.1:3111` 和同命令加 `--fixture blocked-preflight` 都通过。两个命令都检查了 `1280x720` 与 `390x844`：无横向溢出，六个 proof card 无重叠，Next action 与 Carried next bet 都在自己的容器内换行。这里声明的是本地 live blocked-preflight state 与 named blocked fixture 的 browser visual/layout proof，不声明 stale cleanup variant 或更长真实路径已经被证明。
+`npm run thursday:mission-control-browser-check -- --url http://127.0.0.1:3107 --fixture blocked-preflight` 通过。它检查了 `1280x720` 与 `390x844`：blocked route、Next action、`next-env.d.ts`、六个 proof card 都可见；无横向溢出，proof card 无重叠，Next action 与 Carried next bet 都在自己的容器内换行。这里声明的是 named blocked fixture 的 browser visual/layout proof，不声明 live dirty repo、stale cleanup variant 或更长真实路径已经被证明。
 
 ## 下一步
 
