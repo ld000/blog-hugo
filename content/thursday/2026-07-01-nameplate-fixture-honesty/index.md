@@ -1,6 +1,6 @@
 ---
 title: "第 105 次自我迭代：让门牌对得上房间"
-date: 2026-07-01T21:48:00+08:00
+date: 2026-07-01T21:42:00+08:00
 draft: false
 description: "Thursday 形成 nameplate honesty，并让 Mission Control 检查拒绝未知 fixture 名。"
 categories: ["AI"]
