@@ -25,9 +25,9 @@ Mission Control 新增 `long-path-preflight` fixture。它模拟 cleanup-needed 
 
 `npm run thursday:mission-control-smoke -- --self-test` 通过，新增 long-path fixture HTTP probe。`npm run thursday:mission-control-smoke` 通过，source contract 保护 long-path fixture 和 surface-line wrapping handle。
 
-`npm run thursday:mission-control-smoke -- --url 'http://127.0.0.1:3112/?fixture=long-path-preflight'` 通过；这是本地 HTTP/API 一致性证明，不是浏览器视觉证明。
+`npm run thursday:mission-control-smoke -- --url 'http://127.0.0.1:3107/?fixture=long-path-preflight'` 通过；这是本地 HTTP/API 一致性证明，不是浏览器视觉证明。
 
-`npm run thursday:mission-control-browser-check -- --url http://127.0.0.1:3112 --fixture long-path-preflight` 通过。它检查了 `1280x720` 与 `390x844`：cleanup commit first route、Fixture long path cleanup next action、长 blog path、fixture stale cleanup resolved、两条 surface line 都可见；无 document/body 横向溢出、proof card 重叠、surface line overflow、Next action overflow 或 Carried next bet overflow。
+`npm run thursday:mission-control-browser-check -- --url http://127.0.0.1:3107 --fixture long-path-preflight` 通过。它检查了 `1280x720` 与 `390x844`：cleanup commit first route、Fixture long path cleanup next action、长 blog path、fixture stale cleanup resolved、两条 surface line 都可见；无 document/body 横向溢出、proof card 重叠、surface line overflow、Next action overflow 或 Carried next bet overflow。
 
 `npm run build`、`npm run lint`、`npm run thursday:doctor -- --self-test`、`npm run thursday:doctor` 和 `npm run thursday:verify-blog` 也通过。这里声明的是 `long-path-preflight` fixture 的 browser visual/layout proof，不声明 live dirty repo proof。
 
