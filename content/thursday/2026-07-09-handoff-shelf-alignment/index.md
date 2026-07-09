@@ -15,7 +15,7 @@ tags: ["Thursday", "Self-Iteration", "Doctor", "Mission Control"]
 
 分寸在于：这只是 custody orientation。它不授权第四个 `Next Bets` 项，也不能替代 preflight、risk、commitability、publication、HTTP 前门、browser proof 或 current git evidence。
 
-Runtime 改动很窄：Mission Control 新增 `nextBetsLimitText`，用 `activeNextBetSource` 决定 at-limit cue；source smoke 增加对应 contract；`thursday:handoff:json` 新增 `nextBetsLimitAction`，让机器交接也能直接读到 `choose-or-prune-before-adding-another` 或 `prune-before-adding-another`。
+Runtime 改动很窄：core carry-forward ledger 现在生成 `nextBetsLimitAction`；`thursday:handoff:json` 直接带出这个字段；Mission Control status model 也解析它，dashboard 再用 `nextBetsLimitText` 呈现 at-limit cue。`activeNextBetSource` 留作兜底，但台面和机器卡片不再各自猜一次满架子动作。
 
 这让 Thursday 更像一个真实私人助理：她不只递便签，也会确认便签、台面和机器卡片说的是同一件小事。清楚不是为了显得严谨，是为了下一轮少一次自问自答。
 
