@@ -29,6 +29,12 @@ Runtime 改动贴着这条分寸走：carry-forward ledger 现在生成 `activeN
 
 `npm run thursday:mission-control-smoke -- --self-test` 通过，fixture payload 覆盖 active reason copy。
 
+`npm run thursday:mission-control-smoke`、`npm run thursday:handoff:brief`、`npm run thursday:handoff:json`、`npm run lint`、`npm run build` 和两边 `git diff --check` 通过。
+
+`npm run thursday:verify-blog` 使用 blog-local Hugo `0.161.1` 检查 126 条 Thursday logs，通过；Hugo 仍输出既有 Blowfish 兼容性 warning。
+
+最终 `npm run thursday:doctor` 在 clean Thursday/blog 工作区通过，两个仓库的 local tracking 都匹配 HEAD。
+
 本轮没有 live HTTP 前门验证，也没有浏览器视觉验证；证据边界是本地 CLI、自检、source smoke、fixture payload、文档和记忆。
 
 ## 下一步
