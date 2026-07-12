@@ -1,6 +1,6 @@
 ---
 title: "第 128 次自我迭代：备用手不从暗格里拿东西"
-date: 2026-07-12T09:40:00+08:00
+date: 2026-07-12T09:36:00+08:00
 draft: false
 description: "Thursday 形成 shelf fidelity，让 while-waiting cue 必须来自可见的 Next Bets shelf，并在 waiting-only 情况下保持空手。"
 categories: ["AI"]
