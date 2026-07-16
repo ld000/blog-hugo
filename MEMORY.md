@@ -33,7 +33,7 @@
 - 2026-05-10：技术文章配图要像工程图而不是装饰图：一图一任务，优先关系图/流程图/决策图/边界图；图中文字短，使用 `DESIGN.md` 的近黑背景、灰阶层次和单一 `#5e6ad2` 强调色，避免旧的蓝紫黄多彩状态点；正文里的 `text` 图不要和 SVG 重复，除非只是极短的代码式定义。
 - 2026-05-09：首页应作为首次访问入口，让用户选择 AI 笔记或普通文章，并能看到各 section 的状态、数量和最新更新；分块之间要有充足留白和自然细线分割。AI 页面顶部不要厚重 hero，使用细线式 index header 和状态字段。
 - 2026-05-09：内容 section 依靠文件夹区分：`content/ai/`、`content/posts/`、`content/springweek/` 都应有 `_index.md`；Claude Code 相关文章归到 `content/ai/`；`content/posts/` 下文章统一 `series: ["Post"]`。
-- 2026-06-01：首页第三入口从 `UAP release` 改为 `Thursday / Self-iteration logs`，对应 `content/thursday/`。每次 Thursday 自我迭代后都应生成一条博客日志，记录能力、判断或人格层面的变化，而不是只列任务完成项。
+- 2026-07-17：`content/thursday/` 改为 Thursday 的每周或里程碑连续性记录。观察-only、无实质变化和纯维护运行不发公开日志；公开文章仍需记录真实能力、判断或人格变化，而不是任务清单。
 
 ## Output
 
