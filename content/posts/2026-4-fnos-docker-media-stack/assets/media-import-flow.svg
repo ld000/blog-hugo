@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="440" viewBox="0 0 1200 440" role="img" aria-labelledby="title desc">
+  <title id="title">媒体从搜索到入库的流转过程</title>
+  <desc id="desc">电影或剧集经 Prowlarr 搜索、qBittorrent 下载、Radarr 或 Sonarr 整理，再由 Jellyfin 扫描和 Bazarr 补充字幕。</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M0 0L10 5L0 10Z" fill="#5e6ad2"/>
+    </marker>
+    <style>
+      .title{font:600 28px Inter,-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC",sans-serif;fill:#f7f8f8}
+      .step{font:600 17px Inter,-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC",sans-serif;fill:#f7f8f8}
+      .note{font:400 13px Inter,-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC",sans-serif;fill:#92949a}
+      .num{font:600 13px Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;fill:#b9c0ff}
+      .path{fill:none;stroke:#5e6ad2;stroke-width:2;marker-end:url(#arrow)}
+    </style>
+  </defs>
+  <rect width="1200" height="440" rx="24" fill="#010102"/>
+  <text x="64" y="68" class="title">下载完成只是中间状态</text>
+  <text x="64" y="98" class="note">只有 Radarr 或 Sonarr 成功导入后，文件才进入 Jellyfin 扫描范围</text>
+
+  <path d="M183 208H232" class="path"/>
+  <path d="M371 208H420" class="path"/>
+  <path d="M559 208H608" class="path"/>
+  <path d="M747 208H796" class="path"/>
+  <path d="M935 208H984" class="path"/>
+
+  <g>
+    <rect x="44" y="144" width="139" height="128" rx="14" fill="#0f1011" stroke="#303137"/>
+    <text x="62" y="171" class="num">01</text>
+    <text x="62" y="207" class="step">添加内容</text>
+    <text x="62" y="235" class="note">Radarr / Sonarr</text>
+  </g>
+  <g>
+    <rect x="232" y="144" width="139" height="128" rx="14" fill="#0f1011" stroke="#303137"/>
+    <text x="250" y="171" class="num">02</text>
+    <text x="250" y="207" class="step">搜索结果</text>
+    <text x="250" y="235" class="note">Prowlarr</text>
+  </g>
+  <g>
+    <rect x="420" y="144" width="139" height="128" rx="14" fill="#0f1011" stroke="#303137"/>
+    <text x="438" y="171" class="num">03</text>
+    <text x="438" y="207" class="step">完成下载</text>
+    <text x="438" y="235" class="note">qBittorrent</text>
+  </g>
+  <g>
+    <rect x="608" y="144" width="139" height="128" rx="14" fill="#15161a" stroke="#5e6ad2"/>
+    <text x="626" y="171" class="num">04</text>
+    <text x="626" y="207" class="step">识别与导入</text>
+    <text x="626" y="235" class="note">硬链接并重命名</text>
+  </g>
+  <g>
+    <rect x="796" y="144" width="139" height="128" rx="14" fill="#0f1011" stroke="#303137"/>
+    <text x="814" y="171" class="num">05</text>
+    <text x="814" y="207" class="step">扫描媒体库</text>
+    <text x="814" y="235" class="note">Jellyfin</text>
+  </g>
+  <g>
+    <rect x="984" y="144" width="172" height="128" rx="14" fill="#0f1011" stroke="#303137"/>
+    <text x="1002" y="171" class="num">06</text>
+    <text x="1002" y="207" class="step">字幕与刷新</text>
+    <text x="1002" y="235" class="note">Bazarr 通知 Jellyfin</text>
+  </g>
+
+  <rect x="420" y="316" width="139" height="48" rx="10" fill="#0f1011" stroke="#303137"/>
+  <text x="441" y="346" class="note">/data/downloads</text>
+  <rect x="608" y="316" width="327" height="48" rx="10" fill="#15161a" stroke="#5e6ad2"/>
+  <text x="630" y="346" class="note">/data/media/movies 或 /data/media/tv</text>
+  <path d="M489 272V316" class="path"/>
+  <path d="M677 272V316" class="path"/>
+</svg>

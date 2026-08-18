@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="680" viewBox="0 0 1200 680" role="img" aria-labelledby="title desc">
+  <title id="title">自动化影视库服务架构</title>
+  <desc id="desc">Prowlarr 为 Radarr 和 Sonarr 提供索引，二者调度 qBittorrent 下载并整理文件，Bazarr 下载字幕，Jellyfin 读取最终媒体目录。</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M0 0L10 5L0 10Z" fill="#5e6ad2"/>
+    </marker>
+    <style>
+      .title{font:600 28px Inter,-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC",sans-serif;fill:#f7f8f8}
+      .label{font:600 19px Inter,-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC",sans-serif;fill:#f7f8f8}
+      .note{font:400 14px Inter,-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC",sans-serif;fill:#92949a}
+      .path{fill:none;stroke:#5e6ad2;stroke-width:2;marker-end:url(#arrow)}
+      .muted{fill:none;stroke:#505258;stroke-width:1.5;stroke-dasharray:6 6;marker-end:url(#arrow)}
+    </style>
+  </defs>
+  <rect width="1200" height="680" rx="24" fill="#010102"/>
+  <text x="64" y="72" class="title">每个服务只负责一段链路</text>
+  <text x="64" y="102" class="note">控制流走服务接口，媒体文件始终留在统一的 /data 中</text>
+
+  <rect x="64" y="150" width="240" height="112" rx="14" fill="#0f1011" stroke="#303137"/>
+  <text x="88" y="190" class="label">Prowlarr</text>
+  <text x="88" y="220" class="note">索引器与搜索入口</text>
+
+  <rect x="470" y="134" width="260" height="112" rx="14" fill="#15161a" stroke="#5e6ad2"/>
+  <text x="494" y="174" class="label">Radarr</text>
+  <text x="494" y="204" class="note">电影识别、导入、命名</text>
+
+  <rect x="470" y="270" width="260" height="112" rx="14" fill="#15161a" stroke="#5e6ad2"/>
+  <text x="494" y="310" class="label">Sonarr</text>
+  <text x="494" y="340" class="note">剧集识别、按季整理</text>
+
+  <rect x="896" y="200" width="240" height="112" rx="14" fill="#0f1011" stroke="#303137"/>
+  <text x="920" y="240" class="label">qBittorrent</text>
+  <text x="920" y="270" class="note">下载与保种</text>
+
+  <path d="M304 190H430Q448 190 470 190" class="path"/>
+  <path d="M304 220H408Q438 220 438 278Q438 326 470 326" class="path"/>
+  <path d="M730 190H810Q850 190 850 230Q850 256 896 256" class="path"/>
+  <path d="M730 326H810Q850 326 850 282Q850 256 896 256" class="path"/>
+
+  <rect x="64" y="444" width="1072" height="164" rx="18" fill="#0f1011" stroke="#303137"/>
+  <text x="88" y="482" class="label">统一数据目录 /data</text>
+  <line x1="408" y1="468" x2="408" y2="584" stroke="#303137"/>
+  <line x1="764" y1="468" x2="764" y2="584" stroke="#303137"/>
+  <text x="88" y="528" class="label">downloads</text>
+  <text x="88" y="556" class="note">原始下载与保种文件</text>
+  <text x="444" y="528" class="label">media / movies</text>
+  <text x="444" y="556" class="note">Radarr 整理后的电影</text>
+  <text x="800" y="528" class="label">media / tv</text>
+  <text x="800" y="556" class="note">Sonarr 整理后的剧集</text>
+
+  <path d="M1016 312V410Q1016 430 996 444" class="muted"/>
+  <path d="M600 382V420Q600 438 580 444" class="path"/>
+  <path d="M600 246V420Q600 438 564 444" class="path"/>
+
+  <rect x="64" y="626" width="220" height="38" rx="10" fill="#15161a" stroke="#303137"/>
+  <text x="82" y="651" class="note">Bazarr：给 media 写字幕</text>
+  <rect x="326" y="626" width="272" height="38" rx="10" fill="#15161a" stroke="#303137"/>
+  <text x="344" y="651" class="note">Jellyfin：只读取 media 并播放</text>
+  <rect x="640" y="626" width="304" height="38" rx="10" fill="#15161a" stroke="#303137"/>
+  <text x="658" y="651" class="note">硬链接：两条路径，共享同一份数据</text>
+</svg>
